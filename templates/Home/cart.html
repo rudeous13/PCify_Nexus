@@ -652,10 +652,78 @@
   </nav>
 
   <script>
+    const IS_LOGGED_IN = {% if request.session.active %}true{% else %}false{% endif %};
     const toastContainer = document.getElementById("toast-container");
     let lastDeletedItem = null;
     let lastDeletedIndex = null;
     let appliedDiscount = 0;
+
+    function getCSRFToken() {
+      let token = document.querySelector('[name=csrfmiddlewaretoken]');
+      if (token) return token.value;
+
+      token = document.querySelector('#csrf-token');
+      if (token) return token.value;
+
+      const name = 'csrftoken';
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue || '';
+    }
+
+    function postCartAction(action, dataObj) {
+      const formData = new FormData();
+      formData.append('action', action);
+      for (const key in dataObj) {
+        formData.append(key, dataObj[key]);
+      }
+
+      return fetch('/cart', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCSRFToken(),
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+      }).then((response) => response.json());
+    }
+
+    async function syncServerCartFromLocal() {
+      if (!IS_LOGGED_IN) return;
+      if (sessionStorage.getItem('cart_synced') === '1') return;
+
+      let cart = [];
+      try {
+        cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      } catch (e) {
+        cart = [];
+      }
+
+      // Clear server cart first, then re-add from localStorage for accuracy.
+      try {
+        await postCartAction('clear', {});
+        for (const item of cart) {
+          if (item.variant_id) {
+            await postCartAction('add', {
+              variant_id: item.variant_id,
+              quantity: item.quantity || 1
+            });
+          }
+        }
+        sessionStorage.setItem('cart_synced', '1');
+      } catch (e) {
+        console.warn('Cart sync failed', e);
+      }
+    }
 
     function showToast(message, type = "success", hasUndo = false) {
       const toast = document.createElement("div");
@@ -806,6 +874,11 @@
         cart[index].quantity += change;
         if (cart[index].quantity < 1) cart[index].quantity = 1;
         localStorage.setItem("cart", JSON.stringify(cart));
+        if (IS_LOGGED_IN && cart[index].variant_id) {
+          const updateType = change > 0 ? 'increase' : 'decrease';
+          postCartAction('update', { variant_id: cart[index].variant_id, update_type: updateType })
+            .catch((e) => console.warn('Failed to sync quantity', e));
+        }
         loadCart();
       }
     };
@@ -814,6 +887,10 @@
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
       lastDeletedItem = cart[index];
       lastDeletedIndex = index;
+      if (IS_LOGGED_IN && lastDeletedItem && lastDeletedItem.variant_id) {
+        postCartAction('delete', { variant_id: lastDeletedItem.variant_id })
+          .catch((e) => console.warn('Failed to sync delete', e));
+      }
       cart.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
       loadCart();
@@ -842,6 +919,10 @@
     window.clearCart = function () {
       if (confirm("Are you sure you want to clear your entire cart?")) {
         localStorage.removeItem("cart");
+        if (IS_LOGGED_IN) {
+          postCartAction('clear', {})
+            .catch((e) => console.warn('Failed to sync clear', e));
+        }
         appliedDiscount = 0;
         loadCart();
         showToast("Cart cleared");
@@ -917,7 +998,10 @@
       }
     };
 
-    document.addEventListener("DOMContentLoaded", loadCart);
+    document.addEventListener("DOMContentLoaded", async () => {
+      await syncServerCartFromLocal();
+      loadCart();
+    });
   </script>
 
   <script>

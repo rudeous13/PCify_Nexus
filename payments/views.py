@@ -12,7 +12,8 @@ from django.views.decorators.http import require_POST
 
 from accounts.models import User
 from locations.models import Address
-from orders.models import Cart, Invoice, Order, OrderItem, Payment
+from orders.models import Cart, Invoice, Order, OrderItem, Payment, CartItem
+from products.models import ProductVariant
 
 from .models import CashfreeOrder
 from .utils import create_cashfree_order, fetch_cashfree_order, verify_cashfree_signature
@@ -210,18 +211,76 @@ def create_order(request):
     if not user.phone_number:
         return JsonResponse({"error": "Please add a phone number to your profile."}, status=400)
 
+    # Allow client to send a cart snapshot to avoid desync between localStorage and DB.
+    cart_json = request.POST.get("cart_json")
+
+    # Load server cart if present
     try:
         cart = Cart.objects.get(user=user)
     except Cart.DoesNotExist:
-        return JsonResponse({"error": "Your cart is empty."}, status=400)
+        cart = None
 
     address = _get_address_for_user(user, request.POST.get("address_id"))
     if not address:
         return JsonResponse({"error": "Please select a delivery address."}, status=400)
 
-    items, subtotal, tax, total = _calculate_cart_totals(cart)
-    if total <= 0:
-        return JsonResponse({"error": "Your cart total is invalid."}, status=400)
+    # If the client provided a cart snapshot, prefer it and sync the DB cart.
+    if cart_json:
+        try:
+            client_cart = json.loads(cart_json)
+        except Exception:
+            return JsonResponse({"error": "Invalid cart data."}, status=400)
+
+        items = []
+        subtotal = Decimal("0.00")
+
+        for entry in client_cart:
+            variant_id = entry.get("variant_id")
+            qty = int(entry.get("quantity", 1) or 1)
+            if not variant_id:
+                continue
+            variant = ProductVariant.objects.filter(
+                variant_id=variant_id).first()
+            if not variant:
+                continue
+            # Create a small item-like object to pass to order creation
+            items.append(type("_", (), {"variant": variant, "quantity": qty}))
+            subtotal += variant.price * qty
+
+        tax = (subtotal * TAX_RATE).quantize(Decimal("0.01"),
+                                             rounding=ROUND_HALF_UP)
+        total = subtotal + tax
+
+        # Sync DB cart to match client snapshot (wipe & recreate)
+        if cart:
+            cart.items.all().delete()
+            for entry in client_cart:
+                variant_id = entry.get("variant_id")
+                qty = int(entry.get("quantity", 1) or 1)
+                variant = ProductVariant.objects.filter(
+                    variant_id=variant_id).first()
+                if variant:
+                    CartItem.objects.create(
+                        cart=cart, variant=variant, quantity=qty)
+        else:
+            cart = Cart.objects.create(user=user)
+            for entry in client_cart:
+                variant_id = entry.get("variant_id")
+                qty = int(entry.get("quantity", 1) or 1)
+                variant = ProductVariant.objects.filter(
+                    variant_id=variant_id).first()
+                if variant:
+                    CartItem.objects.create(
+                        cart=cart, variant=variant, quantity=qty)
+
+        if total <= 0:
+            return JsonResponse({"error": "Your cart total is invalid."}, status=400)
+    else:
+        if not cart:
+            return JsonResponse({"error": "Your cart is empty."}, status=400)
+        items, subtotal, tax, total = _calculate_cart_totals(cart)
+        if total <= 0:
+            return JsonResponse({"error": "Your cart total is invalid."}, status=400)
 
     order, invoice = _create_order_records(user, cart, address, total, items)
 
