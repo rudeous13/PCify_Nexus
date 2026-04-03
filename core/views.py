@@ -411,6 +411,9 @@ def pro_setting(request):
                 ctx["street_address"] = ""
                 ctx["area"] = ""
                 ctx["pincode"] = ""
+            # include all addresses for management (primary first)
+            ctx["addresses"] = list(Address.objects.filter(
+                user=user_obj).order_by('-is_primary').all())
         else:
             # fall back to session values if available
             ctx["first_name"] = request.session.get("user_name", "")
@@ -425,12 +428,10 @@ def pro_setting(request):
 
     # Handle profile settings form submission
     if request.method == "POST":
+        # Common user fields
         first_name = request.POST.get("first_name", "").strip()
         last_name = request.POST.get("last_name", "").strip()
         email = request.POST.get("email", "").strip()
-        street_address = request.POST.get("street_address", "").strip()
-        area = request.POST.get("area", "").strip()
-        pincode_val = request.POST.get("pincode", "").strip()
 
         # Update basic user fields
         if user:
@@ -441,42 +442,121 @@ def pro_setting(request):
             if email:
                 user.email = email
             user.save()
-
-            # keep session in sync
             request.session["user_name"] = user.first_name or ""
             request.session["user_lname"] = user.last_name or ""
 
-        # Resolve or create pincode record
-        pincode_obj = None
-        if pincode_val:
-            try:
-                pincode_int = int(pincode_val)
-                pincode_obj = Pincode.objects.filter(
-                    pincode=pincode_int).first()
-                if not pincode_obj:
-                    pincode_obj = Pincode.objects.create(
-                        pincode=pincode_int,
-                        area_name=area or "",
-                        city=""
-                    )
-            except ValueError:
-                pincode_obj = None
+        # Address management actions
+        action = request.POST.get('action')
+        if action and user:
+            # add or edit address
+            if action in ('add_address', 'edit_address'):
+                street_address = request.POST.get("street_address", "").strip()
+                area = request.POST.get("area", "").strip()
+                pincode_val = request.POST.get("pincode", "").strip()
+                make_primary = request.POST.get("make_primary") == 'on'
 
-        # Create or update an address for the user
-        if user and street_address and pincode_obj:
-            primary_addr = Address.objects.filter(
-                user=user, is_primary=True).first()
-            if primary_addr:
-                primary_addr.address = street_address
-                primary_addr.pincode = pincode_obj
-                primary_addr.save()
-            else:
-                Address.objects.create(
-                    user=user,
-                    pincode=pincode_obj,
-                    address=street_address,
-                    is_primary=True
-                )
+                pincode_obj = None
+                if pincode_val:
+                    try:
+                        pincode_int = int(pincode_val)
+                        pincode_obj = Pincode.objects.filter(
+                            pincode=pincode_int).first()
+                        if not pincode_obj:
+                            pincode_obj = Pincode.objects.create(
+                                pincode=pincode_int,
+                                area_name=area or "",
+                                city="Ahmedabad"
+                            )
+                        else:
+                            # If an existing Pincode was found but the user provided
+                            # a (possibly updated) area/locality, persist that change
+                            # so edits to area take effect even when using an
+                            # existing pincode row.
+                            if area and area != (pincode_obj.area_name or ""):
+                                pincode_obj.area_name = area
+                                pincode_obj.save()
+                    except ValueError:
+                        pincode_obj = None
+
+                if action == 'add_address' and street_address and pincode_obj:
+                    if make_primary:
+                        Address.objects.filter(
+                            user=user).update(is_primary=False)
+                    Address.objects.create(
+                        user=user,
+                        pincode=pincode_obj,
+                        address=street_address,
+                        is_primary=make_primary or not Address.objects.filter(
+                            user=user).exists()
+                    )
+
+                if action == 'edit_address':
+                    addr_id = request.POST.get('address_id')
+                    if addr_id:
+                        try:
+                            addr_obj = Address.objects.get(
+                                address_id=addr_id, user=user)
+                            # If pincode wasn't provided, keep existing
+                            if not pincode_obj:
+                                pincode_obj = addr_obj.pincode
+
+                            if street_address:
+                                addr_obj.address = street_address
+                            # Update associated pincode and its area when needed.
+                            if pincode_obj:
+                                addr_obj.pincode = pincode_obj
+                            else:
+                                # No new pincode provided: if user supplied an
+                                # updated area, persist it to the existing pincode
+                                # row so the locality reflects the edit.
+                                if area and addr_obj.pincode and area != (addr_obj.pincode.area_name or ""):
+                                    addr_obj.pincode.area_name = area
+                                    addr_obj.pincode.save()
+                            if make_primary:
+                                Address.objects.filter(
+                                    user=user).update(is_primary=False)
+                                addr_obj.is_primary = True
+                            addr_obj.save()
+                        except Address.DoesNotExist:
+                            pass
+
+            elif action == 'delete_address':
+                addr_id = request.POST.get('address_id')
+                if addr_id:
+                    try:
+                        addr_obj = Address.objects.get(
+                            address_id=addr_id, user=user)
+                        was_primary = addr_obj.is_primary
+                        # Keep a reference to the pincode so we can clean it up
+                        # after the address is deleted.
+                        pincode_ref = addr_obj.pincode
+                        addr_obj.delete()
+
+                        # If the deleted address was primary, promote another address to primary
+                        if was_primary:
+                            next_addr = Address.objects.filter(
+                                user=user).first()
+                            if next_addr:
+                                next_addr.is_primary = True
+                                next_addr.save()
+
+                        # If the pincode row is now orphaned (no addresses reference it),
+                        # remove it to avoid stale pincode/area entries.
+                        try:
+                            if pincode_ref and not Address.objects.filter(pincode=pincode_ref).exists():
+                                pincode_ref.delete()
+                        except Exception:
+                            # Be conservative: ignore delete errors and continue.
+                            pass
+                    except Address.DoesNotExist:
+                        pass
+
+            elif action == 'set_primary':
+                addr_id = request.POST.get('address_id')
+                if addr_id:
+                    Address.objects.filter(user=user).update(is_primary=False)
+                    Address.objects.filter(
+                        address_id=addr_id, user=user).update(is_primary=True)
 
         # Return JSON for AJAX or re-render the page with a success message
         from django.http import JsonResponse
