@@ -142,14 +142,14 @@ def dashboard_employees(request):
 
       # -------------------- CREATE User --------------------
       try:
-        user = User.objects.create(
+        user = User.objects.create_user(
+          email=data["Email"],
+          password=data["password"],
           first_name=data["f_name"],
           last_name=data["l_name"],
-          email=data["Email"],
           phone_number=data["PhoneNo"],
-          password=data["password"],  
-          role='employee',
-          profile_image = data["image"]
+          role="employee",
+          profile_image=data["image"]
         )
 
         # ---------------- PINCODE CHECK ----------------
