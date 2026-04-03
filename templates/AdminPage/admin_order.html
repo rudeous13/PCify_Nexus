@@ -114,6 +114,17 @@
         background-color: rgba(255, 255, 255, 0.02);
       }
 
+      /* Dark theme select dropdown styling */
+      [data-theme="dark"] #ov-status-select {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        border-color: #334155;
+      }
+      [data-theme="dark"] #ov-status-select option {
+        background-color: #0b1220;
+        color: #e2e8f0;
+      }
+
       /* --- LIQUID GLASS MOBILE NAV STYLES --- */
       .liquid-glass-nav {
         background: rgba(255, 255, 255, 0.4);
@@ -699,8 +710,8 @@
                       data-id="{{ order.id|default:order.order_id }}"
                       data-date="{{ order.created_at|date:'M d, Y' }}"
                       data-time="{{ order.created_at|time:'h:i A' }}"
-                      data-user="{{ order.customer_name|default:order.customer.user.first_name }}"
-                      data-email="{{ order.customer_email|default:order.customer.user.email }}"
+                      data-user="{{ order.customer_name|default:order.user.first_name }}"
+                      data-email="{{ order.customer_email|default:order.user.email }}"
                       data-amount="{{ order.total_amount }}"
                       data-address="{{ order.shipping_address }}"
                       data-tracking="{{ order.tracking_number }}"
@@ -713,7 +724,7 @@
                                    <i class="bi bi-box-seam text-slate-400"></i>
                               </div>
                               <div class="flex-1">
-                                  <p class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ item.product_name|default:item.product.name }}</p>
+                                  <p class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ item.product_name|default:item.variant.product.product_name }}</p>
                                   <p class="text-xs text-slate-500">Qty: {{ item.quantity }}</p>
                               </div>
                               <p class="text-sm font-mono font-bold text-slate-900 dark:text-white">₹{{ item.price }}</p>
@@ -725,7 +736,7 @@
                           <input type="checkbox" name="order_ids" value="{{ order.id|default:order.order_id }}" class="order-checkbox rounded border-slate-300 dark:border-slate-600 bg-transparent focus:ring-brand-500 text-brand-500 cursor-pointer">
                       </td>
                       <td class="px-6 py-4 font-mono text-xs text-brand-500">{{ order.id|default:order.order_id }}</td>
-                      <td class="px-6 py-4 font-bold">{{ order.customer_name|default:order.customer.user.first_name }}</td>
+                      <td class="px-6 py-4 font-bold">{{ order.customer_name|default:order.user.first_name }}</td>
                       <td class="px-6 py-4 text-xs text-slate-500">{{ order.created_at|date:'M d, Y' }}</td>
                       <td class="px-6 py-4 font-mono font-bold text-slate-900 dark:text-white">₹{{ order.total_amount }}</td>
                       <td class="px-6 py-4 text-center">
@@ -756,8 +767,8 @@
                    data-id="{{ order.id|default:order.order_id }}"
                    data-date="{{ order.created_at|date:'M d, Y' }}"
                    data-time="{{ order.created_at|time:'h:i A' }}"
-                   data-user="{{ order.customer_name|default:order.customer.user.first_name }}"
-                   data-email="{{ order.customer_email|default:order.customer.user.email }}"
+                   data-user="{{ order.customer_name|default:order.user.first_name }}"
+                   data-email="{{ order.customer_email|default:order.user.email }}"
                    data-amount="{{ order.total_amount }}"
                    data-address="{{ order.shipping_address }}"
                    data-tracking="{{ order.tracking_number }}"
@@ -774,7 +785,7 @@
                                <i class="bi bi-box-seam text-slate-400"></i>
                           </div>
                           <div class="flex-1">
-                              <p class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ item.product_name|default:item.product.name }}</p>
+                              <p class="text-sm font-bold text-slate-900 dark:text-white truncate">{{ item.product_name|default:item.variant.product.product_name }}</p>
                               <p class="text-xs text-slate-500">Qty: {{ item.quantity }}</p>
                           </div>
                           <p class="text-sm font-mono font-bold text-slate-900 dark:text-white">₹{{ item.price }}</p>
@@ -785,7 +796,7 @@
                   <div class="flex justify-between items-start mb-3 pl-6">
                       <div>
                           <span class="text-xs font-mono text-brand-500 block mb-1">{{ order.id|default:order.order_id }}</span>
-                          <h4 class="font-bold text-slate-900 dark:text-white">{{ order.customer_name|default:order.customer.user.first_name }}</h4>
+                          <h4 class="font-bold text-slate-900 dark:text-white">{{ order.customer_name|default:order.user.first_name }}</h4>
                       </div>
                       <span class="px-2 py-1 rounded text-[10px] font-bold uppercase border badge-{{ order.status|lower }}">{{ order.status }}</span>
                   </div>

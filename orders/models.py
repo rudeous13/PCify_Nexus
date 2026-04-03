@@ -43,6 +43,8 @@ class Order(models.Model):
     ]
     STATUSES = [
         ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('shipped', 'Shipped'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
     ]

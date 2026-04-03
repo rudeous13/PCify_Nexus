@@ -392,6 +392,8 @@ def pro_order(request):
 
     status_map = {
         "pending": "Processing",
+        "processing": "Processing",
+        "shipped": "Shipped",
         "completed": "Delivered",
         "cancelled": "Cancelled",
     }
