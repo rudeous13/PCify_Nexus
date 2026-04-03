@@ -388,7 +388,7 @@
                     <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
                   {% else %}
                     <span class="text-[9px] sm:text-[11px] font-bold tracking-widest font-mono drop-shadow-sm ml-[1px]">
-                      {{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}
+                      {{ request.user.first_name|default:request.session.user_name|make_list|first|upper }}{{ request.user.last_name|default:request.session.user_lname|make_list|first|upper }}
                     </span>
                   {% endif %}
                 </div>
@@ -396,9 +396,7 @@
               </div>
               
               <div class="flex items-center gap-1 sm:gap-2">
-                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">
-                  {{ request.session.user_name }}
-                </span>
+                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.user.first_name|default:request.session.user_name }}</span>
                 <i id="profileMenuChevron" class="bi bi-chevron-down text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-400 ease-[cubic-bezier(0.87,0,0.13,1)]"></i>
               </div>
             </button>
@@ -412,13 +410,11 @@
                 <div class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 mb-1 bg-slate-50/50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
                       <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
-                      <span class="relative z-10">{{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}</span>
+                      <span class="relative z-10">{{ request.user.first_name|default:request.session.user_name|make_list|first|upper }}{{ request.user.last_name|default:request.session.user_lname|make_list|first|upper }}</span>
                    </div>
                    <div class="flex flex-col min-w-0">
                       <p class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">Nexus Member</p>
-                      <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">
-                        {{ request.session.user_name }} {{ request.session.user_lname }}
-                      </p>
+                      <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.user.first_name|default:request.session.user_name }} {{ request.user.last_name|default:request.session.user_lname }}</p>
                    </div>
                 </div>
                 

@@ -80,8 +80,7 @@
                             {% for address in addresses %}
                             <label
                                 class="flex items-start gap-3 border border-slate-200 dark:border-white/10 rounded-2xl p-4 cursor-pointer">
-                                <input type="radio" name="address_id" value="{{ address.address_id }}" class="mt-1" {%
-                                    if address.address_id==selected_address_id %}checked{% endif %}>
+                                <input type="radio" name="address_id" value="{{ address.address_id }}" class="mt-1" {% if address.address_id == selected_address_id %}checked{% endif %}>
                                 <div>
                                     <div class="font-semibold text-slate-900 dark:text-white">
                                         {{ address.address }}
