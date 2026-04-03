@@ -1,0 +1,62 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Payment Status | NexusBuild</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: ["class", '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Outfit"', "sans-serif"],
+                        mono: ['"Space Grotesk"', "monospace"],
+                    },
+                    colors: {
+                        brand: {
+                            400: "#38bdf8",
+                            500: "#0ea5e9",
+                            600: "#0284c7",
+                        },
+                        dark: {
+                            bg: "#0b0f19",
+                            card: "#111827",
+                            border: "#1f2937",
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-slate-200 min-h-screen">
+    <main class="max-w-3xl mx-auto px-4 md:px-6 py-16 text-center">
+        <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-3xl p-8">
+            <h1 class="text-3xl font-black text-slate-900 dark:text-white font-mono mb-4">Payment Status</h1>
+            <p class="text-sm text-slate-500 mb-6">Order ID: <span class="font-mono text-slate-900 dark:text-white">{{
+                    order_id }}</span></p>
+            <div class="text-lg font-bold">
+                Status: <span class="text-brand-500">{{ status|upper }}</span>
+            </div>
+            <div class="mt-6 flex items-center justify-center gap-4">
+                <a href="{% url 'core:homepage' %}"
+                    class="px-6 py-3 rounded-xl bg-brand-500 text-white font-bold">Continue shopping</a>
+                <a href="{% url 'core:cart' %}"
+                    class="px-6 py-3 rounded-xl border border-slate-200 dark:border-white/10 font-bold">View cart</a>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

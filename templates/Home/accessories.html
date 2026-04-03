@@ -1,0 +1,1186 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="NexusBuild - Build your ultimate reality with expertly curated PC components. Shop CPUs, GPUs, and custom builds."
+    />
+    <meta property="og:title" content="NexusBuild | Ultimate PC Hardware" />
+    <meta
+      property="og:description"
+      content="Expertly curated components for gamers and creators."
+    />
+    <meta property="og:type" content="website" />
+    <title>Accessories | NexusBuild</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: ["class", '[data-theme="dark"]'],
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Outfit"', "sans-serif"],
+              mono: ['"Space Grotesk"', "monospace"],
+            },
+            colors: {
+              brand: {
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                glow: "rgba(14, 165, 233, 0.3)",
+              },
+              accent: {
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                glow: "rgba(139, 92, 246, 0.3)",
+              },
+              dark: { bg: "#0b0f19", card: "#111827", border: "#1f2937" },
+            },
+            backgroundImage: {
+              "grid-pattern":
+                "linear-gradient(to right, rgba(148, 163, 184, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px)",
+            },
+            boxShadow: {
+              neon: "0 0 12px -3px var(--tw-shadow-color)",
+              glass: "0 8px 32px 0 rgba(0, 0, 0, 0.15)",
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              "slide-up": "slideUp 0.8s ease-out forwards",
+              "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+              slideUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              slideRight: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(200%)' },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #030712; }
+      ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; border: 2px solid #030712; backdrop-filter: blur(10px); }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+      .bg-grid {
+        background-size: 40px 40px;
+        mask-image: linear-gradient(to bottom, transparent, 10% white, 90% white, transparent);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, 5% white, 95% white, transparent);
+      }
+
+      .hide-scroll::-webkit-scrollbar { display: none; }
+      .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Micro-interactions */
+      button:active, a.btn:active { transform: scale(0.95); }
+
+      /* Accessories Specific CSS */
+      .custom-checkbox:checked { background-color: #0ea5e9; border-color: #0ea5e9; }
+      .custom-checkbox:checked + div { display: block; }
+
+      ol.tree { padding-left: 0; list-style: none; }
+      ol.tree li { position: relative; margin-left: 15px; }
+      ol.tree li ol { padding-left: 15px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; border-left: 1px solid rgba(255, 255, 255, 0.1); }
+      ol.tree li.open > ol { max-height: 500px; }
+      .tree-icon { transition: transform 0.3s ease; }
+      li.open > div > .tree-icon { transform: rotate(90deg); }
+
+      .range-slider { position: relative; height: 5px; }
+      input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; pointer-events: none; position: absolute; height: 5px; top: 0; }
+      input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; height: 16px; width: 16px; border-radius: 50%; background: #0ea5e9; cursor: pointer; margin-top: -6px; position: relative; z-index: 10; border: 2px solid #fff; }
+      input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: transparent; border-radius: 2px; }
+
+      .card-img img { object-fit: contain; width: 100%; height: 100%; padding: 10px; transition: transform 0.3s ease; }
+      .card-img:hover img { transform: scale(1.1); }
+      .list-view { grid-template-columns: 1fr !important; }
+      .list-view .product-card { display: flex; align-items: center; gap: 20px; }
+      .list-view .product-card .card-img { width: 150px; height: 150px; margin-bottom: 0; }
+      .list-view .product-card .card-details { flex: 1; }
+
+      @keyframes slide-in-right { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
+      .side-sheet-anim { animation: slide-in-right 0.3s ease-out forwards; }
+
+      /* Toast Notification */
+      #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 100; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+      .toast {
+        background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(16px); border: 1px solid #e2e8f0; color: #0f172a; padding: 12px 20px; border-radius: 12px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.6); display: flex; align-items: center; gap: 12px; min-width: 250px; transform: translateY(20px); opacity: 0; transition: all 0.3s ease-out; pointer-events: auto;
+      }
+      [data-theme="dark"] .toast { background: rgba(17, 24, 39, 0.9); border-color: rgba(255, 255, 255, 0.1); color: #f8fafc; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05); }
+      .toast.show { transform: translateY(0); opacity: 1; }
+      .toast-icon { color: #0ea5e9; font-size: 1.25rem; }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 dark:bg-dark-bg text-slate-600 dark:text-slate-300 antialiased font-mono Monaco transition-colors duration-500 pb-20 lg:pb-0 selection:bg-brand-500 selection:text-white overflow-x-hidden relative">
+    
+    <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute inset-0 bg-grid-pattern bg-grid opacity-[0.03] dark:opacity-[0.05]"></div>
+      <div class="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-brand-500/10 rounded-full blur-[80px] sm:blur-[100px] mix-blend-screen"></div>
+      <div class="absolute bottom-[20%] right-[-10%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-accent-500/10 rounded-full blur-[80px] sm:blur-[100px] mix-blend-screen"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-dark-bg/80 border-b border-slate-200/60 dark:border-white/5 transition-all duration-300">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between">
+        <a href="{% url 'core:homepage'%}" class="flex items-center gap-2 sm:gap-3 group">
+          <div class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform duration-300">
+            <i class="bi bi-cpu-fill" aria-hidden="true"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white font-mono Monaco uppercase">
+              Nexus<span class="text-brand-400">Build</span>
+            </span>
+            <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block">Premium Hardware</span>
+          </div>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          <a href="{% url 'core:homepage'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Home</a>
+          <a href="{% url 'core:prebuilt'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Prebuilt</a>
+          <a href="{% url 'core:built'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Builder</a>
+          <a href="{% url 'core:accessories'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10 transition-all font-mono Monaco">Accessories</a>
+          <a href="{% url 'core:cart'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all relative font-mono Monaco">Cart
+            <span id="cart-badge" class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"></span>
+          </a>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 relative z-[100]">
+          <button id="themeToggle" class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:border-brand-400/50 dark:hover:border-brand-500/50 hover:bg-white dark:hover:bg-white/10 hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] transition-all duration-300 group overflow-hidden" aria-label="Toggle Theme">
+            <div class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+            <div class="relative z-10 text-slate-500 dark:text-slate-400 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors duration-300">
+              <i class="bi bi-moon-stars-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 inline-block" aria-hidden="true"></i>
+            </div>
+          </button>
+          
+          <div class="h-5 sm:h-6 w-px bg-gradient-to-b from-transparent via-slate-300 dark:via-white/20 to-transparent mx-0 sm:mx-0.5 hidden sm:block"></div>
+          
+          {% if request.session.active %}
+          <div class="relative hidden sm:block">
+            <button id="profileMenuBtn" class="group flex items-center gap-2 sm:gap-2.5 pl-1 sm:pl-1.5 pr-3 sm:pr-4 py-1 sm:py-1.5 rounded-full bg-white/60 dark:bg-[#0b0f19]/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)] hover:border-brand-500/40 dark:hover:border-brand-400/40 hover:bg-white dark:hover:bg-[#111827]/90 hover:shadow-[0_4px_20px_rgba(14,165,233,0.15)] transition-all duration-300 ease-out outline-none">
+              <div class="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full z-10 before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-brand-400 before:to-accent-500 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10">
+                <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center flex-shrink-0 border-2 border-white dark:border-[#0b0f19] z-10 shadow-inner transition-transform duration-300 group-hover:scale-[0.95]">
+                  {% if request.session.user_image %}
+                    <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
+                  {% else %}
+                    <span class="text-[9px] sm:text-[11px] font-bold tracking-widest font-mono drop-shadow-sm ml-[1px]">
+                      {{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}
+                    </span>
+                  {% endif %}
+                </div>
+                <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-white dark:border-[#0b0f19] rounded-full z-20 shadow-[0_0_8px_rgba(34,197,94,0.6)] group-hover:scale-110 transition-transform duration-300"></span>
+              </div>
+              <div class="flex items-center gap-1 sm:gap-2">
+                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.session.user_name }}</span>
+                <i id="profileMenuChevron" class="bi bi-chevron-down text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-400"></i>
+              </div>
+            </button>
+
+            <div id="profileDropdown" class="absolute right-0 top-[calc(100%+8px)] sm:top-[calc(100%+12px)] w-56 sm:w-64 opacity-0 translate-y-4 scale-[0.97] pointer-events-none transition-all duration-300 origin-top-right z-50">
+              <div class="p-1.5 sm:p-2 rounded-[16px] sm:rounded-[20px] bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-2xl border-x border-b border-slate-200/60 dark:border-white/10 border-t-2 border-t-brand-500/50 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-brand-500/20 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 mb-1 bg-slate-50/50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                   <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
+                      <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
+                      <span class="relative z-10">{{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}</span>
+                   </div>
+                   <div class="flex flex-col min-w-0">
+                      <p class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">Nexus Member</p>
+                      <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.session.user_name }} {{ request.session.user_lname }}</p>
+                   </div>
+                </div>
+                <div class="flex flex-col gap-0.5 mt-1 relative z-10">
+                  <a href="{% url 'core:profile' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-white/10 hover:shadow-sm transition-all duration-300">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                      <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-brand-500 group-hover/item:-translate-y-0.5 transition-all duration-300"><i class="bi bi-person-circle text-[10px] sm:text-sm"></i></div>
+                      Account Settings
+                    </div>
+                    <i class="bi bi-chevron-right text-[8px] sm:text-[10px] text-slate-300 dark:text-slate-600 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300"></i>
+                  </a>
+                  <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent my-1"></div>
+                  <a href="{% url 'accounts:singout' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                      <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-red-500 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 group-hover/item:-translate-y-0.5 transition-all duration-300"><i class="bi bi-power text-[10px] sm:text-sm"></i></div>
+                      Sign Out
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <a href="{% url 'accounts:signin'%}" class="relative hidden sm:flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 group border border-slate-200 dark:border-white/10 hover:border-brand-500/50">
+            <div class="absolute inset-0 bg-white dark:bg-[#0b0f19] transition-colors duration-300"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"></div>
+            <div class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 z-0"></div>
+            <div class="relative z-10 flex items-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-200 group-hover:text-white transition-colors duration-300 font-mono font-bold tracking-wide text-[10px] sm:text-xs">
+              <i class="bi bi-shield-lock text-xs sm:text-sm group-hover:scale-110 transition-transform duration-300 drop-shadow-sm"></i>
+              <span class="drop-shadow-sm">LOGIN</span>
+            </div>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 max-w-[1400px] mx-auto px-4 md:px-6 py-8">
+      
+      <form id="filter-form" method="GET" action="{% url 'core:accessories'%}" class="flex flex-col lg:flex-row gap-8">
+        
+        <aside class="w-full lg:w-64 shrink-0 space-y-8">
+          <div class="lg:hidden flex justify-between items-center mb-4">
+            <h2 class="font-bold text-xl text-slate-900 dark:text-white">Filters</h2>
+            <button
+              type="button"
+              onclick="document.getElementById('filter-panel').classList.toggle('hidden')"
+              class="px-4 py-2 bg-brand-500 text-white rounded-lg text-sm"
+            >
+              <i class="bi bi-filter"></i> Toggle
+            </button>
+          </div>
+
+          <div id="filter-panel" class="hidden lg:block space-y-8">
+            
+            <div>
+  <div class="relative flex items-center">
+    <button type="submit" class="absolute left-3 text-slate-400 hover:text-brand-500 transition-colors">
+      <i class="bi bi-search text-sm"></i>
+    </button>
+    
+    <input
+      type="text"
+      name="q"
+      value="{{ search_query }}"
+      placeholder="Search..."
+      class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-700 dark:text-white outline-none focus:border-brand-500"
+      onsearch="this.form.submit()"
+    />
+  </div>
+</div>
+
+            <div>
+              <h3 class="font-bold text-slate-900 dark:text-white mb-4 uppercase text-xs tracking-widest border-b border-slate-200 dark:border-white/10 pb-2">
+                Categories
+              </h3>
+              <ol class="tree space-y-2">
+                {% for category in categories %}
+                <li>
+                  <label class="flex items-center gap-3 py-1 text-sm cursor-pointer transition-all hover:text-brand-500 {% if selected_category == category.category_id|stringformat:'s' or selected_category == category.category_name %}text-brand-500 font-bold{% else %}text-slate-600 dark:text-slate-400{% endif %}">
+                    <input type="radio" name="category" value="{{ category.category_id }}" class="hidden" onchange="this.form.submit()" {% if selected_category == category.category_id|stringformat:'s' or selected_category == category.category_name %}checked{% endif %}>
+                    <div class="w-4 h-4 border-2 border-slate-300 rounded-full flex flex-shrink-0 items-center justify-center {% if selected_category == category.category_id|stringformat:'s' or selected_category == category.category_name %}border-brand-500{% endif %}">
+                      <div class="w-2 h-2 bg-brand-500 rounded-full {% if selected_category == category.category_id|stringformat:'s' or selected_category == category.category_name %}block{% else %}hidden{% endif %}"></div>
+                    </div>
+                    {{ category.category_name }}
+                  </label>
+                </li>
+                {% empty %}
+                <p class="text-xs text-slate-500">No categories found.</p>
+                {% endfor %}
+              </ol>
+            </div>
+
+            <div>
+  <div class="flex justify-between items-center mb-4 border-b border-slate-200 dark:border-white/10 pb-2">
+    <h3 class="font-bold text-slate-900 dark:text-white uppercase text-xs tracking-widest">
+      Price Range
+    </h3>
+  </div>
+  <div class="range-slider relative h-8 pt-2">
+    <div class="h-1 bg-slate-200 dark:bg-white/10 rounded-full absolute w-full top-3"></div>
+    <div id="slider-track" class="h-1 bg-brand-500 rounded-full absolute top-3" style="left: 0%; right: 0%"></div>
+    
+    <input
+      type="range"
+      name="min_price"
+      id="min-range"
+      min="{{ absolute_min }}"
+      max="{{ absolute_max }}"
+      value="{{ current_min }}"
+      step="100"
+      oninput="updatePrice()"
+      onchange="this.form.submit()"
+      class="absolute w-full top-3 appearance-none bg-transparent pointer-events-none z-20"
+    />
+    <input
+      type="range"
+      name="max_price"
+      id="max-range"
+      min="{{ absolute_min }}"
+      max="{{ absolute_max }}"
+      value="{{ current_max }}"
+      step="100"
+      oninput="updatePrice()"
+      onchange="this.form.submit()"
+      class="absolute w-full top-3 appearance-none bg-transparent pointer-events-none z-30"
+    />
+  </div>
+  <div class="flex justify-between text-xs font-mono font-bold text-slate-500 mt-2">
+    <span>₹<span id="min-price-txt">{{ current_min }}</span></span>
+    <span>₹<span id="max-price-txt">{{ current_max }}</span></span>
+  </div>
+</div>
+<div>
+  <h3 class="font-bold text-slate-900 dark:text-white mb-4 uppercase text-xs tracking-widest border-b border-slate-200 dark:border-white/10 pb-2">
+    Brands
+  </h3>
+  <div class="space-y-3">
+    {% for brand in brands %}
+    <label class="flex items-center gap-3 cursor-pointer group">
+      <input
+        type="checkbox"
+        name="brand"
+        class="peer sr-only custom-checkbox"
+        value="{{ brand.brand_name }}"
+        onchange="this.form.submit()"
+        {% if brand.brand_name in selected_brands %}checked{% endif %}
+      />
+      <div class="w-4 h-4 border-2 border-slate-400 dark:border-slate-600 rounded flex items-center justify-center peer-checked:bg-brand-500 peer-checked:border-brand-500 transition-all">
+        <i class="bi bi-check text-white text-xs hidden"></i>
+      </div>
+      <span class="text-sm text-slate-600 dark:text-slate-400 group-hover:text-brand-500 transition-colors">
+        {{ brand.brand_name }}
+      </span>
+    </label>
+    {% empty %}
+    <p class="text-xs text-slate-500">No brands found.</p>
+    {% endfor %}
+  </div>
+</div>
+            
+            <a href="{% url 'core:accessories'%}" class="block w-full py-3 text-center border border-slate-200 dark:border-white/10 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+               CLEAR ALL FILTERS
+            </a>
+          </div>
+        </aside>
+
+        <section class="flex-1">
+          <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white font-mono">
+              All Accessories
+              <span class="text-sm font-normal text-slate-500 ml-2" id="item-count">
+                ({{ products|length }} Items)
+              </span>
+            </h1>
+
+            <div class="flex items-center gap-3">
+              <div class="flex bg-slate-100 dark:bg-white/5 rounded-lg p-1">
+                <button type="button" onclick="toggleViewMode('grid')" class="p-1.5 rounded text-slate-500 hover:text-brand-500 hover:bg-white dark:hover:bg-white/10 transition-all">
+                  <i class="bi bi-grid-fill"></i>
+                </button>
+                <button type="button" onclick="toggleViewMode('list')" class="p-1.5 rounded text-slate-500 hover:text-brand-500 hover:bg-white dark:hover:bg-white/10 transition-all">
+                  <i class="bi bi-list-ul"></i>
+                </button>
+              </div>
+              
+              <select
+                name="sort"
+                onchange="this.form.submit()"
+                class="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs px-3 py-2 outline-none focus:border-brand-500 text-slate-700 dark:text-white cursor-pointer"
+              >
+                <option value="pop" {% if current_sort == 'pop' %}selected{% endif %}>Popularity</option>
+                <option value="low" {% if current_sort == 'low' %}selected{% endif %}>Price: Low to High</option>
+                <option value="high" {% if current_sort == 'high' %}selected{% endif %}>Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300">
+            {% if products %}
+              {% for product in products %}
+              <div class="product-card group bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-2xl p-4 hover:border-brand-500/50 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-300">
+                
+                <div
+                  class="card-img relative aspect-square bg-slate-50 dark:bg-black/20 rounded-xl mb-4 overflow-hidden flex items-center justify-center cursor-pointer"
+                  onclick="openQuickView('{{ product.name|escapejs }}', {{ product.price }}, '{% if product.all_images_str %}{{ product.all_images_str }}{% else %}/static/images/default.png{% endif %}')"
+                >
+                  {% if product.on_sale %}
+                  <span class="absolute top-2 left-2 bg-brand-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">SALE</span>
+                  {% endif %}
+                  
+                  <img
+                    src="{% if product.image %}{{ product.image.url }}{% else %}/static/images/default.png{% endif %}"
+                    alt="{{ product.name }}"
+                    class="w-full h-full object-contain p-4 hover:scale-110 transition-transform duration-500"
+                  />
+                  
+                </div>
+                
+                <div class="card-details">
+                  
+                  <h3
+                    class="font-bold text-slate-900 dark:text-white mb-1 cursor-pointer hover:text-brand-500 truncate"
+                    onclick="openQuickView('{{ product.name|escapejs }}', {{ product.price }}, '{% if product.all_images_str %}{{ product.all_images_str }}{% else %}/static/images/default.png{% endif %}', '{{ product.category.category_name|escapejs }}')"
+                  >
+                    {{ product.name }}
+                  </h3>
+                  
+                  <p class="text-xs text-slate-500 mb-3">{{ product.category.name }}</p>
+                  <div class="flex justify-between items-center mt-auto">
+                    <span class="text-lg font-mono font-bold text-brand-500">₹{{ product.price }}</span>
+                    <div class="relative inline-block group">
+  <div class="absolute inset-0 bg-brand-500 rounded-full blur-[16px] group-hover:blur-[12px] opacity-10 group-hover:opacity-30 group-hover:scale-105 transition-all duration-700 pointer-events-none"></div>
+
+  <button class="relative flex items-center justify-center w-8 h-8 bg-white/[0.03] backdrop-blur-[12px] rounded-full border border-white/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.03),0_2px_6px_rgba(0,0,0,0.1)] hover:-translate-y-px active:translate-y-0 active:scale-90 transition-all duration-500 overflow-hidden group-hover:border-white/[0.12] group-hover:bg-white/[0.06]">
+    
+    <div class="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-br from-brand-500/20 via-transparent to-accent-500/10 blur-[2px] scale-[1.5] group-hover:-translate-x-1 group-hover:translate-y-1"></div>
+    
+    <div class="absolute inset-0 -translate-x-[200%] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent skew-x-12 group-hover:animate-[slideRight_3s_linear_infinite] opacity-50"></div>
+    
+    <i class="bi bi-cart-check-fill text-sm text-white/[0.8] drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)] group-hover:text-brand-400 group-hover:scale-110 transition-all duration-300 relative z-10"></i>
+    
+  </button>
+</div>
+                    <div class="flex gap-2">
+                      <button
+                        type="button"
+                        onclick="addToCart('{{ product.name|escapejs }}')"
+                        class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors"
+                      >
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="col-span-full py-12 text-center">
+                <p class="text-slate-500 text-lg">No accessories found matching your filters.</p>
+                <a href="{% url 'core:accessories'%}" class="inline-block mt-4 text-brand-500 hover:underline">Clear all filters</a>
+              </div>
+            {% endif %}
+          </div>
+        </section>
+      </form>
+    </main>
+
+    <div
+      id="quick-view-sheet"
+      class="fixed inset-0 z-[150] hidden bg-black/50 backdrop-blur-sm transition-all duration-300"
+    >
+      <div class="absolute right-0 top-0 bottom-0 w-full md:w-[600px] lg:w-[50%] bg-white dark:bg-dark-card border-l border-slate-200 dark:border-white/10 shadow-2xl p-8 overflow-y-auto side-sheet-anim flex flex-col">
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight uppercase">Product Details</h2>
+          <button onclick="closeQuickView()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center hover:rotate-90 transition-all">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <div
+            class="relative w-full h-64 md:h-80 lg:h-96 rounded-[20px] flex items-center justify-center overflow-hidden group cursor-zoom-in bg-slate-50/50 dark:bg-[#050a14]/50 border border-slate-200/60 dark:border-white/5 shadow-inner backdrop-blur-sm"
+            onmousemove="zoomImage(event)"
+            onmouseleave="resetZoom(event)"
+          >
+          <div class="absolute inset-0 bg-gradient-to-tr from-brand-500/5 to-accent-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+            <img id="qv-img" src="" class="w-full h-full object-contain p-6 transition-transform duration-300 ease-out will-change-transform drop-shadow-[0_10px_20px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_10px_20px_rgba(0,0,0,0.4)] group-hover:drop-shadow-[0_20px_30px_rgba(0,0,0,0.2)] dark:group-hover:drop-shadow-[0_20px_30px_rgba(14,165,233,0.15)]" />
+            <div class="absolute bottom-4 right-4 bg-white/80 dark:bg-black/60 backdrop-blur-md rounded-full p-2.5 text-slate-500 dark:text-slate-300 border border-slate-200/50 dark:border-white/10 shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-4 transition-all duration-300 pointer-events-none flex items-center justify-center">
+              <i class="bi bi-zoom-in text-lg"></i>
+            </div>
+          
+          </div>
+        </div>
+        <div class="relative w-full mt-2">
+          <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-dark-card to-transparent z-10 pointer-events-none"></div>
+          <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-card to-transparent z-10 pointer-events-none"></div>
+
+          <div id="qv-thumbnails" class="flex gap-2 overflow-x-auto hide-scroll pb-2 snap-x"></div>
+
+          <div>
+            <h1 id="qv-title" class="text-3xl font-bold text-slate-900 dark:text-white mb-2"></h1>
+            <div class="flex items-center gap-4 mb-4">
+              <span id="qv-price" class="text-2xl font-mono font-bold text-brand-500"></span>
+              <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 text-xs font-bold rounded uppercase border border-emerald-500/20">In Stock</span>
+              <div class="flex text-yellow-500 text-sm">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i>
+                <span class="text-slate-500 ml-2 text-xs">(4.0)</span>
+              </div>
+            </div>
+            <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+              Experience precision engineering with this premium accessory. Designed for competitive gaming and professional workflows.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200 dark:border-white/10">
+            <div class="flex flex-col gap-2">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Availability</span>
+              <button onclick="checkStock()" class="text-xs text-brand-500 hover:underline text-left">Check Store Availability</button>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Share</span>
+              <div class="flex gap-2">
+                <button onclick="shareOnSocial('twitter')" class="w-8 h-8 rounded bg-slate-100 dark:bg-white/5 hover:bg-[#1DA1F2] hover:text-white transition-colors flex items-center justify-center"><i class="bi bi-twitter-x"></i></button>
+                <button onclick="shareOnSocial('facebook')" class="w-8 h-8 rounded bg-slate-100 dark:bg-white/5 hover:bg-[#4267B2] hover:text-white transition-colors flex items-center justify-center"><i class="bi bi-facebook"></i></button>
+                <button onclick="shareProduct('Current Item')" class="w-8 h-8 rounded bg-slate-100 dark:bg-white/5 hover:bg-brand-500 hover:text-white transition-colors flex items-center justify-center"><i class="bi bi-link-45deg"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sticky bottom-0 bg-white dark:bg-dark-card pt-4 border-t border-slate-200 dark:border-white/10 mt-6 flex gap-3">
+          <button onclick="processCartAction('add', {variant_id: {{ product.variant_id }}, quantity: 1})" class="w-full py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition-all shadow-lg shadow-brand-500/20" id="qv-add-cart-btn">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="product-modal" class="fixed inset-0 z-[200] hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal()" aria-hidden="true"></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div id="modal-content" class="bg-white dark:bg-dark-card w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative animate-slide-up" tabindex="-1">
+          <button onclick="closeModal()" aria-label="Close modal" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 btn-press">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+          <div class="w-full md:w-1/2 bg-slate-100 dark:bg-[#050a14] p-8 flex items-center justify-center relative">
+            <img id="modal-img-prebuilt" src="" alt="" class="max-h-[60vh] object-contain drop-shadow-2xl" />
+          </div>
+          <div class="w-full md:w-1/2 p-8 overflow-y-auto">
+            <h2 id="modal-title-prebuilt" class="text-3xl font-black text-slate-900 dark:text-white font-mono mb-2"></h2>
+            <div id="modal-price-prebuilt" class="text-2xl font-bold text-brand-500 mb-6">₹0</div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">Specifications</h3>
+            <div class="space-y-3 mb-8" id="modal-specs"></div>
+            <form method="POST" action="" id="modal-form">
+              {% csrf_token %}
+              <input type="hidden" name="pc_id" id="modal-pc-id" value="">
+              <button
+                type="button"
+                onclick="addToCart('{{ product.name|escapejs }}', {{ product.price }}, '{% if product.image %}{{ product.image.url }}{% else %}/static/images/default.png{% endif %}', '{{ product.category.category_name|escapejs }}')"
+                class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors"
+              >
+                <i class="bi bi-cart-plus-fill" aria-hidden="true"></i> Add to Cart
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-full font-bold shadow-lg flex items-center gap-3 z-[200] transition-all duration-300 opacity-0 -translate-y-10 pointer-events-none border border-slate-800 dark:border-slate-100">
+      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+        <i class="bi bi-check text-white text-lg"></i>
+      </div>
+      <span class="font-mono text-sm" id="toast-msg">Action Successful!</span>
+    </div>
+
+    <footer class="border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-dark-card mt-12 sm:mt-16 lg:mt-20 mb-[80px] lg:mb-0 font-mono Monaco">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-10 sm:py-12 md:py-16">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+          <div class="space-y-3 sm:space-y-4">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center">
+                <i class="bi bi-cpu-fill text-sm sm:text-base" aria-hidden="true"></i>
+              </div>
+              <span class="font-bold text-lg sm:text-xl text-slate-900 dark:text-white font-mono uppercase">Nexus<span class="text-brand-400">Build</span></span>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
+              We have Great amount of experience in Building Gaming PC, Editing
+              PC & Workstation PC for our clients. We build with love and we
+              know what your PC means to you.
+            </p>
+            <div class="flex gap-3 sm:gap-4 pt-1 sm:pt-2">
+              <a href="#" aria-label="Facebook" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-brand-500 hover:text-white transition-colors"><i class="bi bi-facebook text-sm" aria-hidden="true"></i></a>
+              <a href="#" aria-label="X (Twitter)" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-brand-500 hover:text-white transition-colors"><i class="bi bi-twitter-x text-sm" aria-hidden="true"></i></a>
+              <a href="#" aria-label="Instagram" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 dark:bg-white/5 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-brand-500 hover:text-white transition-colors"><i class="bi bi-instagram text-sm" aria-hidden="true"></i></a>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-brand-500 dark:text-brand-400 font-bold text-base sm:text-lg mb-4 sm:mb-6 font-mono uppercase tracking-wider">Shop Categories</h3>
+            <ul class="space-y-2 sm:space-y-3">
+              {% for category in categories %}
+              <li class="relative group z-10">
+                <a href="#" class="text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm flex items-center gap-2 transition-colors cursor-pointer py-1">
+                  <i class="bi bi-chevron-right text-[10px] sm:text-xs opacity-50" aria-hidden="true"></i>
+                  {{ category.name }}
+                </a>
+                {% if category.subcategories.all %}
+                <div class="absolute left-6 top-6 hidden group-hover:block w-36 sm:w-40 bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
+                  <ul class="py-1">
+                    {% for subcategory in category.subcategories.all %}
+                    <li>
+                      <a href="#" class="block px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">
+                        {{ subcategory.name }}
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-brand-500 dark:text-brand-400 font-bold text-base sm:text-lg mb-4 sm:mb-6 font-mono uppercase tracking-wider">Quick Links</h3>
+            <ul class="space-y-2 sm:space-y-3">
+              <li><a href="contact.html" class="text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">Contact Us</a></li>
+              <li><a href="about.html" class="text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">About Us</a></li>
+              <li><a href="policy.html" class="text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">Terms & Conditions</a></li>
+              <li><a href="policy.html" class="text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">Privacy Policy</a></li>
+              <li><a href="policy.html" class="text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-401 text-xs sm:text-sm transition-colors">Refund Policy</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-brand-500 dark:text-brand-400 font-bold text-base sm:text-lg mb-4 sm:mb-6 font-mono uppercase tracking-wider">Information</h3>
+            <ul class="space-y-3 sm:space-y-4">
+              <li class="flex items-start gap-2 sm:gap-3">
+                <i class="bi bi-geo-alt-fill text-brand-500 mt-0.5 sm:mt-1 text-sm sm:text-base" aria-hidden="true"></i>
+                <span class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-snug">305, 3rd Floor, Gedore House 51-52, Nehru Place, New Delhi 110019</span>
+              </li>
+              <li class="flex items-start gap-2 sm:gap-3">
+                <i class="bi bi-telephone-fill text-brand-500 mt-0.5 sm:mt-1 text-sm sm:text-base" aria-hidden="true"></i>
+                <a href="tel:+917016455514" class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm hover:text-brand-500 transition-colors">+91-7016455514</a>
+              </li>
+              <li class="flex items-start gap-2 sm:gap-3">
+                <i class="bi bi-clock-fill text-brand-500 mt-0.5 sm:mt-1 text-sm sm:text-base" aria-hidden="true"></i>
+                <span class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-snug">11am-6pm (Mon-Sat) Sunday Holiday</span>
+              </li>
+              <li class="flex items-start gap-2 sm:gap-3">
+                <i class="bi bi-envelope-fill text-brand-500 mt-0.5 sm:mt-1 text-sm sm:text-base" aria-hidden="true"></i>
+                <a href="mailto:support@nexusbuild.com" class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm hover:text-brand-500 transition-colors break-all">support@nexusbuild.com</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-200 dark:border-white/10 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center">
+          <p class="text-[10px] sm:text-xs text-slate-500">© 2026 NexusBuild Inc. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>    
+
+    <nav class="lg:hidden fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 w-max max-w-[calc(100%-1rem)] sm:max-w-max z-[100] p-1.5 rounded-full bg-white/40 dark:bg-[#0b0f19]/50 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.05)] transition-all duration-500">
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-500/5 via-transparent to-accent-500/5 rounded-full pointer-events-none"></div>
+
+      <div class="relative z-10 flex items-center gap-1 sm:gap-2 overflow-x-auto hide-scroll snap-x snap-mandatory overscroll-x-contain px-1">
+        <a href="{% url 'core:homepage' %}" class="snap-center shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 active:scale-90 group relative">
+          <i class="bi bi-house-door-fill text-lg sm:text-xl group-active:scale-90 transition-transform duration-300"></i>
+        </a>
+
+        <a href="{% url 'core:prebuilt' %}" class="snap-center shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 active:scale-90 group relative">
+          <i class="bi bi-pc-display text-lg sm:text-xl group-active:scale-90 transition-transform duration-300"></i>
+        </a>
+
+        <a href="{% url 'core:built' %}" class="snap-center shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 active:scale-90 group relative">
+          <i class="bi bi-cpu text-lg sm:text-xl group-active:scale-90 transition-transform duration-300"></i>
+        </a>
+
+        <a href="" class="snap-center shrink-0 flex items-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 text-white shadow-[0_4px_15px_rgba(14,165,233,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 transform active:scale-95">
+          <i class="bi bi-headphones text-base sm:text-[1.1rem] drop-shadow-sm"></i>
+          <span class="text-[10px] sm:text-xs font-bold tracking-widest font-mono drop-shadow-sm hidden xs:inline sm:inline">ACC.</span>
+        </a>
+
+        <a href="cart.html" class="snap-center shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 active:scale-90 relative group">
+          <i class="bi bi-cart text-lg sm:text-xl group-active:scale-90 transition-transform duration-300 relative z-10"></i>
+          <span class="mobile-cart-badge absolute top-1.5 sm:top-[10px] right-1.5 sm:right-[10px] w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500 border-2 border-white dark:border-[#0b0f19] shadow-[0_0_10px_rgba(239,68,68,0.8)] opacity-0 group-hover:opacity-100 transition-all duration-300 z-20"></span>
+        </a>
+
+        <a href="{% if request.session.active %}{% else %}{% endif %}" class="snap-center shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 active:scale-90 group relative">
+          {% if request.session.active %}
+            <div class="relative group-active:scale-90 transition-transform duration-300">
+              <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border-[1.5px] border-white/80 dark:border-white/20 shadow-sm">
+                {% if request.session.user_image %}
+                  <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
+                {% else %}
+                   <div class="w-full h-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-[9px] sm:text-[10px] font-black font-mono text-white shadow-inner">
+                     {{ request.session.user_name|make_list|first|upper }}
+                   </div>
+                {% endif %}
+              </div>
+              <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-400 border-[1.5px] border-white dark:border-[#0b0f19] rounded-full shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+            </div>
+          {% else %}
+            <i class="bi bi-person text-lg sm:text-[1.3rem] group-active:scale-90 transition-transform duration-300"></i>
+          {% endif %}
+        </a>
+
+        <button class="snap-center shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 active:scale-90 group relative" aria-label="More Menu">
+          <i class="bi bi-grid text-lg sm:text-xl group-active:scale-90 transition-transform duration-300"></i>
+        </button>
+
+      </div>
+    </nav>
+
+    <script>
+      let cartCount = 0;
+
+      // --- Pure UI Functions (Accessories Logic) ---
+      function toggleViewMode(mode) {
+        const grid = document.getElementById("product-grid");
+        if(mode === "list") {
+          grid.classList.add("list-view");
+          grid.classList.remove("grid-cols-1", "sm:grid-cols-2", "lg:grid-cols-3");
+        } else {
+          grid.classList.remove("list-view");
+          grid.classList.add("grid-cols-1", "sm:grid-cols-2", "lg:grid-cols-3");
+        }
+      }
+
+      // Updated openQuickView to accept an array of image URLs
+// Notice we added 'category' to the parameters here
+      function openQuickView(title, price, imageString, category) {
+        const images = imageString ? imageString.split(',') : ['/static/images/default.png'];
+
+        document.getElementById("qv-title").innerText = title;
+        document.getElementById("qv-price").innerText = "₹" + price.toLocaleString();
+
+        const mainImg = document.getElementById("qv-img");
+        mainImg.src = images[0];
+        mainImg.style.transform = "scale(1)"; 
+
+        const thumbContainer = document.getElementById("qv-thumbnails");
+        thumbContainer.innerHTML = ""; 
+
+        if (images.length > 1) {
+          images.forEach((imgSrc, index) => {
+            const thumbBtn = document.createElement("button");
+            const borderClass = index === 0 ? 'border-brand-500' : 'border-transparent hover:border-brand-500/50';
+            
+            thumbBtn.className = `w-16 h-16 md:w-20 md:h-20 shrink-0 snap-start rounded-xl border-2 overflow-hidden bg-slate-50 dark:bg-black/20 transition-all ${borderClass}`;
+            thumbBtn.onclick = () => changeQuickViewImage(imgSrc, thumbBtn);
+
+            const img = document.createElement("img");
+            img.src = imgSrc;
+            img.className = "w-full h-full object-contain p-2";
+
+            thumbBtn.appendChild(img);
+            thumbContainer.appendChild(thumbBtn);
+          });
+        }
+
+        // --- NEW: Attach the real product data to the Modal's Add to Cart button ---
+        const qvAddBtn = document.getElementById("qv-add-cart-btn");
+        if (qvAddBtn) {
+          qvAddBtn.onclick = function() {
+            addToCart(title, price, images[0], category);
+            closeQuickView(); // Closes the modal after adding to cart
+          };
+        }
+
+        document.getElementById("quick-view-sheet").classList.remove("hidden");
+      }
+
+      // Function to handle clicking on a thumbnail
+      function changeQuickViewImage(src, clickedThumb) {
+        const mainImg = document.getElementById("qv-img");
+        mainImg.src = src;
+        mainImg.style.transform = "scale(1)"; // Reset zoom when changing image
+
+        // Update border styling to show which thumbnail is active
+        const thumbs = document.getElementById("qv-thumbnails").children;
+        for (let t of thumbs) {
+          t.classList.remove("border-brand-500");
+          t.classList.add("border-transparent");
+        }
+        clickedThumb.classList.remove("border-transparent", "hover:border-brand-500/50");
+        clickedThumb.classList.add("border-brand-500");
+      }
+
+
+      // Updated closeQuickView to also clear thumbnails
+      function closeQuickView() {
+        document.getElementById("quick-view-sheet").classList.add("hidden");
+      }
+
+      // Updated addToCart to show a toast notification and update cart count badge
+      function updateCartCount() {
+        cartCount++;
+        const cartBadges = document.querySelectorAll(".mobile-cart-badge, #cart-badge");
+        cartBadges.forEach((badge) => {
+           badge.style.opacity = "1";
+           badge.style.transform = "scale(1.2)";
+           setTimeout(() => (badge.style.transform = "scale(1)"), 200);
+        });
+      }
+      
+      // New function to handle sharing on social media
+      function shareProduct(name) {
+        if (name === "Current Item") name = document.getElementById("qv-title").innerText;
+        navigator.clipboard.writeText(`Check out ${name} at Nexus!`);
+        showNotification("success", "Link Copied!");
+      }
+
+      function checkStock() {
+        showNotification("info", "Stock available nearby!");
+      }
+
+      function zoomImage(e) {
+        const img = document.getElementById("qv-img");
+        const rect = e.currentTarget.getBoundingClientRect();
+        img.style.transformOrigin = `${e.clientX - rect.left}px ${e.clientY - rect.top}px`;
+        img.style.transform = "scale(2)";
+      }
+
+      function resetZoom(e) {
+        e.currentTarget.querySelector("img").style.transform = "scale(1)";
+      }
+
+      // function toggleFavorite(btn) {
+      //   const icon = btn.querySelector("i");
+      //   icon.classList.toggle("text-red-500");
+      //   icon.classList.toggle("text-slate-400");
+      //   if (icon.classList.contains("text-red-500")) {
+      //     icon.classList.add("animate-ping");
+      //     setTimeout(() => icon.classList.remove("animate-ping"), 300);
+      //     showNotification("success", "Added to Wishlist");
+      //   }
+      // }
+
+      function showNotification(type, msg) {
+        const t = document.getElementById("toast");
+        const icon = t.querySelector("i");
+        const msgEl = document.getElementById("toast-msg");
+
+        msgEl.innerText = msg;
+        if (type === "error") {
+          icon.className = "bi bi-x-circle text-white text-lg";
+          t.querySelector("div").className = "w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shrink-0";
+        } else {
+          icon.className = "bi bi-check text-white text-lg";
+          t.querySelector("div").className = "w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0";
+        }
+
+        t.classList.remove("opacity-0", "-translate-y-10", "pointer-events-none");
+        t.classList.add("opacity-100", "translate-y-0");
+        setTimeout(() => {
+          t.classList.remove("opacity-100", "translate-y-0");
+          t.classList.add("opacity-0", "-translate-y-10", "pointer-events-none");
+        }, 3000);
+      }
+
+      function showToast(message) {
+        const toastContainer = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerHTML = `<i class="bi bi-check-circle-fill toast-icon"></i><span class="text-sm font-medium">${message}</span>`;
+        toastContainer.appendChild(toast);
+        requestAnimationFrame(() => { toast.classList.add("show"); });
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => { toast.remove(); }, 300);
+        }, 3000);
+      }
+
+      function toggleTree(el) {
+        el.classList.toggle("open");
+      }
+
+      function addToCart(name, price, image, category) {
+        // 1. Get the existing cart from browser storage, or create an empty array
+        let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+        // 2. Check if this exact product is already in the cart
+        const existingItem = cart.find((item) => item.name === name);
+        
+        if (existingItem) {
+          // If it exists, just increase the quantity
+          existingItem.quantity += 1;
+        } else {
+          // If it's new, add all the product details to the cart
+          cart.push({
+            name: name,
+            price: parseFloat(price),
+            quantity: 1,
+            type: category || 'Component',
+            image: image || '/static/images/default.png'
+          });
+        }
+
+        // 3. Save the updated cart back to the browser
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // 4. Trigger your UI animations
+        showToast(`Added <b>${name}</b> to cart!`);
+        updateCartCount();
+      }
+
+      function updatePrice() {
+    let minSlider = document.getElementById("min-range");
+    let maxSlider = document.getElementById("max-range");
+    let track = document.getElementById("slider-track");
+    let minTxt = document.getElementById("min-price-txt");
+    let maxTxt = document.getElementById("max-price-txt");
+
+    let minVal = parseInt(minSlider.value);
+    let maxVal = parseInt(maxSlider.value);
+
+    // Prevent sliders from crossing
+    if (minVal >= maxVal) {
+        // Determine which slider was moved
+        if (document.activeElement === minSlider) {
+            minSlider.value = maxVal - 100; // Keep min slightly below max
+            minVal = parseInt(minSlider.value);
+        } else {
+            maxSlider.value = minVal + 100; // Keep max slightly above min
+            maxVal = parseInt(maxSlider.value);
+        }
+    }
+
+    minTxt.innerText = minVal.toLocaleString();
+    maxTxt.innerText = maxVal.toLocaleString();
+
+    // Update the visual blue track
+    let absoluteMin = parseInt(minSlider.min);
+    let absoluteMax = parseInt(maxSlider.max);
+    let percent1 = ((minVal - absoluteMin) / (absoluteMax - absoluteMin)) * 100;
+    let percent2 = ((maxVal - absoluteMin) / (absoluteMax - absoluteMin)) * 100;
+
+    track.style.left = percent1 + "%";
+    track.style.right = (100 - percent2) + "%";
+}
+
+// Run it once when the page loads to set the initial blue track width
+document.addEventListener("DOMContentLoaded", function() {
+        // Read cart from storage on page load
+        let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+        // If there are items, show the red dot on the cart icons
+        if (totalItems > 0) {
+            cartCount = totalItems;
+            const cartBadges = document.querySelectorAll(".mobile-cart-badge, #cart-badge");
+            cartBadges.forEach(badge => badge.style.opacity = "1");
+        }
+      });
+
+
+      // --- Prebuilt Product Modal Logic (Kept for compatibility) ---
+      const products = {
+        {% for pc in prebuilt_pcs %}
+        "pc_{{ pc.id }}": {
+          id: "{{ pc.id }}",
+          name: "{{ pc.name|escapejs }}",
+          price: "₹{{ pc.price }}",
+          img: "{% if pc.image %}{{ pc.image.url }}{% else %}{% static 'images/case1.png' %}{% endif %}",
+          alt: "{{ pc.name|escapejs }}",
+          specs: [
+            {% for spec in pc.specs.all %}
+            {
+              icon: "{{ spec.icon|default:'bi-cpu' }}",
+              label: "{{ spec.label|escapejs }}",
+              val: "{{ spec.value|escapejs }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      };
+
+      let lastFocusedElement = null;
+      const modal = document.getElementById("product-modal");
+
+      window.openModal = function (id) {
+        const p = products[id];
+        if (!p || !modal) return;
+        lastFocusedElement = document.activeElement;
+        document.getElementById("modal-title-prebuilt").innerText = p.name;
+        document.getElementById("modal-price-prebuilt").innerText = p.price;
+        document.getElementById("modal-pc-id").value = p.id;
+        const imgEl = document.getElementById("modal-img-prebuilt");
+        imgEl.src = p.img;
+        imgEl.alt = p.alt || p.name;
+        document.getElementById("modal-specs").innerHTML = p.specs.map((s) => `
+            <div class="flex items-center gap-4 p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5">
+                <div class="w-10 h-10 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center text-brand-500">
+                    <i class="bi ${s.icon} text-lg" aria-hidden="true"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">${s.label}</div>
+                    <div class="font-semibold text-slate-700 dark:text-white text-sm">${s.val}</div>
+                </div>
+            </div>
+        `).join("");
+
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        document.getElementById("modal-content").focus();
+        window.addEventListener("keydown", handleModalKeydown);
+      };
+
+      window.closeModal = function () {
+        if (!modal) return;
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleModalKeydown);
+        if (lastFocusedElement) lastFocusedElement.focus();
+      };
+
+      window.addToCartFromModal = function (e) {
+        e.preventDefault(); 
+        const btn = document.getElementById("modal-add-btn");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<i class="bi bi-check-lg"></i> Added!`;
+        btn.classList.add("bg-green-600", "text-white");
+        btn.classList.remove("bg-slate-900", "dark:bg-white");
+
+        showToast(`Added ${document.getElementById("modal-title-prebuilt").innerText} to cart!`);
+        updateCartCount();
+
+        setTimeout(() => {
+          closeModal();
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove("bg-green-600", "text-white");
+            btn.classList.add("bg-slate-900", "dark:bg-white");
+            document.getElementById("modal-form").submit();
+          }, 300);
+        }, 800);
+      };
+
+      window.handleCardKeydown = function (e, id) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          window.openModal(id);
+        }
+      };
+
+      function handleModalKeydown(e) {
+        if (e.key === "Escape") window.closeModal();
+      }
+
+      // --- Theme & Global Logic ---
+      document.addEventListener("DOMContentLoaded", function () {
+        
+        const toggleBtn = document.getElementById("themeToggle");
+        const html = document.documentElement;
+
+        if (toggleBtn) {
+          const icon = toggleBtn.querySelector("i");
+
+          function updateIcon() {
+            const isDark = html.getAttribute("data-theme") === "dark";
+            icon.className = isDark ? "bi bi-sun-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] inline-block" : "bi bi-moon-stars-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] inline-block";
+            toggleBtn.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
+          }
+
+          function initTheme() {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "light") {
+              html.removeAttribute("data-theme");
+            } else if (savedTheme === "dark") {
+              html.setAttribute("data-theme", "dark");
+            } else {
+              const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+              if (prefersDark) html.setAttribute("data-theme", "dark");
+              else html.removeAttribute("data-theme");
+            }
+            updateIcon();
+          }
+
+          toggleBtn.addEventListener("click", function () {
+            const isDark = html.getAttribute("data-theme") === "dark";
+            if (isDark) {
+              html.removeAttribute("data-theme");
+              localStorage.setItem("theme", "light");
+            } else {
+              html.setAttribute("data-theme", "dark");
+              localStorage.setItem("theme", "dark");
+            }
+            updateIcon();
+          });
+          initTheme();
+        }
+
+        // Profile Dropdown
+        const profileBtn = document.getElementById("profileMenuBtn");
+        const profileDropdown = document.getElementById("profileDropdown");
+        const profileChevron = document.getElementById("profileMenuChevron");
+
+        if (profileBtn && profileDropdown && profileChevron) {
+          profileBtn.addEventListener("click", function (event) {
+            event.stopPropagation();
+            profileDropdown.classList.toggle("opacity-0");
+            profileDropdown.classList.toggle("pointer-events-none");
+            profileDropdown.classList.toggle("translate-y-4");
+            profileDropdown.classList.toggle("scale-[0.97]");
+            profileChevron.classList.toggle("rotate-180");
+          });
+
+          document.addEventListener("click", function (event) {
+            if (!profileBtn.contains(event.target) && !profileDropdown.contains(event.target)) {
+              profileDropdown.classList.add("opacity-0", "pointer-events-none", "translate-y-4", "scale-[0.97]");
+              profileChevron.classList.remove("rotate-180");
+            }
+          });
+        }
+      });
+
+      // Function to grab Django's CSRF token for security
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
+// Single function to handle ALL cart actions dynamically
+function processCartAction(action, dataObj) {
+    // We use FormData to mimic standard HTML form submission, matching your Python view
+    const formData = new FormData();
+    formData.append('action', action);
+    
+    // Add all specific data (like variant_id or cart_item_id)
+    for (const key in dataObj) {
+        formData.append(key, dataObj[key]);
+    }
+
+    fetch('/cart/', {  // Pointing to your single cart URL
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCSRFToken(),
+            'X-Requested-With': 'XMLHttpRequest' // Tells Django this is a background request
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            if (action === 'add') {
+                showToast("Item added to cart!");
+            } else {
+                window.location.reload(); // Reload the cart page to update totals after a change
+            }
+        } else {
+            alert(data.message);
+        }
+    });
+}
+    </script>
+  </body>
+</html>
