@@ -1,5 +1,7 @@
 import hashlib
 import hmac
+import datetime
+from decimal import Decimal
 
 from django.conf import settings
 
@@ -15,21 +17,52 @@ except ImportError:
     OrderMeta = None
 
 
-def _init_cashfree():
+def _get_cashfree_client():
     if Cashfree is None:
         raise RuntimeError(
             "cashfree-pg is not installed in the active environment.")
 
-    Cashfree.XClientId = settings.CASHFREE_CLIENT_ID
-    Cashfree.XClientSecret = settings.CASHFREE_CLIENT_SECRET
     env = (settings.CASHFREE_ENV or "sandbox").lower()
-    Cashfree.XEnvironment = (
-        Cashfree.XProduction if env == "production" else Cashfree.XSandbox
+    x_environment = Cashfree.PRODUCTION if env == "production" else Cashfree.SANDBOX
+    return Cashfree(
+        XEnvironment=x_environment,
+        XClientId=settings.CASHFREE_CLIENT_ID,
+        XClientSecret=settings.CASHFREE_CLIENT_SECRET,
     )
 
 
+def _normalize_cashfree_payload(payload):
+    if payload is None:
+        return None
+    if hasattr(payload, "model_dump"):
+        return payload.model_dump(by_alias=True)
+    if hasattr(payload, "dict"):
+        return payload.dict()
+    if hasattr(payload, "to_dict"):
+        return payload.to_dict()
+    return payload
+
+
+def _make_json_serializable(obj):
+    if obj is None:
+        return None
+    if isinstance(obj, (str, bool, int, float)):
+        return obj
+    if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
+        try:
+            return obj.isoformat()
+        except Exception:
+            return str(obj)
+    if isinstance(obj, Decimal):
+        return str(obj)
+    if isinstance(obj, dict):
+        return {k: _make_json_serializable(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple, set)):
+        return [_make_json_serializable(v) for v in obj]
+    return str(obj)
+
+
 def create_cashfree_order(amount, currency, customer_details, order_meta):
-    _init_cashfree()
     x_api_version = settings.CASHFREE_API_VERSION
     customer = CustomerDetails(**customer_details)
     meta = OrderMeta(**order_meta) if order_meta else None
@@ -39,15 +72,16 @@ def create_cashfree_order(amount, currency, customer_details, order_meta):
         customer_details=customer,
         order_meta=meta,
     )
-    response = Cashfree().PGCreateOrder(x_api_version, order_request, None, None)
-    return response.data
+    client = _get_cashfree_client()
+    response = client.PGCreateOrder(x_api_version, order_request, None, None)
+    return _make_json_serializable(_normalize_cashfree_payload(response.data))
 
 
 def fetch_cashfree_order(order_id):
-    _init_cashfree()
     x_api_version = settings.CASHFREE_API_VERSION
-    response = Cashfree().PGFetchOrder(x_api_version, order_id, None)
-    return response.data
+    client = _get_cashfree_client()
+    response = client.PGFetchOrder(x_api_version, order_id, None)
+    return _make_json_serializable(_normalize_cashfree_payload(response.data))
 
 
 def verify_cashfree_signature(payload_body, signature, secret):

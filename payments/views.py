@@ -1,5 +1,7 @@
 from decimal import Decimal, ROUND_HALF_UP
 import json
+import logging
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.db import transaction
@@ -19,6 +21,7 @@ from .models import CashfreeOrder
 from .utils import create_cashfree_order, fetch_cashfree_order, verify_cashfree_signature
 
 TAX_RATE = Decimal("0.18")
+logger = logging.getLogger(__name__)
 
 
 def _get_user_from_session(request):
@@ -119,7 +122,9 @@ def _sync_cashfree_order(cashfree_order, status, payload, payment_id=None):
 
         if cashfree_order.order_id:
             if normalized_status == "paid":
-                cashfree_order.order.status = "completed"
+                # Keep fulfillment status separate from payment; leave as pending until shipped/delivered.
+                if cashfree_order.order.status != "completed":
+                    cashfree_order.order.status = "pending"
             elif normalized_status == "cancelled":
                 cashfree_order.order.status = "cancelled"
             else:
@@ -285,11 +290,12 @@ def create_order(request):
     order, invoice = _create_order_records(user, cart, address, total, items)
 
     return_url = request.build_absolute_uri(reverse("payments:payment_return"))
+    return_url = f"{return_url}?{urlencode({'business_order_id': order.order_id})}"
     notify_url = request.build_absolute_uri(
         reverse("payments:payment_webhook"))
 
     customer_details = {
-        "customer_id": str(user.user_id),
+        "customer_id": f"user_{user.user_id}",
         "customer_phone": str(user.phone_number),
         "customer_email": user.email,
     }
@@ -306,8 +312,15 @@ def create_order(request):
             customer_details=customer_details,
             order_meta=order_meta,
         )
-    except Exception:
+    except Exception as exc:
         order.delete()
+        logger.exception("Cashfree order creation failed")
+        if settings.DEBUG:
+            return JsonResponse(
+                {"error": "Cashfree order creation failed.",
+                    "detail": str(exc)},
+                status=502,
+            )
         return JsonResponse({"error": "Cashfree order creation failed."}, status=502)
 
     if not order_data or not order_data.get("order_id"):
@@ -347,6 +360,13 @@ def payment_return(request):
         or request.GET.get("cf_order_id")
         or request.GET.get("orderId")
     )
+    business_order_id = request.GET.get("business_order_id")
+    if not cf_order_id and business_order_id:
+        cashfree_order = CashfreeOrder.objects.select_related("order", "invoice").filter(
+            order__order_id=business_order_id
+        ).first()
+        if cashfree_order:
+            cf_order_id = cashfree_order.cf_order_id
 
     status = "unknown"
     if cf_order_id:
@@ -368,8 +388,9 @@ def payment_return(request):
         except Exception:
             status = "unknown"
 
+    display_order_id = cf_order_id or business_order_id or "-"
     context = {
-        "order_id": cf_order_id,
+        "order_id": display_order_id,
         "status": status,
     }
     return render(request, "Home/payment_status.html", context)

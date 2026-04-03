@@ -375,7 +375,52 @@ def pro_builds(request):
 
 
 def pro_order(request):
-    return render(request, "Home/pro_order_history.html")
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return redirect("accounts:signin")
+
+    try:
+        user = User.objects.get(user_id=user_id)
+    except User.DoesNotExist:
+        return redirect("accounts:signin")
+
+    orders_qs = (
+        Order.objects.filter(user=user)
+        .prefetch_related("items__variant__product")
+        .order_by("-created_at")
+    )
+
+    status_map = {
+        "pending": "Processing",
+        "completed": "Delivered",
+        "cancelled": "Cancelled",
+    }
+
+    orders = []
+    for order in orders_qs:
+        items = list(order.items.all())
+        first_item = items[0] if items else None
+        product = first_item.variant.product if first_item else None
+
+        total_qty = sum(item.quantity for item in items) if items else 0
+        orders.append(
+            {
+                "order_number": order.order_id,
+                "status": status_map.get(order.status, order.status),
+                "created_at": order.created_at,
+                "total_price": order.total_amount,
+                "title": product.product_name if product else "Order",
+                "description": product.description if product else "",
+                "quantity": total_qty,
+                "build_status": status_map.get(order.status, "Processing"),
+            }
+        )
+
+    context = {
+        "orders": orders,
+    }
+
+    return render(request, "Home/pro_order_history.html", context)
 
 
 def pro_security(request):
