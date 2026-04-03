@@ -86,9 +86,11 @@
                                         {{ address.address }}
                                     </div>
                                     <div class="text-xs text-slate-500">
-                                        {{ address.pincode.area_name }}, {{ address.pincode.city }} - {{
-                                        address.pincode.pincode }}
-                                        {% if address.is_primary %}(Primary){% endif %}
+                                        {% if address.pincode %}
+                                            {{ address.pincode.area_name }}, {{ address.pincode.city }} - {{ address.pincode.pincode }} {% if addresses|length > 1 and address.is_primary %}(Primary){% endif %}
+                                        {% else %}
+                                            {{ address.address }} {% if addresses|length > 1 and address.is_primary %}(Primary){% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </label>
