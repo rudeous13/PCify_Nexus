@@ -1166,7 +1166,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // Function to grab Django's CSRF token for security
 function getCSRFToken() {
-    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    // Try standard Django {% csrf_token %} tag
+    let token = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (token) return token.value;
+    
+    // Fallback to custom id (if page has <input id="csrf-token">)
+    token = document.querySelector('#csrf-token');
+    if (token) return token.value;
+    
+    // Fallback to reading from cookies
+    const name = 'csrftoken';
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue || '';
 }
 
 // Single function to handle ALL cart actions dynamically
@@ -1180,16 +1201,27 @@ function processCartAction(action, dataObj) {
         formData.append(key, dataObj[key]);
     }
 
-    fetch('/cart/', {  // Pointing to your single cart URL
+    const csrfToken = getCSRFToken();
+    console.log('CSRF Token:', csrfToken ? 'Found' : 'NOT FOUND');
+    console.log('Sending action:', action, 'with data:', dataObj);
+
+    fetch('/cart', {  // Pointing to your single cart URL
         method: 'POST',
         headers: {
-            'X-CSRFToken': getCSRFToken(),
+            'X-CSRFToken': csrfToken,
             'X-Requested-With': 'XMLHttpRequest' // Tells Django this is a background request
         },
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            console.error('Server error:', response.status, response.statusText);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.status === 'success') {
             if (action === 'add') {
                 showToast("Item added to cart!");
@@ -1197,8 +1229,12 @@ function processCartAction(action, dataObj) {
                 window.location.reload(); // Reload the cart page to update totals after a change
             }
         } else {
-            alert(data.message);
+            alert(data.message || 'Error: ' + JSON.stringify(data));
         }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('Network error: ' + error.message);
     });
 }
     </script>
