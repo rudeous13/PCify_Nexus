@@ -110,7 +110,7 @@
                     <div class="space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">First Name</label>
                       <div class="relative">
-                          <input type="text" name="first_name" value="{{ request.user.first_name }}" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" name="first_name" value="{{ first_name }}" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
                           <i class="bi bi-person absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -118,7 +118,7 @@
                     <div class="space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Last Name</label>
                       <div class="relative">
-                          <input type="text" name="last_name" value="{{ request.user.last_name }}" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" name="last_name" value="{{ last_name }}" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
                           <i class="bi bi-person absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -126,7 +126,7 @@
                     <div class="md:col-span-2 space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Email Address</label>
                       <div class="relative">
-                          <input type="email" name="email" value="{{ request.user.email }}" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="email" name="email" value="{{ email }}" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
                           <i class="bi bi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -134,7 +134,7 @@
                     <div class="md:col-span-2 space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Street Address</label>
                       <div class="relative">
-                          <input type="text" name="street_address" value="{{ request.user.profile.street_address|default:'' }}" placeholder="123 Example St, Apt 4" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" name="street_address" value="{{ street_address }}" placeholder="123 Example St, Apt 4" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
                           <i class="bi bi-geo-alt absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -142,7 +142,7 @@
                     <div class="space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Area</label>
                       <div class="relative">
-                          <input type="text" name="area" value="{{ request.user.profile.area|default:'' }}" placeholder="Area / Locality" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" name="area" value="{{ area }}" placeholder="Area / Locality" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
                           <i class="bi bi-map absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -150,7 +150,7 @@
                     <div class="space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Pincode</label>
                       <div class="relative">
-                          <input type="text" name="pincode" value="{{ request.user.profile.pincode|default:'' }}" placeholder="Postal / Zip Code" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" name="pincode" value="{{ pincode }}" placeholder="Postal / Zip Code" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
                           <i class="bi bi-pin-map absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
