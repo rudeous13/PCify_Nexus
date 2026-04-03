@@ -104,7 +104,7 @@
                     Personal Information
                   </h3>
                   
-                  <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6" autocomplete="off">
                     {% csrf_token %}
                     
                     <div class="space-y-2">
@@ -134,7 +134,7 @@
                     <div class="md:col-span-2 space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Street Address</label>
                       <div class="relative">
-                          <input type="text" name="street_address" value="{{ street_address }}" placeholder="123 Example St, Apt 4" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" value="{{ street_address }}" placeholder="Manage addresses below" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none text-slate-900 dark:text-white shadow-sm font-medium" disabled />
                           <i class="bi bi-geo-alt absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -142,7 +142,7 @@
                     <div class="space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Area</label>
                       <div class="relative">
-                          <input type="text" name="area" value="{{ area }}" placeholder="Area / Locality" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" value="{{ area }}" placeholder="Manage addresses below" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none text-slate-900 dark:text-white shadow-sm font-medium" disabled />
                           <i class="bi bi-map absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -150,7 +150,7 @@
                     <div class="space-y-2">
                       <label class="block text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Pincode</label>
                       <div class="relative">
-                          <input type="text" name="pincode" value="{{ pincode }}" placeholder="Postal / Zip Code" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-dark-card focus:ring-4 focus:ring-brand-500/20 transition-all text-slate-900 dark:text-white shadow-sm font-medium" />
+                          <input type="text" value="{{ pincode }}" placeholder="Manage addresses below" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-4 pl-12 outline-none text-slate-900 dark:text-white shadow-sm font-medium" disabled />
                           <i class="bi bi-pin-map absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       </div>
                     </div>
@@ -163,6 +163,83 @@
                   </form>
                 </div>
               </div>
+
+                              <div class="relative bg-white/80 dark:bg-dark-card/80 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-[2rem] p-1 shadow-xl shadow-slate-200/50 dark:shadow-none group hover:shadow-brand-500/10 transition-all duration-500 overflow-hidden">
+                                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+                                <div class="relative bg-white/90 dark:bg-dark-card/90 rounded-[1.75rem] p-6 md:p-8 border border-white/50 dark:border-white/5 group-hover:border-brand-500/30 transition-colors z-10">
+                                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-accent-400 to-accent-600 rounded-xl text-white flex items-center justify-center text-xl shadow-lg">
+                                      <i class="bi bi-geo-alt-fill"></i>
+                                    </div>
+                                    Manage Addresses
+                                  </h3>
+
+                                  <div class="mb-4">
+                                    {% if addresses %}
+                                    <div class="space-y-3">
+                                      {% for addr in addresses %}
+                                      <div class="flex items-center justify-between border border-slate-200 dark:border-white/10 rounded-2xl p-4">
+                                        <div>
+                                          <div class="font-semibold text-slate-900 dark:text-white">{{ addr.address }}</div>
+                                          <div class="text-xs text-slate-500">{{ addr.pincode.area_name }}, {{ addr.pincode.city }} - {{ addr.pincode.pincode }}</div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                          <form method="POST" class="inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="set_primary" />
+                                            <input type="hidden" name="address_id" value="{{ addr.address_id }}" />
+                                            <button type="submit" class="px-3 py-2 rounded-lg text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">{% if addr.is_primary %}Primary{% else %}Set primary{% endif %}</button>
+                                          </form>
+                                          <button
+                                            type="button"
+                                            class="px-3 py-2 rounded-lg text-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10"
+                                            data-edit-address
+                                            data-address-id="{{ addr.address_id }}"
+                                            data-address="{{ addr.address }}"
+                                            data-area="{{ addr.pincode.area_name }}"
+                                            data-pincode="{{ addr.pincode.pincode }}"
+                                            data-is-primary="{{ addr.is_primary }}">
+                                            Edit
+                                          </button>
+                                          <form method="POST" class="inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="delete_address" />
+                                            <input type="hidden" name="address_id" value="{{ addr.address_id }}" />
+                                            <button type="submit" class="px-3 py-2 rounded-lg text-sm bg-red-50 dark:bg-red-700/10 border border-red-200 dark:border-red-500/20 text-red-600">Delete</button>
+                                          </form>
+                                        </div>
+                                      </div>
+                                      {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <div class="rounded-2xl border border-slate-200 dark:border-white/10 p-4 text-sm text-slate-600 dark:text-slate-300">No saved addresses yet.</div>
+                                    {% endif %}
+                                  </div>
+
+                                  <div class="mt-4">
+                                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-3">Add New Address</h4>
+                                    <form id="addressForm" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="action" value="add_address" />
+                                      <input type="hidden" name="address_id" value="" />
+                                      <div class="md:col-span-2">
+                                        <input type="text" name="street_address" placeholder="Street address" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-3 outline-none" autocomplete="street-address" />
+                                      </div>
+                                      <div>
+                                        <input type="text" name="area" placeholder="Area / Locality" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-3 outline-none" autocomplete="address-level2" />
+                                      </div>
+                                      <div>
+                                        <input type="text" name="pincode" placeholder="Pincode" class="w-full bg-slate-50/80 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/10 rounded-xl p-3 outline-none" autocomplete="postal-code" />
+                                      </div>
+                                      <div class="flex items-center gap-3 md:col-span-2">
+                                        <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300"><input type="checkbox" name="make_primary" /> Make primary</label>
+                                        <button id="addressSubmit" type="submit" class="ml-auto px-4 py-2 rounded-xl bg-brand-500 text-white font-bold">Add Address</button>
+                                        <button id="addressCancel" type="button" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hidden">Cancel</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
 
               <div class="relative bg-red-50/50 dark:bg-red-500/5 backdrop-blur-xl border border-red-200 dark:border-red-500/20 rounded-[2rem] p-1 shadow-sm group hover:shadow-red-500/10 transition-all duration-500 overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full blur-[60px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
@@ -256,6 +333,45 @@
       }
 
       initTheme();
+
+      // Address edit button behavior
+      const addressForm = document.getElementById('addressForm');
+      const addressSubmit = document.getElementById('addressSubmit');
+      const addressCancel = document.getElementById('addressCancel');
+
+      if (addressForm) {
+        const actionInput = addressForm.querySelector('input[name="action"]');
+        const addressIdInput = addressForm.querySelector('input[name="address_id"]');
+        const streetInput = addressForm.querySelector('input[name="street_address"]');
+        const areaInput = addressForm.querySelector('input[name="area"]');
+        const pincodeInput = addressForm.querySelector('input[name="pincode"]');
+        const primaryInput = addressForm.querySelector('input[name="make_primary"]');
+
+        document.querySelectorAll('[data-edit-address]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            actionInput.value = 'edit_address';
+            addressIdInput.value = btn.getAttribute('data-address-id') || '';
+            streetInput.value = btn.getAttribute('data-address') || '';
+            areaInput.value = btn.getAttribute('data-area') || '';
+            pincodeInput.value = btn.getAttribute('data-pincode') || '';
+            primaryInput.checked = btn.getAttribute('data-is-primary') === 'True';
+            addressSubmit.textContent = 'Save Address';
+            addressCancel.classList.remove('hidden');
+            streetInput.focus();
+          });
+        });
+
+        addressCancel.addEventListener('click', () => {
+          actionInput.value = 'add_address';
+          addressIdInput.value = '';
+          streetInput.value = '';
+          areaInput.value = '';
+          pincodeInput.value = '';
+          primaryInput.checked = false;
+          addressSubmit.textContent = 'Add Address';
+          addressCancel.classList.add('hidden');
+        });
+      }
     </script>
   </body>
 </html>
