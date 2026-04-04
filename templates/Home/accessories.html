@@ -987,9 +987,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const cartBadges = document.querySelectorAll(".mobile-cart-badge, #cart-badge");
             cartBadges.forEach(badge => badge.style.opacity = "1");
         }
-        // If user is logged in, try to sync any localStorage cart to server once
+        // If user is logged in, sync any localStorage cart to server only on cart/checkout pages
         try {
-          if (IS_LOGGED_IN && cart.length > 0 && !sessionStorage.getItem('cart_synced')) {
+          const path = (window.location && window.location.pathname) ? window.location.pathname : '';
+          const shouldSync = path.startsWith('/cart') || path.startsWith('/checkout') || path === '/';
+          if (IS_LOGGED_IN && cart.length > 0 && !sessionStorage.getItem('cart_synced') && shouldSync) {
             cart.forEach(item => {
               if (item.variant_id) {
                 processCartAction('add', { variant_id: item.variant_id, quantity: item.quantity || 1 });

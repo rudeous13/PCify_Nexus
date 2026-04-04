@@ -157,6 +157,14 @@ def _sync_cashfree_order(cashfree_order, status, payload, payment_id=None):
                     "paid_at": timezone.now(),
                 },
             )
+            # Clear the associated cart after successful payment to avoid keeping purchased items
+            try:
+                if cashfree_order.cart:
+                    CartItem.objects.filter(cart=cashfree_order.cart).delete()
+            except Exception:
+                # Don't allow cart cleanup failures to break payment sync
+                logger.exception(
+                    "Failed to clear cart after payment for cf_order %s", cashfree_order.cf_order_id)
 
 
 def checkout(request):

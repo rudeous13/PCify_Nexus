@@ -574,27 +574,44 @@ def pro_setting(request):
                         addr_obj = Address.objects.get(
                             address_id=addr_id, user=user)
                         was_primary = addr_obj.is_primary
-                        # Keep a reference to the pincode so we can clean it up
-                        # after the address is deleted.
                         pincode_ref = addr_obj.pincode
-                        addr_obj.delete()
-
-                        # If the deleted address was primary, promote another address to primary
-                        if was_primary:
-                            next_addr = Address.objects.filter(
-                                user=user).first()
-                            if next_addr:
-                                next_addr.is_primary = True
-                                next_addr.save()
-
-                        # If the pincode row is now orphaned (no addresses reference it),
-                        # remove it to avoid stale pincode/area entries.
+                        # Attempt to delete; if Address is referenced by Orders (RESTRICT),
+                        # fall back to disassociating it from the user so Orders keep their FK.
+                        from django.db.models.deletion import RestrictedError
                         try:
-                            if pincode_ref and not Address.objects.filter(pincode=pincode_ref).exists():
-                                pincode_ref.delete()
-                        except Exception:
-                            # Be conservative: ignore delete errors and continue.
-                            pass
+                            addr_obj.delete()
+                        except RestrictedError:
+                            # Remove ownership so it no longer appears in user's address list
+                            addr_obj.user = None
+                            addr_obj.is_primary = False
+                            addr_obj.save()
+
+                            # If deleted address was primary, promote another address to primary
+                            if was_primary:
+                                next_addr = Address.objects.filter(
+                                    user=user).first()
+                                if next_addr:
+                                    next_addr.is_primary = True
+                                    next_addr.save()
+
+                            # When we couldn't delete the address, do not attempt to delete the pincode
+                            pincode_ref = None
+
+                        else:
+                            # Successfully deleted: if it was primary, promote another; and
+                            # remove orphaned pincode rows.
+                            if was_primary:
+                                next_addr = Address.objects.filter(
+                                    user=user).first()
+                                if next_addr:
+                                    next_addr.is_primary = True
+                                    next_addr.save()
+
+                            try:
+                                if pincode_ref and not Address.objects.filter(pincode=pincode_ref).exists():
+                                    pincode_ref.delete()
+                            except Exception:
+                                pass
                     except Address.DoesNotExist:
                         pass
 

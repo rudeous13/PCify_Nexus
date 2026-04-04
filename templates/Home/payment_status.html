@@ -56,6 +56,21 @@
             </div>
         </div>
     </main>
+            <script>
+                // If payment succeeded, clear client-side cart to avoid re-syncing items back to server
+                (function() {
+                    try {
+                        const status = "{{ status }}".toLowerCase();
+                        if (status === 'paid' || status === 'completed' || status === 'success') {
+                            localStorage.removeItem('cart');
+                            // mark as synced to avoid syncing later on /cart page load
+                            if (window.sessionStorage) sessionStorage.setItem('cart_synced', '1');
+                        }
+                    } catch (e) {
+                        console.warn('Failed to clear client cart after payment', e);
+                    }
+                })();
+            </script>
 </body>
 
 </html>
