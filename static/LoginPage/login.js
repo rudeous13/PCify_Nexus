@@ -6,6 +6,18 @@ function isAlphaOnly(value) {
     return /^[A-Za-z]+$/.test(value.trim());
 }
 
+function markFormError(input, message) {
+    input.classList.add('input-error');
+    const span = input.closest('.space-y-2')?.querySelector('.error-msg');
+    if (span) span.innerText = message;
+}
+
+function clearFormError(input) {
+    input.classList.remove('input-error');
+    const span = input.closest('.space-y-2')?.querySelector('.error-msg');
+    if (span) span.innerText = '';
+}
+
 const signupForm = document.querySelector('#signup-container form');
 
 
@@ -15,9 +27,7 @@ if (signupForm) {
     // Remove error on typing
     inputs.forEach(input => {
         input.addEventListener('input', () => {
-            input.classList.remove('input-error');
-            const err = input.closest('.space-y-2').querySelector('.error-msg');
-            if (err) err.innerText = '';
+            clearFormError(input);
         });
     });
 
@@ -38,9 +48,7 @@ if (signupForm) {
         function markError(input, message) {
             if (valid) firstErrorInput = input;
             valid = false;
-            input.classList.add('input-error');
-            const span = input.closest('.space-y-2').querySelector('.error-msg');
-            if (span) span.innerText = message;
+            markFormError(input, message);
             errorMessages.push(message); // New: Collect the message
             // Removed: showToast(message); // No longer call here to avoid overwriting
         }
@@ -191,7 +199,7 @@ function togglePass(id, btn) {
 const passInput = document.getElementById('signup-pass');
 if (passInput) {
     passInput.addEventListener('input', function (e) {
-        updateStrengthMeter(e.target.value);
+        updateStrengthMeter(e.target.value, 'strength-bar');
     });
 }
 
@@ -210,8 +218,9 @@ function scorePassword(pw) {
     return 4; // Strong
 }
 
-function updateStrengthMeter(val) {
-    const bar = document.getElementById('strength-bar');
+function updateStrengthMeter(val, barId = 'strength-bar') {
+    const bar = document.getElementById(barId);
+    if (!bar) return;
     if (!val) {
         bar.style.width = '0%';
         return;
@@ -225,6 +234,13 @@ function updateStrengthMeter(val) {
 
     bar.style.width = width + '%';
     bar.style.backgroundColor = color;
+}
+
+const changePassInput = document.getElementById('new-pass');
+if (changePassInput) {
+    changePassInput.addEventListener('input', function (e) {
+        updateStrengthMeter(e.target.value, 'change-strength-bar');
+    });
 }
 
 /* -----------------------------------------------------------
@@ -293,10 +309,7 @@ if (signinForm) {
 
   inputs.forEach(input=>{
     input.addEventListener("input",()=>{
-      input.classList.remove("input-error");
-
-      const err = input.closest(".space-y-2")?.querySelector(".error-msg");
-      if(err) err.innerText="";
+            clearFormError(input);
     });
   });
 
@@ -309,10 +322,7 @@ if (signinForm) {
 
     function markError(input,msg){
         valid=false;
-        input.classList.add("input-error");
-
-        const span=input.closest(".space-y-2")?.querySelector(".error-msg");
-        if(span) span.innerText=msg;
+        markFormError(input, msg);
     }
 
     if(!email.value.trim()){
@@ -329,4 +339,41 @@ if (signinForm) {
 
   });
 
+}
+
+const changePasswordForm = document.querySelector('form[action*="change-password"]');
+if (changePasswordForm) {
+    const newPass = changePasswordForm.querySelector('[name="new_password"]');
+    const confirmPass = changePasswordForm.querySelector('[name="confirm_password"]');
+    const inputs = changePasswordForm.querySelectorAll('input');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            clearFormError(input);
+        });
+    });
+
+    changePasswordForm.addEventListener('submit', (e) => {
+        let valid = true;
+
+        if (!newPass.value.trim()) {
+            markFormError(newPass, 'Password is required.');
+            valid = false;
+        } else if (scorePassword(newPass.value) < 3) {
+            markFormError(newPass, 'Password is too weak.');
+            valid = false;
+        }
+
+        if (!confirmPass.value.trim()) {
+            markFormError(confirmPass, 'Please confirm password.');
+            valid = false;
+        } else if (newPass.value !== confirmPass.value) {
+            markFormError(confirmPass, 'Passwords do not match.');
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
 }
