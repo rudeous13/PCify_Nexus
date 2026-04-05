@@ -177,6 +177,16 @@ _CF_TO_PAYMENT_STATUS = {
 }
 
 
+def _extract_payment_id(payments_list):
+    if not payments_list:
+        return None
+    for entry in payments_list:
+        if not isinstance(entry, dict):
+            continue
+        return entry.get("cf_payment_id") or entry.get("payment_id")
+    return None
+
+
 def _sync_order_payment(order, status, payload, payment_id=None):
     normalized_status = _normalize_cashfree_status(status)
 
@@ -461,6 +471,8 @@ def payment_return(request):
                 logger.info("Cashfree payments for %s: %s",
                             cf_order_id, payments_list)
 
+                fallback_payment_id = _extract_payment_id(payments_list)
+
                 # Combine order + payment data
                 combined_payload = order_data.copy() if isinstance(order_data, dict) else {}
                 combined_payload["payment"] = payments_list
@@ -470,7 +482,9 @@ def payment_return(request):
                     status=status,
                     payload=combined_payload,
                     payment_id=order_data.get(
-                        "cf_payment_id") or order_data.get("payment_id"),
+                        "cf_payment_id")
+                    or order_data.get("payment_id")
+                    or fallback_payment_id,
                 )
         except Exception as exc:
             logger.exception("Payment return processing failed")
@@ -549,6 +563,7 @@ def payment_webhook(request):
             else:
                 payments_list = payment_data if isinstance(payment_data, list) else [
                     payment_data] if payment_data else []
+            payment_id = payment_id or _extract_payment_id(payments_list)
             combined_payload = payload.copy() if isinstance(payload, dict) else {}
             combined_payload["payment"] = payments_list
             _sync_order_payment(
