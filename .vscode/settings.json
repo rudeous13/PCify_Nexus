@@ -14,6 +14,7 @@
         "/^python manage\\.py test payments\\.tests\\.PaymentMethodDetectionTest -v 2$/": {
             "approve": true,
             "matchCommandLine": true
-        }
+        },
+        "conda": true
     }
 }

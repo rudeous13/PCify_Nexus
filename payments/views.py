@@ -168,26 +168,47 @@ def _create_order_records(user, cart, address, total, items):
     return order, invoice
 
 
+_CF_TO_PAYMENT_STATUS = {
+    "paid": "completed",
+    "failed": "failed",
+    "cancelled": "failed",
+    "active": "pending",
+    "created": "pending",
+}
+
+
 def _sync_order_payment(order, status, payload, payment_id=None):
     normalized_status = _normalize_cashfree_status(status)
 
     with transaction.atomic():
-        order.payment_status = normalized_status
-        order.cf_payment_id = payment_id or order.cf_payment_id
-        order.payment_raw = payload
+        invoice = getattr(order, "invoice", None)
+        if not invoice:
+            return
+
+        payment = invoice.payments.order_by("-created_at").first()
+        if not payment:
+            return
+
+        payment.payment_status = _CF_TO_PAYMENT_STATUS.get(
+            normalized_status, "pending")
+        payment.gateway_payment_id = payment_id or payment.gateway_payment_id
+        payment.raw_response = payload
         inferred = _infer_payment_method(payload)
         if inferred:
-            order.payment_method = inferred
+            payment.payment_method = inferred
             logger.info("Order %s: payment_method set to '%s'",
                         order.order_id, inferred)
-        order.save(
-            update_fields=[
-                "payment_status",
-                "cf_payment_id",
-                "payment_raw",
-                "payment_method",
-            ]
-        )
+
+        update_fields = [
+            "payment_status",
+            "gateway_payment_id",
+            "raw_response",
+            "payment_method",
+        ]
+        if normalized_status == "paid":
+            payment.paid_at = timezone.now()
+            update_fields.append("paid_at")
+        payment.save(update_fields=update_fields)
 
         if normalized_status == "paid":
             if order.status != "completed":
@@ -198,38 +219,21 @@ def _sync_order_payment(order, status, payload, payment_id=None):
             order.status = "pending"
         order.save(update_fields=["status"])
 
-        invoice = getattr(order, "invoice", None)
-        if invoice:
-            if normalized_status == "paid":
-                invoice.status = "paid"
-                invoice.paid_amount = order.total_amount
-            else:
-                invoice.status = "unpaid"
-                invoice.paid_amount = Decimal("0.00")
-            invoice.save(update_fields=["status", "paid_amount"])
+        if normalized_status == "paid":
+            invoice.status = "paid"
+            invoice.paid_amount = order.total_amount
+        else:
+            invoice.status = "unpaid"
+            invoice.paid_amount = Decimal("0.00")
+        invoice.save(update_fields=["status", "paid_amount"])
 
-        if invoice and normalized_status == "paid":
-            Payment.objects.update_or_create(
-                invoice=invoice,
-                gateway_order_id=order.cf_order_id,
-                defaults={
-                    "amount": order.total_amount,
-                    "reference_type": "order",
-                    "reference_id": order.order_id,
-                    "payment_method": order.payment_method or _infer_payment_method(payload) or "card",
-                    "gateway": "cashfree",
-                    "gateway_payment_id": payment_id or order.cf_payment_id,
-                    "raw_response": payload,
-                    "payment_status": "completed",
-                    "paid_at": timezone.now(),
-                },
-            )
+        if normalized_status == "paid":
             try:
                 if order.cart:
                     CartItem.objects.filter(cart=order.cart).delete()
             except Exception:
                 logger.exception(
-                    "Failed to clear cart after payment for cf_order %s", order.cf_order_id)
+                    "Failed to clear cart after payment for order %s", order.order_id)
 
 
 def checkout(request):
@@ -400,27 +404,25 @@ def create_order(request):
         order.delete()
         return JsonResponse({"error": "Cashfree did not return an order."}, status=502)
 
-    order.cf_order_id = order_data.get("order_id")
-    order.payment_session_id = order_data.get("payment_session_id")
-    order.payment_status = _normalize_cashfree_status(
-        order_data.get("order_status", "created")
-    )
-    order.payment_raw = order_data
-    order.save(
-        update_fields=[
-            "cf_order_id",
-            "payment_session_id",
-            "payment_status",
-            "payment_raw",
-        ]
+    payment = Payment.objects.create(
+        invoice=invoice,
+        amount=total,
+        reference_type="order",
+        reference_id=order.order_id,
+        payment_method="card",
+        gateway="cashfree",
+        gateway_order_id=order_data.get("order_id"),
+        payment_session_id=order_data.get("payment_session_id"),
+        raw_response=order_data,
+        payment_status="pending",
     )
 
     return JsonResponse(
         {
-            "order_id": order.cf_order_id,
+            "order_id": payment.gateway_order_id,
             "business_order_id": order.order_id,
             "invoice_id": invoice.invoice_id,
-            "payment_session_id": order.payment_session_id,
+            "payment_session_id": payment.payment_session_id,
             "amount": str(total),
         }
     )
@@ -434,9 +436,11 @@ def payment_return(request):
     )
     business_order_id = request.GET.get("business_order_id")
     if not cf_order_id and business_order_id:
-        order = Order.objects.filter(order_id=business_order_id).first()
-        if order:
-            cf_order_id = order.cf_order_id
+        payment_rec = Payment.objects.filter(
+            invoice__order__order_id=business_order_id
+        ).first()
+        if payment_rec:
+            cf_order_id = payment_rec.gateway_order_id
 
     status = "unknown"
     if cf_order_id:
@@ -444,8 +448,14 @@ def payment_return(request):
             order_data = fetch_cashfree_order(cf_order_id)
             status = _normalize_cashfree_status(
                 order_data.get("order_status", status))
-            order = Order.objects.filter(cf_order_id=cf_order_id).first()
-            if order:
+            payment_rec = (
+                Payment.objects
+                .select_related("invoice__order")
+                .filter(gateway_order_id=cf_order_id)
+                .first()
+            )
+            if payment_rec:
+                order = payment_rec.invoice.order
                 # Fetch payment details — this has the payment_group field
                 payments_list = fetch_cashfree_payments_for_order(cf_order_id)
                 logger.info("Cashfree payments for %s: %s",
@@ -525,8 +535,14 @@ def payment_webhook(request):
     )
 
     if cf_order_id and order_status:
-        order = Order.objects.filter(cf_order_id=cf_order_id).first()
-        if order:
+        payment_rec = (
+            Payment.objects
+            .select_related("invoice__order")
+            .filter(gateway_order_id=cf_order_id)
+            .first()
+        )
+        if payment_rec:
+            order = payment_rec.invoice.order
             # If the webhook didn't include payment details, fetch them
             if not payment_data and cf_order_id:
                 payments_list = fetch_cashfree_payments_for_order(cf_order_id)

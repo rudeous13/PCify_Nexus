@@ -48,16 +48,6 @@ class Order(models.Model):
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
     ]
-    PAYMENT_METHODS = [
-        ('card', 'Credit/Debit Card'),
-        ('upi', 'UPI'),
-        ('wallet', 'Wallet'),
-        ('netbanking', 'Net Banking'),
-        ('cardless_emi', 'Cardless EMI'),
-        ('paypal', 'PayPal'),
-        ('cod', 'Cash on Delivery'),
-    ]
-
     order_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         'accounts.User',
@@ -83,18 +73,6 @@ class Order(models.Model):
     )
     status = models.CharField(
         max_length=15, choices=STATUSES, default='pending')
-    cf_order_id = models.CharField(max_length=100, null=True, blank=True)
-    payment_session_id = models.CharField(
-        max_length=200, null=True, blank=True)
-    cf_payment_id = models.CharField(max_length=100, null=True, blank=True)
-    payment_method = models.CharField(
-        max_length=20,
-        choices=PAYMENT_METHODS,
-        null=True,
-        blank=True,
-    )
-    payment_status = models.CharField(max_length=20, null=True, blank=True)
-    payment_raw = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -175,10 +153,12 @@ class Payment(models.Model):
     reference_type = models.CharField(max_length=20, choices=REFERENCE_TYPES)
     reference_id = models.IntegerField()
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
-    gateway = models.CharField(max_length=50, default='razorpay')
+    gateway = models.CharField(max_length=50, default='cashfree')
     gateway_payment_id = models.CharField(
         max_length=255, null=True, blank=True)
     gateway_order_id = models.CharField(max_length=255, null=True, blank=True)
+    payment_session_id = models.CharField(
+        max_length=200, null=True, blank=True)
     raw_response = models.JSONField(null=True, blank=True)
     payment_status = models.CharField(
         max_length=15, choices=STATUSES, default='pending')
