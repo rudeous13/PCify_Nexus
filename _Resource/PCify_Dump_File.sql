@@ -231,7 +231,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,7 +240,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'locations','0001_initial','2026-03-09 11:06:45.535511'),(2,'accounts','0001_initial','2026-03-09 11:06:45.574528'),(3,'accounts','0002_customer','2026-03-09 11:06:45.615195'),(4,'accounts','0003_staff','2026-03-09 11:06:45.649470'),(5,'accounts','0004_remove_staff_profile_image_user_profile_image','2026-03-09 11:06:45.672768'),(6,'accounts','0005_staffaddress_customeraddress','2026-03-09 11:06:45.832564'),(7,'accounts','0006_alter_customeraddress_unique_together_and_more','2026-03-09 11:06:46.573683'),(8,'accounts','0007_initial','2026-03-09 11:06:46.589628'),(9,'accounts','0008_alter_user_managers_alter_user_first_name_and_more','2026-03-09 11:06:46.623539'),(10,'contenttypes','0001_initial','2026-03-09 11:06:46.644951'),(11,'admin','0001_initial','2026-03-09 11:06:46.699419'),(12,'admin','0002_logentry_remove_auto_add','2026-03-09 11:06:46.707744'),(13,'admin','0003_logentry_add_action_flag_choices','2026-03-09 11:06:46.713870'),(14,'contenttypes','0002_remove_content_type_name','2026-03-09 11:06:46.746171'),(15,'auth','0001_initial','2026-03-09 11:06:46.857996'),(16,'auth','0002_alter_permission_name_max_length','2026-03-09 11:06:46.884760'),(17,'auth','0003_alter_user_email_max_length','2026-03-09 11:06:46.890457'),(18,'auth','0004_alter_user_username_opts','2026-03-09 11:06:46.898014'),(19,'auth','0005_alter_user_last_login_null','2026-03-09 11:06:46.903926'),(20,'auth','0006_require_contenttypes_0002','2026-03-09 11:06:46.906080'),(21,'auth','0007_alter_validators_add_error_messages','2026-03-09 11:06:46.911624'),(22,'auth','0008_alter_user_username_max_length','2026-03-09 11:06:46.916439'),(23,'auth','0009_alter_user_last_name_max_length','2026-03-09 11:06:46.921045'),(24,'auth','0010_alter_group_name_max_length','2026-03-09 11:06:46.933927'),(25,'auth','0011_update_proxy_permissions','2026-03-09 11:06:46.943758'),(26,'auth','0012_alter_user_first_name_max_length','2026-03-09 11:06:46.948553'),(27,'dashboard','0001_initial','2026-03-09 11:06:46.970365'),(28,'dashboard','0002_suppliers','2026-03-09 11:06:46.981440'),(29,'dashboard','0003_alter_suppliers_gst_number','2026-03-09 11:06:46.993173'),(30,'dashboard','0004_alter_suppliers_phone_number','2026-03-09 11:06:47.003429'),(31,'dashboard','0005_supplieraddress','2026-03-09 11:06:47.090718'),(32,'dashboard','0006_delete_brand_delete_category_delete_supplieraddress_and_more','2026-03-09 11:06:47.103085'),(33,'locations','0002_remove_address_pincode_delete_addresstype_and_more','2026-03-09 11:06:47.349338'),(34,'sessions','0001_initial','2026-03-09 11:06:47.371159'),(35,'accounts','0009_alter_user_profile_image','2026-03-10 10:12:51.637584'),(36,'locations','0003_initial','2026-03-10 11:14:15.410516'),(37,'inventory','0001_initial','2026-03-15 11:33:41.313423'),(38,'dashboard','0007_initial','2026-03-29 09:52:57.898519'),(39,'dashboard','0008_delete_brand_delete_category','2026-03-29 10:02:25.547822'),(40,'dashboard','0009_delete_brand_delete_category','2026-03-29 10:21:22.630170'),(41,'products','0001_initial','2026-03-29 10:23:13.814759'),(42,'products','0002_product_productvariant_productimage','2026-03-30 07:53:10.890882'),(43,'products','0003_product_description','2026-03-31 05:19:48.333391'),(44,'products','0004_storage_ram_motherboard_gpu_cpu_cabinet','2026-03-31 11:31:33.129742'),(45,'products','0005_psu','2026-03-31 11:35:52.224385'),(46,'products','0006_productreview','2026-04-01 04:32:23.468682'),(47,'builds','0001_initial','2026-04-01 04:32:23.541954'),(48,'inventory','0002_inventory_supplier_is_active_purchaseorder_and_more','2026-04-01 04:32:23.699291'),(49,'orders','0001_initial','2026-04-01 04:32:24.187119'),(50,'services','0001_initial','2026-04-01 04:32:24.295453'),(51,'products','0007_product_is_trending','2026-04-01 09:26:23.452768'),(52,'builds','0002_pcbuild_description_pcbuild_image_url_pcbuild_price','2026-04-01 10:06:12.734657'),(53,'orders','0002_order_cf_order_id_order_cf_payment_id_and_more','2026-04-05 07:07:36.796787'),(54,'payments','0001_initial','2026-04-05 07:07:37.760973'),(55,'payments','0002_add_payment_method','2026-04-05 07:07:38.016846'),(56,'payments','0003_delete_cashfreeorder','2026-04-05 07:07:38.075538');
+INSERT INTO `django_migrations` VALUES (1,'locations','0001_initial','2026-03-09 11:06:45.535511'),(2,'accounts','0001_initial','2026-03-09 11:06:45.574528'),(3,'accounts','0002_customer','2026-03-09 11:06:45.615195'),(4,'accounts','0003_staff','2026-03-09 11:06:45.649470'),(5,'accounts','0004_remove_staff_profile_image_user_profile_image','2026-03-09 11:06:45.672768'),(6,'accounts','0005_staffaddress_customeraddress','2026-03-09 11:06:45.832564'),(7,'accounts','0006_alter_customeraddress_unique_together_and_more','2026-03-09 11:06:46.573683'),(8,'accounts','0007_initial','2026-03-09 11:06:46.589628'),(9,'accounts','0008_alter_user_managers_alter_user_first_name_and_more','2026-03-09 11:06:46.623539'),(10,'contenttypes','0001_initial','2026-03-09 11:06:46.644951'),(11,'admin','0001_initial','2026-03-09 11:06:46.699419'),(12,'admin','0002_logentry_remove_auto_add','2026-03-09 11:06:46.707744'),(13,'admin','0003_logentry_add_action_flag_choices','2026-03-09 11:06:46.713870'),(14,'contenttypes','0002_remove_content_type_name','2026-03-09 11:06:46.746171'),(15,'auth','0001_initial','2026-03-09 11:06:46.857996'),(16,'auth','0002_alter_permission_name_max_length','2026-03-09 11:06:46.884760'),(17,'auth','0003_alter_user_email_max_length','2026-03-09 11:06:46.890457'),(18,'auth','0004_alter_user_username_opts','2026-03-09 11:06:46.898014'),(19,'auth','0005_alter_user_last_login_null','2026-03-09 11:06:46.903926'),(20,'auth','0006_require_contenttypes_0002','2026-03-09 11:06:46.906080'),(21,'auth','0007_alter_validators_add_error_messages','2026-03-09 11:06:46.911624'),(22,'auth','0008_alter_user_username_max_length','2026-03-09 11:06:46.916439'),(23,'auth','0009_alter_user_last_name_max_length','2026-03-09 11:06:46.921045'),(24,'auth','0010_alter_group_name_max_length','2026-03-09 11:06:46.933927'),(25,'auth','0011_update_proxy_permissions','2026-03-09 11:06:46.943758'),(26,'auth','0012_alter_user_first_name_max_length','2026-03-09 11:06:46.948553'),(27,'dashboard','0001_initial','2026-03-09 11:06:46.970365'),(28,'dashboard','0002_suppliers','2026-03-09 11:06:46.981440'),(29,'dashboard','0003_alter_suppliers_gst_number','2026-03-09 11:06:46.993173'),(30,'dashboard','0004_alter_suppliers_phone_number','2026-03-09 11:06:47.003429'),(31,'dashboard','0005_supplieraddress','2026-03-09 11:06:47.090718'),(32,'dashboard','0006_delete_brand_delete_category_delete_supplieraddress_and_more','2026-03-09 11:06:47.103085'),(33,'locations','0002_remove_address_pincode_delete_addresstype_and_more','2026-03-09 11:06:47.349338'),(34,'sessions','0001_initial','2026-03-09 11:06:47.371159'),(35,'accounts','0009_alter_user_profile_image','2026-03-10 10:12:51.637584'),(36,'locations','0003_initial','2026-03-10 11:14:15.410516'),(37,'inventory','0001_initial','2026-03-15 11:33:41.313423'),(38,'dashboard','0007_initial','2026-03-29 09:52:57.898519'),(39,'dashboard','0008_delete_brand_delete_category','2026-03-29 10:02:25.547822'),(40,'dashboard','0009_delete_brand_delete_category','2026-03-29 10:21:22.630170'),(41,'products','0001_initial','2026-03-29 10:23:13.814759'),(42,'products','0002_product_productvariant_productimage','2026-03-30 07:53:10.890882'),(43,'products','0003_product_description','2026-03-31 05:19:48.333391'),(44,'products','0004_storage_ram_motherboard_gpu_cpu_cabinet','2026-03-31 11:31:33.129742'),(45,'products','0005_psu','2026-03-31 11:35:52.224385'),(46,'products','0006_productreview','2026-04-01 04:32:23.468682'),(47,'builds','0001_initial','2026-04-01 04:32:23.541954'),(48,'inventory','0002_inventory_supplier_is_active_purchaseorder_and_more','2026-04-01 04:32:23.699291'),(49,'orders','0001_initial','2026-04-01 04:32:24.187119'),(50,'services','0001_initial','2026-04-01 04:32:24.295453'),(51,'products','0007_product_is_trending','2026-04-01 09:26:23.452768'),(52,'builds','0002_pcbuild_description_pcbuild_image_url_pcbuild_price','2026-04-01 10:06:12.734657'),(53,'orders','0002_order_cf_order_id_order_cf_payment_id_and_more','2026-04-05 07:07:36.796787'),(54,'payments','0001_initial','2026-04-05 07:07:37.760973'),(55,'payments','0002_add_payment_method','2026-04-05 07:07:38.016846'),(56,'payments','0003_delete_cashfreeorder','2026-04-05 07:07:38.075538'),(57,'orders','0003_alter_order_payment_method_and_more','2026-04-05 07:20:18.429157'),(58,'orders','0004_remove_order_cf_order_id_remove_order_cf_payment_id_and_more','2026-04-05 16:35:32.125235'),(59,'orders','0004_move_cf_fields_to_payment','2026-04-05 17:20:37.917631'),(60,'orders','0005_remove_payment_session_id','2026-04-05 17:27:42.161987'),(61,'orders','0006_clean_payment_fields','2026-04-05 17:36:56.581737'),(62,'orders','0005_clean_orphaned_payment_fields','2026-04-05 17:38:07.502921');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -266,7 +266,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('mmi8ngbnpthw1yhyvkrkrxislrtdlj0x','.eJxVjMsOwiAQRf-FtSG8BqhL934DGRiQqoGktCvjv2uTLnR7zzn3xQJuaw3byEuYiZ2ZZKffLWJ65LYDumO7dZ56W5c58l3hBx382ik_L4f7d1Bx1G9tdMmAkJQu5CxRySIZJ60toAroqRgiEC5DdAhT9BKjUkDJea-dJsHeH_gsOBE:1w7nHv:R4CBYrzl4Dm0tFiCqdxdRrjk9iCAuUHJVUuNRhWSnUA','2026-04-15 04:34:43.702722'),('st4szisy1rk0cbnnrb60wu4wewzozlww','.eJxVjMsOwiAQRf-FtSG8BqhL934DGRiQqoGktCvjv2uTLnR7zzn3xQJuaw3byEuYiZ2ZZKffLWJ65LYDumO7dZ56W5c58l3hBx382ik_L4f7d1Bx1G9tdMmAkJQu5CxRySIZJ60toAroqRgiEC5DdAhT9BKjUkDJea-dJsHeH_gsOBE:1vztl8:oVhp4NK_WFg1MfD9dA1Bh0FlqnAlW29_1cb6dS4ACVw','2026-03-24 09:52:14.291485');
+INSERT INTO `django_session` VALUES ('38nlzhuvxhoxqa3nmbc8q2wo15tizk4d','.eJyrViotTi2Kz0xRsjI004Fw8hJzU5WslMIyk7MrlaBiOVDBgMSS1BygYGJySWYZUKCkqDS1FgAqAhdx:1w9I5O:w2yUOBr5Xs30tas9Rqc6NcKBXTrt5446kTdrS4T4X48','2026-04-19 07:39:58.934354'),('mmi8ngbnpthw1yhyvkrkrxislrtdlj0x','.eJxVjMsOwiAQRf-FtSG8BqhL934DGRiQqoGktCvjv2uTLnR7zzn3xQJuaw3byEuYiZ2ZZKffLWJ65LYDumO7dZ56W5c58l3hBx382ik_L4f7d1Bx1G9tdMmAkJQu5CxRySIZJ60toAroqRgiEC5DdAhT9BKjUkDJea-dJsHeH_gsOBE:1w7nHv:R4CBYrzl4Dm0tFiCqdxdRrjk9iCAuUHJVUuNRhWSnUA','2026-04-15 04:34:43.702722'),('st4szisy1rk0cbnnrb60wu4wewzozlww','.eJxVjMsOwiAQRf-FtSG8BqhL934DGRiQqoGktCvjv2uTLnR7zzn3xQJuaw3byEuYiZ2ZZKffLWJ65LYDumO7dZ56W5c58l3hBx382ik_L4f7d1Bx1G9tdMmAkJQu5CxRySIZJ60toAroqRgiEC5DdAhT9BKjUkDJea-dJsHeH_gsOBE:1vztl8:oVhp4NK_WFg1MfD9dA1Bh0FlqnAlW29_1cb6dS4ACVw','2026-03-24 09:52:14.291485');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -445,7 +445,7 @@ CREATE TABLE `locations_address` (
   KEY `locations_address_user_id_49501546_fk_Users_user_id` (`user_id`),
   CONSTRAINT `locations_address_pincode_id_5df9fee2_fk_locations` FOREIGN KEY (`pincode_id`) REFERENCES `locations_pincode` (`pincode_id`),
   CONSTRAINT `locations_address_user_id_49501546_fk_Users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +454,7 @@ CREATE TABLE `locations_address` (
 
 LOCK TABLES `locations_address` WRITE;
 /*!40000 ALTER TABLE `locations_address` DISABLE KEYS */;
-INSERT INTO `locations_address` VALUES (3,'32, Umanager socity, rabariconly charrashta',0,1,10),(4,'33, Umanager Socity, Rabariy colony, charrasata',0,1,12),(5,'48, Ranchode sosayti, ',0,2,11),(6,'129, Ajay tenal mente, labha road',0,3,8),(7,'99, Kelasha nager, ',0,4,9);
+INSERT INTO `locations_address` VALUES (3,'32, Umanager socity, rabariconly charrashta',0,1,10),(4,'33, Umanager Socity, Rabariy colony, charrasata',0,1,12),(5,'48, Ranchode sosayti, ',0,2,11),(6,'129, Ajay tenal mente, labha road',0,3,8),(7,'99, Kelasha nager, ',0,4,9),(8,'C/1/24, OM-SHANTI NAGAR 2, NAROL, LAMBHA-VATVA ROAD',1,5,16);
 /*!40000 ALTER TABLE `locations_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -471,7 +471,7 @@ CREATE TABLE `locations_pincode` (
   `area_name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
   `city` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`pincode_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -480,7 +480,7 @@ CREATE TABLE `locations_pincode` (
 
 LOCK TABLES `locations_pincode` WRITE;
 /*!40000 ALTER TABLE `locations_pincode` DISABLE KEYS */;
-INSERT INTO `locations_pincode` VALUES (1,380026,'Amraiwadi','Ahmedabad'),(2,382440,'Vatva','Ahmedabad'),(3,380009,'Navrangpura','Ahmedabad'),(4,380054,'Thaltej','Ahmedabad');
+INSERT INTO `locations_pincode` VALUES (1,380026,'Amraiwadi','Ahmedabad'),(2,382440,'Vatva','Ahmedabad'),(3,380009,'Navrangpura','Ahmedabad'),(4,380054,'Thaltej','Ahmedabad'),(5,382405,'AHMEDABAD','Ahmedabad');
 /*!40000 ALTER TABLE `locations_pincode` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -499,7 +499,7 @@ CREATE TABLE `orders_cart` (
   PRIMARY KEY (`cart_id`),
   UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `orders_cart_user_id_121a069e_fk_Users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -508,6 +508,7 @@ CREATE TABLE `orders_cart` (
 
 LOCK TABLES `orders_cart` WRITE;
 /*!40000 ALTER TABLE `orders_cart` DISABLE KEYS */;
+INSERT INTO `orders_cart` VALUES (1,'2026-04-05 07:12:37.040222','2026-04-05 07:12:37.040222',16);
 /*!40000 ALTER TABLE `orders_cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,7 +532,7 @@ CREATE TABLE `orders_cartitem` (
   CONSTRAINT `orders_cartitem_cart_id_529df5fa_fk_orders_cart_cart_id` FOREIGN KEY (`cart_id`) REFERENCES `orders_cart` (`cart_id`),
   CONSTRAINT `orders_cartitem_variant_id_a3661000_fk_products_` FOREIGN KEY (`variant_id`) REFERENCES `products_productvariant` (`variant_id`),
   CONSTRAINT `orders_cartitem_chk_1` CHECK ((`quantity` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -561,7 +562,7 @@ CREATE TABLE `orders_invoice` (
   PRIMARY KEY (`invoice_id`),
   UNIQUE KEY `order_id` (`order_id`),
   CONSTRAINT `orders_invoice_order_id_bc372e79_fk_orders_order_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders_order` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -570,6 +571,7 @@ CREATE TABLE `orders_invoice` (
 
 LOCK TABLES `orders_invoice` WRITE;
 /*!40000 ALTER TABLE `orders_invoice` DISABLE KEYS */;
+INSERT INTO `orders_invoice` VALUES (28,67258.82,67258.82,'paid','2026-04-05 18:56:05.267554',NULL,28);
 /*!40000 ALTER TABLE `orders_invoice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -589,12 +591,6 @@ CREATE TABLE `orders_order` (
   `address_id` int NOT NULL,
   `cart_id` int DEFAULT NULL,
   `user_id` int NOT NULL,
-  `cf_order_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cf_payment_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_method` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_raw` json DEFAULT NULL,
-  `payment_session_id` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`order_id`),
   KEY `orders_order_address_id_0daf897b_fk_locations_address_address_id` (`address_id`),
   KEY `orders_order_cart_id_7e0252e3_fk_orders_cart_cart_id` (`cart_id`),
@@ -602,7 +598,7 @@ CREATE TABLE `orders_order` (
   CONSTRAINT `orders_order_address_id_0daf897b_fk_locations_address_address_id` FOREIGN KEY (`address_id`) REFERENCES `locations_address` (`address_id`),
   CONSTRAINT `orders_order_cart_id_7e0252e3_fk_orders_cart_cart_id` FOREIGN KEY (`cart_id`) REFERENCES `orders_cart` (`cart_id`),
   CONSTRAINT `orders_order_user_id_e9b59eb1_fk_Users_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -611,6 +607,7 @@ CREATE TABLE `orders_order` (
 
 LOCK TABLES `orders_order` WRITE;
 /*!40000 ALTER TABLE `orders_order` DISABLE KEYS */;
+INSERT INTO `orders_order` VALUES (28,67258.82,'standard','pending','2026-04-05 18:56:05.266295',8,1,16);
 /*!40000 ALTER TABLE `orders_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -634,7 +631,7 @@ CREATE TABLE `orders_orderitem` (
   CONSTRAINT `orders_orderitem_order_id_fe61a34d_fk_orders_order_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders_order` (`order_id`),
   CONSTRAINT `orders_orderitem_variant_id_5d350ded_fk_products_` FOREIGN KEY (`variant_id`) REFERENCES `products_productvariant` (`variant_id`),
   CONSTRAINT `orders_orderitem_chk_1` CHECK ((`quantity` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -643,6 +640,7 @@ CREATE TABLE `orders_orderitem` (
 
 LOCK TABLES `orders_orderitem` WRITE;
 /*!40000 ALTER TABLE `orders_orderitem` DISABLE KEYS */;
+INSERT INTO `orders_orderitem` VALUES (30,1,56999.00,'2026-04-05 18:56:05.267554',28,8);
 /*!40000 ALTER TABLE `orders_orderitem` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -687,7 +685,7 @@ CREATE TABLE `orders_payment` (
   `amount` decimal(10,2) NOT NULL,
   `reference_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   `reference_id` int NOT NULL,
-  `payment_method` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
   `gateway` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `gateway_payment_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `gateway_order_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -696,11 +694,12 @@ CREATE TABLE `orders_payment` (
   `created_at` datetime(6) NOT NULL,
   `paid_at` datetime(6) DEFAULT NULL,
   `invoice_id` int NOT NULL,
+  `payment_session_id` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`payment_id`),
   KEY `orders_payment_invoice_id_157ae570_fk_orders_invoice_invoice_id` (`invoice_id`),
   CONSTRAINT `orders_payment_invoice_id_157ae570_fk_orders_invoice_invoice_id` FOREIGN KEY (`invoice_id`) REFERENCES `orders_invoice` (`invoice_id`),
   CONSTRAINT `orders_payment_chk_1` CHECK (json_valid(`raw_response`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -709,6 +708,7 @@ CREATE TABLE `orders_payment` (
 
 LOCK TABLES `orders_payment` WRITE;
 /*!40000 ALTER TABLE `orders_payment` DISABLE KEYS */;
+INSERT INTO `orders_payment` VALUES (12,67258.82,'order',28,'upi','cashfree','5114926893850','order_110358833Bx0Meabl15DboFpqoAFC6JKVKH','{\"cf_order_id\": \"2206623826\", \"order_id\": \"order_110358833Bx0Meabl15DboFpqoAFC6JKVKH\", \"entity\": \"order\", \"order_currency\": \"INR\", \"order_amount\": 67258.82, \"order_status\": \"PAID\", \"payment_session_id\": \"session_gLazknP1AcKlTP1yR2X3z8i2U0txGxqXl5JoUi8ezshm-iNcRIAIlLiF0n3ToUDgWM8Nq7uKmahnIObsKS75PJcpK4EQc7K2O6Xyeg9z0qH1wPiePS-cs9HN_mZ5_gpaymentpayment\", \"order_expiry_time\": \"2026-05-06T00:26:07+05:30\", \"order_note\": null, \"created_at\": \"2026-04-06T00:26:07+05:30\", \"order_splits\": [], \"customer_details\": {\"customer_id\": \"user_16\", \"customer_email\": \"vp4844321@gmail.com\", \"customer_phone\": \"8469836615\", \"customer_name\": null, \"customer_bank_account_number\": null, \"customer_bank_ifsc\": null, \"customer_bank_code\": null, \"customer_uid\": null}, \"order_meta\": {\"return_url\": \"http://127.0.0.1:8000/payments/return/?business_order_id=28\", \"notify_url\": \"http://127.0.0.1:8000/payments/webhook/\", \"payment_methods\": null}, \"order_tags\": null, \"cart_details\": null, \"payment\": [{\"cf_payment_id\": \"5114926893850\", \"order_id\": \"order_110358833Bx0Meabl15DboFpqoAFC6JKVKH\", \"entity\": \"payment\", \"error_details\": null, \"is_captured\": true, \"order_amount\": 67258.82, \"payment_group\": \"upi\", \"payment_currency\": \"INR\", \"payment_amount\": 67258.82, \"payment_time\": \"2026-04-06T00:26:13+05:30\", \"payment_completion_time\": \"2026-04-06T00:26:31+05:30\", \"payment_status\": \"SUCCESS\", \"payment_message\": \"Simulated response message\", \"bank_reference\": \"1234567890\", \"auth_id\": null, \"authorization\": null, \"payment_method\": {\"upi\": {\"channel\": \"collect\", \"upi_id\": \"testsuccess@gocash\"}}}]}','completed','2026-04-05 18:56:05.626371','2026-04-05 18:56:39.175397',28,'session_tfu7Xu9Lg9Qn7IzSmRTzWgnzBKsOQYzLPFHQgOKWptuAPgwKxo0QC5oVO6INH-qVmy-kxN328lIdQ5GfXSnf-E4H5WCPnjAlFdLn-GmFVdcgkVC3IC8HhEspmmhK3Qpaymentpayment');
 /*!40000 ALTER TABLE `orders_payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1348,7 +1348,7 @@ CREATE TABLE `users` (
   `updated_at` datetime(6) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1357,7 +1357,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('2026-04-01 04:34:43.701801',1,'ashok','bariya','asohkbariya1982@gmail.com',NULL,'pbkdf2_sha256$600000$B278IHZeeaxKMIfJKUbiif$Ec3i7Kd7CdQPfJTkOpDVUsLi4BkTQT5jiwywb/1VzWw=',NULL,'admin',1,'2026-03-09 11:07:55.147040','2026-03-09 11:07:55.147294'),('2026-03-09 11:51:32.000000',3,'Yash','Bariya','yashbariya9925@gmail.com','8140031718','pbkdf2_sha256$600000$BzjzqHXIiVzDY7I4e7s15P$uLdhMzAk7glQIM98VO3tosnoNBN0CW+8VCamtCX6VPA=',NULL,'customer',1,'2026-03-09 11:51:53.934914','2026-03-09 11:51:53.934923'),(NULL,4,'Prem','Makawan','gamingxyz981@gmail.com','7016455514','pbkdf2_sha256$600000$9tpcXhWFoaC5J6gS1BN1NC$vXpBdoKbvmVsn2j/1hjPux0zhMX9+VZmqM2s9aP4xE8=',NULL,'customer',1,'2026-03-10 05:02:57.458394','2026-03-10 05:02:57.458622'),(NULL,5,'Prince','Jain','princejain200595@gmail.com','6352674484','pbkdf2_sha256$600000$yV2V5BZfvG7Jw2JgFTWTdf$c8h74pfIn4UufWIL4l7vmRb38jL4KX3OtPgOJF2SRiU=',NULL,'customer',1,'2026-03-10 05:25:42.551391','2026-03-10 05:25:42.551420'),(NULL,6,'Manish','Zala','manish2005@gmail.com','9737682783','pbkdf2_sha256$600000$JWaLCIDM3icPPUhBVb682q$c7YGLUHVjR9f4Z3JD5CiPCWlvVNrfBhzpNhGru0RmNA=',NULL,'customer',1,'2026-03-10 05:29:57.115967','2026-03-10 05:29:57.115987'),(NULL,7,'Omdevshih','Rana','omdevshih82@gmail.com','6355504818','pbkdf2_sha256$600000$QyuTh7kfbjbVnF4yOHaixD$EkFsaxm3j9tddWsyQfjadd9ADW3tI18tacF/JCMABik=',NULL,'customer',1,'2026-03-10 05:34:41.347327','2026-03-10 05:34:41.347464'),(NULL,8,'Vicky','Patel','vickypatel2000@gmail.com','8469836615','pbkdf2_sha256$600000$Wjh5iD2m3XkcULKaxrbssk$n9RhHG6tDx6hCg4QFPjvhFyFGSwawZflX+DaO8lWpKQ=','profile_images/Screenshot_2026-03-10_at_3.50.19PM.png','employee',1,'2026-03-10 10:22:58.647144','2026-03-30 05:02:07.420313'),(NULL,9,'Sumit','Mishara','sumitmishara2726@gmail.com','9054513290','pbkdf2_sha256$600000$3bsRn4TRAmaQxszqE2iwXt$Xl70kgEsWlF0UPkr4Htpm0cn1h20eyU2Sedhe7LjOnc=','profile_images/Screenshot_2026-03-10_at_4.03.35PM.png','employee',1,'2026-03-10 10:35:14.434415','2026-03-30 05:02:44.572294'),(NULL,10,'Harsh','Upadhaya','harshupadhaya2005@gmail.com','9426966021','pbkdf2_sha256$600000$MzgRL5dQrwsMR9n7ibffXS$4R68TSSucL+aYTQTlOhATVKDWbdforeGKstb+RtpThU=','profile_images/DK.jpeg','employee',1,'2026-03-10 10:38:03.657343','2026-03-16 05:16:01.741591'),(NULL,11,'Vikash','Gupata','vikashgupata2019@gmail.com','8320882919','pbkdf2_sha256$600000$nZYZarnUvHgsc2FS5G4keg$EKfuO0r3cJh6PZEXGd/8Q7NNJ34PVhgUymmVdmcH6VY=','profile_images/Screenshot_2026-03-10_at_4.09.06PM.png','employee',1,'2026-03-10 10:40:32.185119','2026-03-30 05:01:04.114024'),(NULL,12,'Sunil','Bariya','sunilbariya1516@gmail.com','8866361516','pbkdf2_sha256$600000$jNY1IEFIW7Oni3YnCYxsjh$DK6JvGEEaFK2Y9ub5J4EcqwwQP7LlQapMdmPH+6U9jg=','profile_images/Screenshot_2026-03-10_at_4.12.31PM.png','employee',1,'2026-03-10 10:43:25.224441','2026-03-15 06:25:46.154122');
+INSERT INTO `users` VALUES ('2026-04-01 04:34:43.701801',1,'ashok','bariya','asohkbariya1982@gmail.com',NULL,'pbkdf2_sha256$600000$B278IHZeeaxKMIfJKUbiif$Ec3i7Kd7CdQPfJTkOpDVUsLi4BkTQT5jiwywb/1VzWw=',NULL,'admin',1,'2026-03-09 11:07:55.147040','2026-03-09 11:07:55.147294'),('2026-03-09 11:51:32.000000',3,'Yash','Bariya','yashbariya9925@gmail.com','8140031718','pbkdf2_sha256$600000$BzjzqHXIiVzDY7I4e7s15P$uLdhMzAk7glQIM98VO3tosnoNBN0CW+8VCamtCX6VPA=',NULL,'customer',1,'2026-03-09 11:51:53.934914','2026-03-09 11:51:53.934923'),(NULL,4,'Prem','Makawan','gamingxyz981@gmail.com','7016455514','pbkdf2_sha256$600000$9tpcXhWFoaC5J6gS1BN1NC$vXpBdoKbvmVsn2j/1hjPux0zhMX9+VZmqM2s9aP4xE8=',NULL,'customer',1,'2026-03-10 05:02:57.458394','2026-03-10 05:02:57.458622'),(NULL,5,'Prince','Jain','princejain200595@gmail.com','6352674484','pbkdf2_sha256$600000$yV2V5BZfvG7Jw2JgFTWTdf$c8h74pfIn4UufWIL4l7vmRb38jL4KX3OtPgOJF2SRiU=',NULL,'customer',1,'2026-03-10 05:25:42.551391','2026-03-10 05:25:42.551420'),(NULL,6,'Manish','Zala','manish2005@gmail.com','9737682783','pbkdf2_sha256$600000$JWaLCIDM3icPPUhBVb682q$c7YGLUHVjR9f4Z3JD5CiPCWlvVNrfBhzpNhGru0RmNA=',NULL,'customer',1,'2026-03-10 05:29:57.115967','2026-03-10 05:29:57.115987'),(NULL,7,'Omdevshih','Rana','omdevshih82@gmail.com','6355504818','pbkdf2_sha256$600000$QyuTh7kfbjbVnF4yOHaixD$EkFsaxm3j9tddWsyQfjadd9ADW3tI18tacF/JCMABik=',NULL,'customer',1,'2026-03-10 05:34:41.347327','2026-03-10 05:34:41.347464'),(NULL,8,'Vicky','Patel','vickypatel2000@gmail.com','8469836611','pbkdf2_sha256$600000$Wjh5iD2m3XkcULKaxrbssk$n9RhHG6tDx6hCg4QFPjvhFyFGSwawZflX+DaO8lWpKQ=','profile_images/Screenshot_2026-03-10_at_3.50.19PM.png','employee',1,'2026-03-10 10:22:58.647144','2026-03-30 05:02:07.420313'),(NULL,9,'Sumit','Mishara','sumitmishara2726@gmail.com','9054513290','pbkdf2_sha256$600000$3bsRn4TRAmaQxszqE2iwXt$Xl70kgEsWlF0UPkr4Htpm0cn1h20eyU2Sedhe7LjOnc=','profile_images/Screenshot_2026-03-10_at_4.03.35PM.png','employee',1,'2026-03-10 10:35:14.434415','2026-03-30 05:02:44.572294'),(NULL,10,'Harsh','Upadhaya','harshupadhaya2005@gmail.com','9426966021','pbkdf2_sha256$600000$MzgRL5dQrwsMR9n7ibffXS$4R68TSSucL+aYTQTlOhATVKDWbdforeGKstb+RtpThU=','profile_images/DK.jpeg','employee',1,'2026-03-10 10:38:03.657343','2026-03-16 05:16:01.741591'),(NULL,11,'Vikash','Gupata','vikashgupata2019@gmail.com','8320882919','pbkdf2_sha256$600000$nZYZarnUvHgsc2FS5G4keg$EKfuO0r3cJh6PZEXGd/8Q7NNJ34PVhgUymmVdmcH6VY=','profile_images/Screenshot_2026-03-10_at_4.09.06PM.png','employee',1,'2026-03-10 10:40:32.185119','2026-03-30 05:01:04.114024'),(NULL,12,'Sunil','Bariya','sunilbariya1516@gmail.com','8866361516','pbkdf2_sha256$600000$jNY1IEFIW7Oni3YnCYxsjh$DK6JvGEEaFK2Y9ub5J4EcqwwQP7LlQapMdmPH+6U9jg=','profile_images/Screenshot_2026-03-10_at_4.12.31PM.png','employee',1,'2026-03-10 10:43:25.224441','2026-03-15 06:25:46.154122'),(NULL,16,'Vicky','Patel','vp4844321@gmail.com','8469836615','pbkdf2_sha256$600000$5CtBs99hUOQrl2vgX3fqAd$DmJr+o9FgP1STxiHuBx/A0Oo8aXONGvii6BUEJbsj2A=','','customer',1,'2026-04-05 07:12:09.194789','2026-04-05 07:12:58.488537');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1370,4 +1370,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-05 12:39:20
+-- Dump completed on 2026-04-06  0:38:37
