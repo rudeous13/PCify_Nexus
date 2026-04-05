@@ -93,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'PCify_Nexus',
         'USER': 'root',
-        'PASSWORD': '13112000',  # admin
+        'PASSWORD': '',  # admin
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
