@@ -84,6 +84,26 @@ def fetch_cashfree_order(order_id):
     return _make_json_serializable(_normalize_cashfree_payload(response.data))
 
 
+def fetch_cashfree_payments_for_order(order_id):
+    """
+    Fetch all payment attempts for a Cashfree order.
+    Returns a list of payment dicts, each containing payment_group
+    (e.g. 'wallet', 'upi', 'credit_card', 'debit_card', 'net_banking').
+    """
+    try:
+        x_api_version = settings.CASHFREE_API_VERSION
+        client = _get_cashfree_client()
+        response = client.PGOrderFetchPayments(x_api_version, order_id, None)
+        data = response.data
+        if data is None:
+            return []
+        if isinstance(data, list):
+            return [_make_json_serializable(_normalize_cashfree_payload(p)) for p in data]
+        return [_make_json_serializable(_normalize_cashfree_payload(data))]
+    except Exception:
+        return []
+
+
 def verify_cashfree_signature(payload_body, signature, secret):
     if not signature or not secret:
         return False
