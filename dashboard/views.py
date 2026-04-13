@@ -433,7 +433,7 @@ def dashboard_product(request):
                             tdp=safe_int(request.POST.get('tdp'))
                         )
 
-                    elif 'storage' in cat_name:
+                    elif any(k in cat_name for k in ['storage', 'ssd', 'hdd', 'm.2']):
                         Storage.objects.create(
                             variant=variant,
                             storage_type=request.POST.get('storage_type', ''),
@@ -639,7 +639,7 @@ def dashboard_product(request):
                             'tdp': safe_int(request.POST.get('tdp'))
                         })
 
-                    elif 'storage' in cat_name:
+                    elif any(k in cat_name for k in ['storage', 'ssd', 'hdd', 'm.2']):
                         Storage.objects.update_or_create(variant=variant, defaults={
                             'storage_type': request.POST.get('storage_type', ''),
                             'capacity_gb': safe_int(request.POST.get('capacity_gb')),
