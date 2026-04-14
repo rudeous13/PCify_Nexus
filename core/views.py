@@ -1,3 +1,5 @@
+# Ensure you have your models imported!
+from builds.models import PCBuild, PCBuildItem
 import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -26,13 +28,15 @@ def _primary_image(variant):
 # ─── public pages ───────────────────────────────────────────────────────────
 
 def homepage(request):
-    trending_products_qs = Product.objects.filter(is_trending=True).prefetch_related('variants__images')
+    trending_products_qs = Product.objects.filter(
+        is_trending=True).prefetch_related('variants__images')
     trending_products = []
 
     for product in trending_products_qs:
         variant = product.variants.first()
         if variant:
-            image_obj = variant.images.filter(is_primary=True).first() or variant.images.first()
+            image_obj = variant.images.filter(
+                is_primary=True).first() or variant.images.first()
             trending_products.append({
                 'name': product.product_name,
                 'short_description': product.description,
@@ -49,7 +53,8 @@ def homepage(request):
 
 def prebuilt(request):
     # 1. Start with the base filter so customer builds are EXCLUDED immediately
-    builds_qs = PCBuild.objects.filter(is_prebuilt=True).prefetch_related('items__variant__product')
+    builds_qs = PCBuild.objects.filter(
+        is_prebuilt=True).prefetch_related('items__variant__product')
 
     # 2. Apply further filters (Budget/Premium)
     filter_param = request.GET.get('filter', 'all')
@@ -117,7 +122,8 @@ def built(request):
         v = spec.variant
         img = _primary_image(v)
         # Rough gaming-score: cores × boost_clock × 10
-        score = round(float(spec.cores or 0) * float(spec.boost_clock or 0) * 10)
+        score = round(float(spec.cores or 0) *
+                      float(spec.boost_clock or 0) * 10)
         cpus.append({
             'id':     v.variant_id,
             'name':   str(v),
@@ -224,8 +230,6 @@ def built(request):
             'image': img,
         })
 
-    
-
     # ── Air Coolers ─────────────────────────────────────────────────────────
     air_coolers = []
     for spec in Cooler.objects.filter(
@@ -305,14 +309,17 @@ def built(request):
 
 
 def accessories(request):
-    products_qs = Product.objects.all().prefetch_related('variants__images', 'category', 'brand')
+    products_qs = Product.objects.all().prefetch_related(
+        'variants__images', 'category', 'brand')
 
     category_param = request.GET.get('category')
     if category_param:
         if category_param.isdigit():
-            products_qs = products_qs.filter(category__category_id=category_param)
+            products_qs = products_qs.filter(
+                category__category_id=category_param)
         else:
-            products_qs = products_qs.filter(category__category_name__icontains=category_param)
+            products_qs = products_qs.filter(
+                category__category_name__icontains=category_param)
 
     search_query = request.GET.get('q', '')
     if search_query:
@@ -322,7 +329,8 @@ def accessories(request):
     if selected_brands:
         products_qs = products_qs.filter(brand__brand_name__in=selected_brands)
 
-    price_aggregates = ProductVariant.objects.aggregate(min_price=Min('price'), max_price=Max('price'))
+    price_aggregates = ProductVariant.objects.aggregate(
+        min_price=Min('price'), max_price=Max('price'))
     absolute_min = int(price_aggregates['min_price'] or 0)
     absolute_max = int(price_aggregates['max_price'] or 50000)
 
@@ -345,7 +353,8 @@ def accessories(request):
         variant = product.variants.first()
         if variant:
             all_imgs = variant.images.all()
-            primary_image = all_imgs.filter(is_primary=True).first() or all_imgs.first()
+            primary_image = all_imgs.filter(
+                is_primary=True).first() or all_imgs.first()
             img_urls = [img.image.url for img in all_imgs if img.image]
             all_images_str = ",".join(img_urls) if img_urls else ""
 
@@ -383,13 +392,6 @@ def accessories(request):
     }
     return render(request, "Home/accessories.html", context)
 
-
-import json
-from decimal import Decimal
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from accounts.models import User
-from builds.models import PCBuild, PCBuildItem # Ensure you have your models imported!
 
 def cart(request):
     user_id = request.session.get('user_id')
@@ -433,12 +435,14 @@ def cart(request):
 
             elif action == "delete":
                 cart_item_id = request.POST.get("cart_item_id")
-                CartItem.objects.filter(cart_item_id=cart_item_id, cart=cart_obj).delete()
+                CartItem.objects.filter(
+                    cart_item_id=cart_item_id, cart=cart_obj).delete()
 
             elif action == "update":
                 cart_item_id = request.POST.get("cart_item_id")
                 update_type = request.POST.get("update_type")
-                cart_item = CartItem.objects.get(cart_item_id=cart_item_id, cart=cart_obj)
+                cart_item = CartItem.objects.get(
+                    cart_item_id=cart_item_id, cart=cart_obj)
                 if update_type == "increase":
                     cart_item.quantity += 1
                     cart_item.save()
@@ -455,10 +459,10 @@ def cart(request):
             elif action == 'add_custom_build':
                 components_json = request.POST.get('components')
                 build_price = request.POST.get('build_price', 0)
-                
+
                 if components_json:
                     components_data = json.loads(components_json)
-                    
+
                     new_build = PCBuild.objects.create(
                         user=user,
                         name="Custom Nexus Build",
@@ -467,21 +471,22 @@ def cart(request):
                         is_prebuilt=False,
                         is_custom=True,
                     )
-                    
+
                     for comp in components_data:
                         variant_id = comp.get('variant_id')
                         comp_type = comp.get('component_type')
-                        variant = ProductVariant.objects.filter(variant_id=variant_id).first()
+                        variant = ProductVariant.objects.filter(
+                            variant_id=variant_id).first()
                         if variant:
                             PCBuildItem.objects.create(
                                 build=new_build,
                                 variant=variant,
                                 component_type=comp_type
                             )
-                    
+
                     CartItem.objects.create(
-                        cart=cart_obj, 
-                        build=new_build, 
+                        cart=cart_obj,
+                        build=new_build,
                         quantity=1
                     )
                     return JsonResponse({'status': 'success', 'message': 'Build packaged successfully'})
@@ -519,7 +524,8 @@ def cart(request):
                     item_total = variant.price * item.quantity
                     subtotal += item_total
 
-                    primary_image = variant.images.filter(is_primary=True).first() or variant.images.first()
+                    primary_image = variant.images.filter(
+                        is_primary=True).first() or variant.images.first()
                     cart_items_data.append({
                         'cart_item_id': item.cart_item_id,
                         'variant_id':   variant.variant_id,
@@ -530,14 +536,15 @@ def cart(request):
                         'item_total':   item_total,
                         'image_url':    primary_image.image.url if primary_image and primary_image.image else None,
                     })
-                
+
                 # 2. Send Prebuilt PCs to the HTML
                 elif getattr(item, 'build', None):
                     build = item.build
                     item_total = build.price * item.quantity
                     subtotal += item_total
-                    
-                    component_list = [b_item.variant.product.product_name for b_item in build.items.all()]
+
+                    component_list = [
+                        b_item.variant.product.product_name for b_item in build.items.all()]
 
                     cart_items_data.append({
                         'cart_item_id': item.cart_item_id,
@@ -570,22 +577,184 @@ def cart(request):
 def profile(request):
     return render(request, "Home/pro_overview.html")
 
+
 def pro_builds(request):
-    return render(request, "Home/pro_my_builds.html")
+    """Display user's saved PC builds"""
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('accounts:signin')
+
+    user = User.objects.get(user_id=user_id)
+    builds = PCBuild.objects.filter(
+        user=user, is_custom=True).order_by('-created_at')
+
+    # Prepare build data for template
+    build_data = []
+    for build in builds:
+        components = {}
+        for item in build.items.all():
+            components[item.component_type] = str(item.variant)
+
+        build_data.append({
+            'id': build.build_id,
+            'name': build.name,
+            'price': build.price,
+            'created_at': build.created_at,
+            'processor': components.get('cpu', 'Not selected'),
+            'motherboard': components.get('mobo', 'Not selected'),
+            'graphics': components.get('gpu', 'Not selected'),
+            'memory': components.get('ram', 'Not selected'),
+            'ssd': components.get('storage_m2', 'Not selected'),
+            'hdd': components.get('storage_hdd', 'Not selected'),
+            'm2': components.get('storage_m2', 'Not selected'),
+            'total_price': build.price
+        })
+
+    return render(request, "Home/pro_my_builds.html", {'builds': build_data})
+
+
+def save_pc_build(request):
+    """Save a custom PC build configuration"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return JsonResponse({'status': 'error', 'message': 'Please login to save builds'})
+
+    try:
+        user = User.objects.get(user_id=user_id)
+        build_name = request.POST.get('build_name', '').strip()
+
+        # Validate build name
+        if not build_name:
+            return JsonResponse({'status': 'error', 'message': 'Build name is required'})
+
+        if len(build_name) > 100:
+            return JsonResponse({'status': 'error', 'message': 'Build name too long (max 100 characters)'})
+
+        # Parse components from form data
+        components = {}
+        component_types = ['cpu', 'mobo', 'gpu', 'ram', 'storage_m2',
+                           'storage_hdd', 'cooler_air', 'cooler_aio', 'psu', 'case']
+
+        total_price = 0
+        for comp_type in component_types:
+            variant_id = request.POST.get(comp_type)
+            quantity = int(request.POST.get(f'qty_{comp_type}', 1))
+
+            if variant_id and variant_id != 'none':
+                try:
+                    variant = ProductVariant.objects.get(variant_id=variant_id)
+                    components[comp_type] = {
+                        'variant': variant, 'quantity': quantity}
+                    total_price += variant.price * quantity
+                except ProductVariant.DoesNotExist:
+                    pass
+
+        # Create or update build
+        build_id = request.POST.get('build_id')
+        if build_id:
+            # Update existing build
+            build = PCBuild.objects.get(build_id=build_id, user=user)
+            build.name = build_name
+            build.price = total_price
+            build.save()
+
+            # Clear existing items
+            build.items.all().delete()
+        else:
+            # Create new build
+            build = PCBuild.objects.create(
+                user=user,
+                name=build_name,
+                price=total_price,
+                description=f"Custom build: {build_name}",
+                is_prebuilt=False,
+                is_custom=True
+            )
+
+        # Add components to build
+        for comp_type, comp_data in components.items():
+            PCBuildItem.objects.create(
+                build=build,
+                variant=comp_data['variant'],
+                component_type=comp_type,
+                quantity=comp_data['quantity']
+            )
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Build saved successfully',
+            'build_id': build.build_id
+        })
+
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Error saving build: {str(e)}'})
+
+
+def delete_pc_build(request, build_id):
+    """Delete a saved PC build"""
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return JsonResponse({'status': 'error', 'message': 'Please login to delete builds'})
+
+    try:
+        user = User.objects.get(user_id=user_id)
+        build = PCBuild.objects.get(build_id=build_id, user=user)
+        build.delete()
+
+        return JsonResponse({'status': 'success', 'message': 'Build deleted successfully'})
+
+    except PCBuild.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Build not found'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Error deleting build: {str(e)}'})
+
+
+def load_pc_build(request, build_id):
+    """Load a saved build configuration for editing"""
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return JsonResponse({'status': 'error', 'message': 'Please login to load builds'})
+
+    try:
+        user = User.objects.get(user_id=user_id)
+        build = PCBuild.objects.get(build_id=build_id, user=user)
+
+        # Prepare build configuration
+        config = {'build_id': build.build_id, 'build_name': build.name}
+        for item in build.items.all():
+            config[item.component_type] = item.variant.variant_id
+            config[f'qty_{item.component_type}'] = item.quantity
+
+        return JsonResponse({'status': 'success', 'config': config})
+
+    except PCBuild.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Build not found'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Error loading build: {str(e)}'})
+
 
 def pro_order(request):
     return render(request, "Home/pro_order_history.html")
+
 
 def pro_security(request):
     return render(request, "Home/pro_security.html")
 
 # Make sure the function name matches your actual view name (e.g., pro_setting)
+
+
 def pro_setting(request):
     # Ensure user is logged in
     user_id = request.session.get("user_id")
     if not user_id:
         return redirect("accounts:signin")
-        
+
     user = User.objects.get(user_id=user_id)
 
     if request.method == "POST":
@@ -596,17 +765,17 @@ def pro_setting(request):
             user.first_name = request.POST.get("first_name", user.first_name)
             user.last_name = request.POST.get("last_name", user.last_name)
             user.email = request.POST.get("email", user.email)
-            
+
             # Check if a new image was uploaded
             if "profile_image" in request.FILES:
                 user.profile_image = request.FILES.get("profile_image")
-                
+
             user.save()
-            
+
             # Update the session variables so the new name/image appear in the header immediately
             request.session["user_name"] = user.first_name
             request.session["user_lname"] = user.last_name
-            
+
             # Safely update the image session URL if it exists
             if hasattr(user, 'profile_image') and user.profile_image:
                 request.session["user_image"] = user.profile_image.url
@@ -624,7 +793,7 @@ def pro_setting(request):
                     pincode=pin,
                     defaults={'area_name': area, 'city': 'Ahmedabad'}
                 )
-                
+
                 # If this is their first address, or they checked the box, make it primary
                 if make_primary or not Address.objects.filter(user=user).exists():
                     Address.objects.filter(user=user).update(is_primary=False)
@@ -632,9 +801,9 @@ def pro_setting(request):
 
                 # Save the new address to the database
                 Address.objects.create(
-                    user=user, 
-                    address=street, 
-                    pincode=pincode_obj, 
+                    user=user,
+                    address=street,
+                    pincode=pincode_obj,
                     is_primary=make_primary
                 )
 
@@ -677,14 +846,16 @@ def pro_setting(request):
             addr_id = request.POST.get("address_id")
             if addr_id:
                 Address.objects.filter(user=user).update(is_primary=False)
-                Address.objects.filter(address_id=addr_id, user=user).update(is_primary=True)
+                Address.objects.filter(
+                    address_id=addr_id, user=user).update(is_primary=True)
 
         # Refresh the page to show the new data
-        return redirect("core:pro_setting") 
+        return redirect("core:pro_setting")
 
     # --- YOUR EXISTING GET LOGIC GOES HERE ---
-    addresses = Address.objects.filter(user=user).select_related('pincode').order_by('-is_primary')
-    
+    addresses = Address.objects.filter(user=user).select_related(
+        'pincode').order_by('-is_primary')
+
     context = {
         'first_name': user.first_name,
         'last_name': user.last_name,

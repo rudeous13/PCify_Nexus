@@ -15,6 +15,11 @@ urlpatterns = [
     path('cart', views.cart, name="cart"),
     path('profile', views.profile, name="profile"),
 
+    # Build management endpoints
+    path('save-pc-build/', views.save_pc_build, name="save_pc_build"),
+    path('delete-build/<int:build_id>/',
+         views.delete_pc_build, name="delete_build"),
+    path('load-build/<int:build_id>/', views.load_pc_build, name="load_build"),
 
     path('profile/builds/', views.pro_builds, name="pro_builds"),
     path('profile/order', views.pro_order, name="pro_order"),

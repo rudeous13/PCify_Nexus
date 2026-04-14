@@ -271,6 +271,8 @@
 
         <form id="buildForm" method="POST" action="">
           {% csrf_token %}
+          <!-- Build name display -->
+          <div id="current-build-name" class="mb-4 text-lg font-bold text-brand-500" style="display:none;"></div>
           <div class="space-y-4 relative" id="component-list-container"></div>
         </form>
       </section>
@@ -1048,6 +1050,305 @@
     });
 
 
+    // ─────────────────────────────────────────────────────────────────────
+    //  13.  BUILD MANAGEMENT - Draft persistence and save functionality
+    // ─────────────────────────────────────────────────────────────────────
+    
+    // Draft storage key
+    const DRAFT_STORAGE_KEY = 'pc_builder_draft';
+    const CURRENT_BUILD_KEY = 'pc_builder_current';
+    
+    /** Save current build state to localStorage */
+    function saveDraft() {
+        const state = {};
+        const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
+        
+        componentIds.forEach(compId => {
+            const selectEl = document.getElementById(compId);
+            if (selectEl) {
+                state[compId] = selectEl.value || '';
+                
+                // Save quantity for components that have it
+                if (compId === 'ram' || compId === 'storage_m2' || compId === 'storage_hdd') {
+                    const qtyEl = document.getElementById(`qty-${compId}`);
+                    state[`qty_${compId}`] = qtyEl ? parseInt(qtyEl.innerText) : 1;
+                }
+            }
+        });
+        
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(state));
+    }
+    
+    /** Restore draft from localStorage */
+    function restoreDraft() {
+        try {
+            const draft = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+            const currentBuild = localStorage.getItem(CURRENT_BUILD_KEY);
+            
+            // Don't restore draft if we're editing a specific build
+            if (currentBuild) {
+                localStorage.removeItem(DRAFT_STORAGE_KEY);
+                localStorage.removeItem(CURRENT_BUILD_KEY);
+                // Hide build name if any
+                const buildNameDiv = document.getElementById('current-build-name');
+                if (buildNameDiv) {
+                    buildNameDiv.innerText = '';
+                    buildNameDiv.style.display = 'none';
+                }
+                return false;
+            }
+            
+            if (Object.keys(draft).length === 0) return false;
+            
+            // Hide build name for draft
+            const buildNameDiv = document.getElementById('current-build-name');
+            if (buildNameDiv) {
+                buildNameDiv.innerText = '';
+                buildNameDiv.style.display = 'none';
+            }
+            // Restore component selections
+            Object.keys(draft).forEach(key => {
+                if (key.startsWith('qty_')) {
+                    const compId = key.replace('qty_', '');
+                    const qtyEl = document.getElementById(`qty-${compId}`);
+                    if (qtyEl) qtyEl.innerText = draft[key];
+                } else {
+                    const selectEl = document.getElementById(key);
+                    if (selectEl && draft[key]) {
+                        selectEl.value = draft[key];
+                        // Trigger change event to update compatibility
+                        const event = new Event('change');
+                        selectEl.dispatchEvent(event);
+                    }
+                }
+            });
+            
+            // Update system to reflect restored state
+            setTimeout(() => updateSystem(), 100);
+            showToast('Draft restored');
+            return true;
+            
+        } catch (e) {
+            console.error('Error restoring draft:', e);
+            return false;
+        }
+    }
+    
+    /** Clear draft from storage */
+    function clearDraft() {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        localStorage.removeItem(CURRENT_BUILD_KEY);
+        // Hide build name if any
+        const buildNameDiv = document.getElementById('current-build-name');
+        if (buildNameDiv) {
+            buildNameDiv.innerText = '';
+            buildNameDiv.style.display = 'none';
+        }
+    }
+    
+    /** Prompt for build name and save configuration */
+    async function saveBuild() {
+        const buildName = prompt('Enter a name for your build:');
+        
+        if (!buildName || buildName.trim() === '') {
+            showToast('Build name is required');
+            return;
+        }
+        
+        if (buildName.length > 100) {
+            showToast('Build name too long (max 100 characters)');
+            return;
+        }
+        
+        // Gather form data
+        const formData = new FormData();
+        formData.append('build_name', buildName.trim());
+        
+        // Add current build ID if editing
+        const currentBuild = localStorage.getItem(CURRENT_BUILD_KEY);
+        if (currentBuild) {
+            formData.append('build_id', currentBuild);
+        }
+        
+        // Add all component selections
+        const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
+        componentIds.forEach(compId => {
+            const selectEl = document.getElementById(compId);
+            if (selectEl) {
+                formData.append(compId, selectEl.value || '');
+                
+                // Add quantity for relevant components
+                if (compId === 'ram' || compId === 'storage_m2' || compId === 'storage_hdd') {
+                    const qtyEl = document.getElementById(`qty-${compId}`);
+                    formData.append(`qty_${compId}`, qtyEl ? parseInt(qtyEl.innerText) : 1);
+                }
+            }
+        });
+        
+        // Get CSRF token
+        let csrftoken = '';
+        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) csrftoken = csrfInput.value;
+        
+        try {
+            const response = await fetch("{% url 'core:save_pc_build' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showToast('Build saved successfully!');
+                clearDraft(); // Clear draft after successful save
+                
+                // Redirect to builds page if this was a new build
+                if (!currentBuild) {
+                    setTimeout(() => {
+                        window.location.href = "{% url 'core:pro_builds' %}";
+                    }, 1500);
+                }
+            } else {
+                alert(data.message || 'Failed to save build');
+            }
+            
+        } catch (error) {
+            console.error('Save error:', error);
+            alert('Network error while saving build');
+        }
+    }
+    
+    /** Load a specific build for editing */
+    async function loadBuild(buildId) {
+        try {
+            const response = await fetch(`/load-build/${buildId}/`);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // Store current build ID
+                localStorage.setItem(CURRENT_BUILD_KEY, buildId);
+                
+                // Load configuration
+                const config = data.config;
+                
+                // Set build name in the UI
+                const buildNameDiv = document.getElementById('current-build-name');
+                if (config.build_name) {
+                    buildNameDiv.innerText = `Editing: ${config.build_name}`;
+                    buildNameDiv.style.display = '';
+                } else {
+                    buildNameDiv.innerText = '';
+                    buildNameDiv.style.display = 'none';
+                }
+                
+                // Set component values
+                Object.keys(config).forEach(key => {
+                    if (key.startsWith('qty_')) {
+                        const compId = key.replace('qty_', '');
+                        const qtyEl = document.getElementById(`qty-${compId}`);
+                        if (qtyEl) qtyEl.innerText = config[key];
+                    } else if (key !== 'build_id' && key !== 'build_name') {
+                        const selectEl = document.getElementById(key);
+                        if (selectEl && config[key]) {
+                            selectEl.value = config[key];
+                            // Trigger change event for compatibility
+                            const event = new Event('change');
+                            selectEl.dispatchEvent(event);
+                        }
+                    }
+                });
+                
+                // Update system state
+                setTimeout(() => updateSystem(), 100);
+                showToast(`Build "${config.build_name}" loaded`);
+                
+            } else {
+                alert(data.message || 'Failed to load build');
+            }
+            
+        } catch (error) {
+            console.error('Load error:', error);
+            alert('Network error while loading build');
+        }
+    }
+    
+    /** Delete a build with confirmation */
+    async function deleteBuild(buildId, buildName) {
+        if (!confirm(`Are you sure you want to delete "${buildName}"? This action cannot be undone.`)) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/delete-build/${buildId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showToast('Build deleted successfully');
+                // Reload the page if we're on the builds page
+                if (window.location.pathname.includes('profile/builds')) {
+                    window.location.reload();
+                }
+            } else {
+                alert(data.message || 'Failed to delete build');
+            }
+            
+        } catch (error) {
+            console.error('Delete error:', error);
+            alert('Network error while deleting build');
+        }
+    }
+    
+    // Auto-save draft on component changes
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add change listeners to all component selects
+        const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
+        
+        componentIds.forEach(compId => {
+            const selectEl = document.getElementById(compId);
+            if (selectEl) {
+                selectEl.addEventListener('change', () => {
+                    setTimeout(saveDraft, 100); // Debounce auto-save
+                });
+            }
+        });
+        
+        // Add quantity change listeners
+        componentIds.filter(compId => 
+            compId === 'ram' || compId === 'storage_m2' || compId === 'storage_hdd'
+        ).forEach(compId => {
+            const buttons = document.querySelectorAll(`[onclick*="changeQty('${compId}'"`);
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(saveDraft, 100); // Debounce auto-save
+                });
+            });
+        });
+        
+        // Restore draft on page load
+        setTimeout(() => {
+            const restored = restoreDraft();
+            if (!restored) {
+                // Check if we have a build ID in URL for editing
+                const urlParams = new URLSearchParams(window.location.search);
+                const buildId = urlParams.get('edit');
+                if (buildId) {
+                    loadBuild(buildId);
+                }
+            }
+        }, 500);
+    });
+    
     // ─────────────────────────────────────────────────────────────────────
     //  12.  INIT
     // ─────────────────────────────────────────────────────────────────────

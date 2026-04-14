@@ -228,12 +228,12 @@
                       <span class="font-black font-mono text-3xl text-transparent bg-clip-text bg-gradient-to-r from-{{ theme }}-600 to-{{ theme }}-400 dark:from-{{ theme }}-400 dark:to-{{ theme }}-200">₹{{ build.total_price }}</span>
                     </div>
                     <div class="flex gap-2.5">
-                      <button class="w-12 h-12 flex items-center justify-center bg-slate-100 dark:bg-white/5 hover:bg-{{ theme }}-500 hover:text-white rounded-xl transition-all duration-300 text-slate-500 dark:text-slate-400 shadow-sm hover:shadow-{{ theme }}-500/30 group/btn" title="Edit Build">
+                      <button onclick="window.location.href='{% url 'core:built' %}?edit={{ build.id }}'" class="w-12 h-12 flex items-center justify-center bg-slate-100 dark:bg-white/5 hover:bg-{{ theme }}-500 hover:text-white rounded-xl transition-all duration-300 text-slate-500 dark:text极速赛车开奖直播记录
                         <i class="bi bi-pencil-fill group-hover/btn:scale-110 transition-transform"></i>
                       </button>
-                      <button class="w-12 h-12 flex items-center justify-center bg-slate-100 dark:bg-white/5 hover:bg-red-500 hover:text-white rounded-xl transition-all duration-300 text-slate-500 dark:text-slate-400 shadow-sm hover:shadow-red-500/30 group/btn" title="Delete Build">
-                        <i class="bi bi-trash3-fill group-hover/btn:scale-110 transition-transform"></i>
-                      </button>
+                        <button onclick="deleteBuild({{ build.id }}, '{{ build.name|escapejs }}')" class="w-12 h-12 flex items-center justify-center bg-slate-100 dark:bg-white/5 hover:bg-red-500 hover:text-white rounded-xl transition-all duration-300 text-slate-500 dark:text-slate-400 shadow-sm hover:shadow-red-500/30 group/btn" title="Delete Build">
+                          <i class="bi bi-trash3-fill group-hover/btn:scale-110 transition-transform"></i>
+                        </button>
                     </div>
                   </div>
                   
