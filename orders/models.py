@@ -10,7 +10,7 @@ class Cart(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+ 
     def __str__(self):
         return f"Cart of {self.user}"
 
@@ -18,23 +18,36 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart_item_id = models.AutoField(primary_key=True)
     cart = models.ForeignKey(
-        Cart, on_delete=models.CASCADE, related_name='items')
+        'Cart', on_delete=models.CASCADE, related_name='items'
+    )
     variant = models.ForeignKey(
         'products.ProductVariant',
         on_delete=models.CASCADE,
-        related_name='cart_items'
+        related_name='cart_items',
+        null=True,
+        blank=True,
+    )
+    # ✅ FIXED: was 'payment.PCBuild' (app didn't exist)
+    build = models.ForeignKey(
+
+        'builds.PCBuild',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='cart_items',
     )
     quantity = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = [('cart', 'variant')]
-
+ 
     def __str__(self):
-        return f"{self.variant.sku} × {self.quantity}"
-
-
+        if self.variant:
+            return f"{self.variant.sku} × {self.quantity}"
+        elif self.build:
+            return f"Build: {self.build.name} × {self.quantity}"
+        return f"Empty Cart Item × {self.quantity}"
+ 
+ 
 class Order(models.Model):
     SHIPPING_METHODS = [
         ('standard', 'Standard'),
@@ -48,6 +61,16 @@ class Order(models.Model):
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
     ]
+    PAYMENT_METHODS = [
+        ('card', 'Credit/Debit Card'),
+        ('upi', 'UPI'),
+        ('wallet', 'Wallet'),
+        ('netbanking', 'Net Banking'),
+        ('cardless_emi', 'Cardless EMI'),
+        ('paypal', 'PayPal'),
+        ('cod', 'Cash on Delivery'),
+    ]
+ 
     order_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         'accounts.User',
@@ -73,8 +96,20 @@ class Order(models.Model):
     )
     status = models.CharField(
         max_length=15, choices=STATUSES, default='pending')
+    cf_order_id = models.CharField(max_length=100, null=True, blank=True)
+    payment_session_id = models.CharField(
+        max_length=200, null=True, blank=True)
+    cf_payment_id = models.CharField(max_length=100, null=True, blank=True)
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_METHODS,
+        null=True,
+        blank=True,
+    )
+    payment_status = models.CharField(max_length=20, null=True, blank=True)
+    payment_raw = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+ 
     def __str__(self):
         return f"Order-{self.order_id} ({self.user})"
 
@@ -82,22 +117,47 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order_item_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name='items')
+        Order, 
+        on_delete=models.CASCADE, 
+        related_name='items'
+    )
+    
+    # 1. Variant is now nullable so it can be empty when ordering a Build
     variant = models.ForeignKey(
         'products.ProductVariant',
         on_delete=models.RESTRICT,
-        related_name='order_items'
+        related_name='order_items',
+        null=True, 
+        blank=True
     )
+    
+    # 2. Added the Build field (Update 'builds.CustomBuild' to your actual app and model name!)
+    build = models.ForeignKey(
+ # <--- Replace with your actual Build model path
+        'builds.PCBuild',
+        on_delete=models.SET_NULL,
+        related_name='order_items',
+        null=True, 
+        blank=True
+    )
+    
     quantity = models.PositiveIntegerField(default=1)
-    unit_price = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0.00)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        # Note: In Django, if 'variant' is NULL, most databases will allow multiple 
+        # rows with the same 'order' and a NULL 'variant', so this is safe to keep.
         unique_together = [('order', 'variant')]
 
     def __str__(self):
-        return f"{self.variant.sku} × {self.quantity} (Order-{self.order_id})"
+        # 3. Updated to safely display either the Variant or the Build
+        if self.variant:
+            return f"{self.variant.sku} × {self.quantity} (Order-{self.order_id})"
+        elif self.build:
+            # Assuming your Build model has a 'name' field. Change to match your model.
+            return f"Build: {self.build.name} × {self.quantity} (Order-{self.order_id})"
+        return f"Unknown Item × {self.quantity} (Order-{self.order_id})"
 
 
 class Invoice(models.Model):
@@ -153,12 +213,10 @@ class Payment(models.Model):
     reference_type = models.CharField(max_length=20, choices=REFERENCE_TYPES)
     reference_id = models.IntegerField()
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
-    gateway = models.CharField(max_length=50, default='cashfree')
+    gateway = models.CharField(max_length=50, default='razorpay')
     gateway_payment_id = models.CharField(
         max_length=255, null=True, blank=True)
     gateway_order_id = models.CharField(max_length=255, null=True, blank=True)
-    payment_session_id = models.CharField(
-        max_length=200, null=True, blank=True)
     raw_response = models.JSONField(null=True, blank=True)
     payment_status = models.CharField(
         max_length=15, choices=STATUSES, default='pending')

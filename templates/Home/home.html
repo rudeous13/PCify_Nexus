@@ -300,124 +300,73 @@
 
     <div id="toast-container"></div>
 
-    <header
-      class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-dark-bg/80 border-b border-slate-200/60 dark:border-white/5 transition-all duration-300"
-    >
-      <div
-        class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between"
-      >
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-dark-bg/80 border-b border-slate-200/60 dark:border-white/5 transition-all duration-300">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between">
         <a href="{% url 'core:homepage'%}" class="flex items-center gap-2 sm:gap-3 group">
-          <div
-            class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform duration-300"
-          >
+          <div class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform duration-300">
             <i class="bi bi-cpu-fill" aria-hidden="true"></i>
           </div>
           <div class="flex flex-col">
-            <span
-              class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white font-mono Monaco"
-            >
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white font-mono Monaco">
               Nexus<span class="text-brand-400">Build</span>
             </span>
-            <span
-              class="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block"
-              >Premium Hardware</span
-            >
+            <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block">Premium Hardware</span>
           </div>
         </a>
 
-        <nav
-          class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md"
-        >
-          <a
-            href="{% url 'core:homepage'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10 font-mono Monaco"
-            >Home</a
-          >
-          <a
-            href="{% url 'core:prebuilt'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Prebuilt</a
-          >
-          <a
-            href="{% url 'core:built'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Builder</a
-          >
-          <a
-            href="{% url 'core:accessories'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Accessories</a
-          >
-          <a
-            href="{% url 'core:cart'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all relative"
-            >Cart
-            <span
-              id="cart-badge"
-              class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"
-            ></span>
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          <a href="{% url 'core:homepage'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10 font-mono Monaco">Home</a>
+          <a href="{% url 'core:prebuilt'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Prebuilt</a>
+          <a href="{% url 'core:built'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Builder</a>
+          <a href="{% url 'core:accessories'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Accessories</a>
+          <a href="{% url 'core:cart'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all relative">Cart
+            <span id="cart-badge" class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"></span>
           </a>
-
         </nav>
 
         <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 relative z-[100]">
-          
-          <button
-            id="themeToggle"
-            class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:border-brand-400/50 dark:hover:border-brand-500/50 hover:bg-white dark:hover:bg-white/10 hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] transition-all duration-300 group overflow-hidden"
-            aria-label="Toggle Theme"
-          >
+          <button id="themeToggle" class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:border-brand-400/50 dark:hover:border-brand-500/50 hover:bg-white dark:hover:bg-white/10 hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] transition-all duration-300 group overflow-hidden" aria-label="Toggle Theme">
             <div class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
-            
             <div class="relative z-10 text-slate-500 dark:text-slate-400 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors duration-300">
               <i class="bi bi-moon-stars-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] inline-block" aria-hidden="true"></i>
             </div>
           </button>
-          
+
           <div class="h-5 sm:h-6 w-px bg-gradient-to-b from-transparent via-slate-300 dark:via-white/20 to-transparent mx-0 sm:mx-0.5 hidden sm:block"></div>
-          
+
           {% if request.session.active %}
-          
           <div class="relative hidden sm:block">
-            
             <button id="profileMenuBtn" class="group flex items-center gap-2 sm:gap-2.5 pl-1 sm:pl-1.5 pr-3 sm:pr-4 py-1 sm:py-1.5 rounded-full bg-white/60 dark:bg-[#0b0f19]/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)] hover:border-brand-500/40 dark:hover:border-brand-400/40 hover:bg-white dark:hover:bg-[#111827]/90 hover:shadow-[0_4px_20px_rgba(14,165,233,0.15)] transition-all duration-300 ease-out outline-none">
-              
               <div class="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full z-10 before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-brand-400 before:to-accent-500 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10">
                 <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center flex-shrink-0 border-2 border-white dark:border-[#0b0f19] z-10 shadow-inner transition-transform duration-300 group-hover:scale-[0.95]">
                   {% if request.session.user_image %}
                     <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
                   {% else %}
                     <span class="text-[9px] sm:text-[11px] font-bold tracking-widest font-mono drop-shadow-sm ml-[1px]">
-                      {{ request.user.first_name|default:request.session.user_name|make_list|first|upper }}{{ request.user.last_name|default:request.session.user_lname|make_list|first|upper }}
+                      {{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}
                     </span>
                   {% endif %}
                 </div>
                 <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-white dark:border-[#0b0f19] rounded-full z-20 shadow-[0_0_8px_rgba(34,197,94,0.6)] group-hover:scale-110 transition-transform duration-300"></span>
               </div>
-              
               <div class="flex items-center gap-1 sm:gap-2">
-                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.user.first_name|default:request.session.user_name }}</span>
+                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.session.user_name }}</span>
                 <i id="profileMenuChevron" class="bi bi-chevron-down text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-400 ease-[cubic-bezier(0.87,0,0.13,1)]"></i>
               </div>
             </button>
-
             <div id="profileDropdown" class="absolute right-0 top-[calc(100%+8px)] sm:top-[calc(100%+12px)] w-56 sm:w-64 opacity-0 translate-y-4 scale-[0.97] pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top-right z-50">
-              
               <div class="p-1.5 sm:p-2 rounded-[16px] sm:rounded-[20px] bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-2xl border-x border-b border-slate-200/60 dark:border-white/10 border-t-2 border-t-brand-500/50 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] flex flex-col relative overflow-hidden">
-                
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-brand-500/20 blur-2xl rounded-full pointer-events-none"></div>
-
                 <div class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 mb-1 bg-slate-50/50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-                   <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
-                      <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
-                      <span class="relative z-10">{{ request.user.first_name|default:request.session.user_name|make_list|first|upper }}{{ request.user.last_name|default:request.session.user_lname|make_list|first|upper }}</span>
-                   </div>
-                   <div class="flex flex-col min-w-0">
-                      <p class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">Nexus Member</p>
-                      <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.user.first_name|default:request.session.user_name }} {{ request.user.last_name|default:request.session.user_lname }}</p>
-                   </div>
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
+                    <span class="relative z-10">{{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}</span>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <p class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">Nexus Member</p>
+                    <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.session.user_name }} {{ request.session.user_lname }}</p>
+                  </div>
                 </div>
-                
                 <div class="flex flex-col gap-0.5 mt-1 relative z-10">
                   <a href="{% url 'core:profile' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-white/10 hover:shadow-sm transition-all duration-300">
                     <div class="flex items-center gap-2 sm:gap-3">
@@ -428,9 +377,7 @@
                     </div>
                     <i class="bi bi-chevron-right text-[8px] sm:text-[10px] text-slate-300 dark:text-slate-600 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300"></i>
                   </a>
-                  
                   <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent my-1"></div>
-                  
                   <a href="{% url 'accounts:singout' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300">
                     <div class="flex items-center gap-2 sm:gap-3">
                       <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-red-500 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
@@ -440,29 +387,18 @@
                     </div>
                   </a>
                 </div>
-
               </div>
             </div>
           </div>
-
           {% else %}
-          
-          <a
-            href="{% url 'accounts:signin'%}"
-            class="relative hidden sm:flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 group border border-slate-200 dark:border-white/10 hover:border-brand-500/50"
-          >
+          <a href="{% url 'accounts:signin'%}" class="relative hidden sm:flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 group border border-slate-200 dark:border-white/10 hover:border-brand-500/50">
             <div class="absolute inset-0 bg-white dark:bg-[#0b0f19] transition-colors duration-300"></div>
-            
             <div class="absolute inset-0 bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"></div>
-            
-            <div class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 z-0"></div>
-            
             <div class="relative z-10 flex items-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-200 group-hover:text-white transition-colors duration-300 font-mono font-bold tracking-wide text-[10px] sm:text-xs">
               <i class="bi bi-shield-lock text-xs sm:text-sm group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" aria-hidden="true"></i>
               <span class="drop-shadow-sm">LOGIN</span>
             </div>
           </a>
-          
           {% endif %}
         </div>
       </div>

@@ -767,10 +767,10 @@
                 <div class="relative">
                   <select
                     name="brand"
-                    class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer"
+                    class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer"
                   >
                     {% for brand in brand_list %}
-                    <option value="{{ brand.brand_id }}">
+                    <option value="{{ brand.brand_id }}" class="bg-[#708090]">
                       {{ brand.brand_name }}
                     </option>
                     {% endfor %}
@@ -789,12 +789,12 @@
                   <select
                     id="addCategorySelect"
                     name="category"
-                    class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer"
+                    class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer"
                     onchange="handleCategoryChange(this, 'addDynamicFields')"
                   >
                     <option value="" disabled selected>Select Category</option>
                     {% for category in category_list %}
-                    <option value="{{ category.category_id }}">
+                    <option value="{{ category.category_id }}" class="bg-[#708090]">
                       {{ category.category_name }}
                     </option>
                     {% endfor %}
@@ -1358,11 +1358,11 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Socket Type</label>
             <div class="relative">
-              <select name="socket_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="AM4">AM4</option>
-                <option value="AM5">AM5</option>
-                <option value="LGA1200">LGA1200</option>
-                <option value="LGA1700">LGA1700</option>
+              <select name="socket_type" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="AM4" class="bg-[#708090]">AM4</option>
+                <option value="AM5" class="bg-[#708090]">AM5</option>
+                <option value="LGA1200" class="bg-[#708090]">LGA1200</option>
+                <option value="LGA1700" class="bg-[#708090]">LGA1700</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1399,9 +1399,9 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">RAM Type</label>
             <div class="relative">
-              <select name="ram_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="DDR4">DDR4</option>
-                <option value="DDR5">DDR5</option>
+              <select name="ram_type" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="DDR4" class="bg-[#708090]">DDR4</option>
+                <option value="DDR5" class="bg-[#708090]">DDR5</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1417,10 +1417,10 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Module Count</label>
             <div class="relative">
-              <select name="module_count" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="4">4</option>
+              <select name="module_count" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="1" class="bg-[#708090]">1</option>
+                <option value="2" class="bg-[#708090]">2</option>
+                <option value="4" class="bg-[#708090]">4</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1434,10 +1434,11 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Storage Type</label>
             <div class="relative">
-              <select name="storage_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="HDD">HDD</option>
-                <option value="SSD">SSD</option>
-                <option value="NVMe SSD">NVMe SSD</option>
+              <select name="storage_type" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="HDD" class="bg-[#708090]">HDD</option>
+                <option value="SSD" class="bg-[#708090]">SSD</option>
+                <option value="NVMe SSD" class="bg-[#708090]">NVMe SSD</option>
+                <option value="M.2" class="bg-[#708090]">M.2</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1449,11 +1450,11 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Interface Type</label>
             <div class="relative">
-              <select name="interface_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="SATA">SATA</option>
-                <option value="PCIe 3.0">PCIe 3.0</option>
-                <option value="PCIe 4.0">PCIe 4.0</option>
-                <option value="PCIe 5.0">PCIe 5.0</option>
+              <select name="interface_type" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="SATA" class="bg-[#708090]">SATA</option>
+                <option value="PCIe 3.0" class="bg-[#708090]">PCIe 3.0</option>
+                <option value="PCIe 4.0" class="bg-[#708090]">PCIe 4.0</option>
+                <option value="PCIe 5.0" class="bg-[#708090]">PCIe 5.0</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1461,12 +1462,16 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Form Factor</label>
             <div class="relative">
-              <select name="form_factor" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="2.5 inch">2.5"</option>
-                <option value="3.5 inch">3.5"</option>
-                <option value="M.2 2280">M.2 2280</option>
+              <select name="form_factor" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="2.5 inch" class="bg-[#708090]">2.5"</option>
+                <option value="3.5 inch" class="bg-[#708090]">3.5"</option>
+                <option value="M.2 2280" class="bg-[#708090]">M.2 2280</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
+            </div>
+            <div class="group">
+            <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">TDP (W)</label>
+              <input type="number" name="tdp" class="form-input" placeholder="e.g. 8" />
             </div>
           </div>
         `,
@@ -1478,9 +1483,9 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">PCIe Version</label>
             <div class="relative">
-              <select name="pcie_version" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="PCIe 3.0 x16">PCIe 3.0 x16</option>
-                <option value="PCIe 4.0 x16">PCIe 4.0 x16</option>
+              <select name="pcie_version" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="PCIe 3.0 x16" class="bg-[#708090]">PCIe 3.0 x16</option>
+                <option value="PCIe 4.0 x16" class="bg-[#708090]">PCIe 4.0 x16</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1492,9 +1497,9 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Interface Type</label>
             <div class="relative">
-              <select name="interface_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="HDMI/DP">HDMI/DP</option>
-                <option value="DVI/HDMI/DP">DVI/HDMI/DP</option>
+              <select name="interface_type" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="HDMI/DP" class="bg-[#708090]">HDMI/DP</option>
+                <option value="DVI/HDMI/DP" class="bg-[#708090]">DVI/HDMI/DP</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1524,9 +1529,9 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Form Factor</label>
             <div class="relative">
-              <select name="form_factor" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="ATX">ATX</option>
-                <option value="SFX">SFX</option>
+              <select name="form_factor" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="ATX" class="bg-[#708090]">ATX</option>
+                <option value="SFX" class="bg-[#708090]">SFX</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1538,11 +1543,11 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Efficiency Rating</label>
             <div class="relative">
-              <select name="efficiency_rating" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="80+ Bronze">80+ Bronze</option>
-                <option value="80+ Gold">80+ Gold</option>
-                <option value="80+ Platinum">80+ Platinum</option>
-                <option value="80+ Titanium">80+ Titanium</option>
+              <select name="efficiency_rating" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="80+ Bronze" class="bg-[#708090]">80+ Bronze</option>
+                <option value="80+ Gold" class="bg-[#708090]">80+ Gold</option>
+                <option value="80+ Platinum" class="bg-[#708090]">80+ Platinum</option>
+                <option value="80+ Titanium" class="bg-[#708090]">80+ Titanium</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1579,9 +1584,9 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">RAM Type</label>
             <div class="relative">
-              <select name="ram_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="DDR4">DDR4</option>
-                <option value="DDR5">DDR5</option>
+              <select name="ram_type" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="DDR4" class="bg-[#708090]">DDR4</option>
+                <option value="DDR5" class="bg-[#708090]">DDR5</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1606,8 +1611,8 @@
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">SATA Ports</label>
             <div class="relative">
-              <select name="sata_ports" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="2">2</option><option value="4">4</option><option value="6">6</option><option value="8">8</option>
+              <select name="sata_ports" class="w-full appearance-none bg-[#708090] border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
+                <option value="2" class="bg-[#708090]">2</option><option value="4" class="bg-[#708090]">4</option><option value="6" class="bg-[#708090]">6</option><option value="8" class="bg-[#708090]">8</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
@@ -1652,23 +1657,105 @@
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Cooler Type</label>
             <div class="relative">
               <select name="cooler_type" class="w-full appearance-none bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 transition-all cursor-pointer">
-                <option value="Air">Air</option>
-                <option value="Liquid (AIO)">Liquid (AIO)</option>
+                <option value="AIR">Air</option>
+                <option value="AIO">Liquid (AIO)</option>
               </select>
               <i class="bi bi-chevron-down absolute right-4 top-4 text-xs text-slate-500 pointer-events-none"></i>
             </div>
           </div>
-          <div class="group">
-            <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Supported Sockets</label>
-            <input type="text" name="supported_socket" class="form-input" placeholder="e.g. AM4, LGA1700 (comma separated)" />
+
+          <div class="group md:col-span-2">
+            <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-3 block group-focus-within:text-brand-300 transition-colors">
+              Supported Sockets
+            </label>
+            
+            <div class="flex flex-wrap gap-2 p-4 bg-[#1e293b]/30 border border-white/5 rounded-xl shadow-inner">
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="AM3" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  AM3
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="AM4" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  AM4
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="AM5" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  AM5
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="LGA1151" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  LGA1151
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="LGA1200" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  LGA1200
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="LGA1366" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  LGA1366
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="LGA2011" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  LGA2011
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="LGA2066" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  LGA2066
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="LGA1700" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  LGA1700
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="TR4" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  TR4
+                </div>
+              </label>
+
+              <label class="cursor-pointer relative">
+                <input type="checkbox" name="sockets" value="sTRX4" class="peer sr-only" />
+                <div class="px-4 py-2 rounded-lg border border-white/10 bg-slate-800/50 text-xs font-medium text-slate-400 transition-all duration-300 hover:bg-white/5 peer-checked:border-brand-500/50 peer-checked:bg-brand-500/10 peer-checked:text-brand-400 peer-checked:shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+                  sTRX4
+                </div>
+              </label>
+            </div>
           </div>
+
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Height (mm)</label>
             <input type="number" name="height_mm" class="form-input" placeholder="e.g. 155" />
           </div>
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">Radiator Size (mm)</label>
-            <input type="number" name="rediater_size" class="form-input" placeholder="e.g. 240 (0 if Air)" />
+            <input type="number" name="radiator_size_mm" class="form-input" placeholder="e.g. 240 (0 if Air)" />
           </div>
           <div class="group">
             <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block">TDP (W)</label>
@@ -1736,60 +1823,59 @@
       const jsonCategories = ['moniter', 'keyboard', 'mouse', 'headset', 'power strip', 'ups'];
 
       function handleCategoryChange(selectElement, containerId) {
-  const container = document.getElementById(containerId);
-  const selectedText = selectElement.options[selectElement.selectedIndex].text.trim().toLowerCase();
-  
-  container.innerHTML = '';
-
-  let matchedKey = null;
-
-  // 1. Intercept storage types specifically
-  if (selectedText.includes('ssd') || selectedText.includes('hdd') || selectedText.includes('m.2')) {
-    matchedKey = 'ssd';
-  } else {
-    // 2. Default loop for everything else (cpu, ram, gpu, etc.)
-    for(let key in categoryTemplates) {
-      if (selectedText.includes(key)) {
-        matchedKey = key;
-        break;
-      }
-    }
-  }
-
-  if (matchedKey) {
-    container.innerHTML = `
-      <div class="col-span-1 md:col-span-2 mt-2 border-t border-white/10 pt-4">
-        <h4 class="text-xs font-bold text-brand-400 uppercase tracking-widest mb-4">Specific Parameters</h4>
-      </div>
-      ${categoryTemplates[matchedKey]}
-    `;
-  }
-}
-
-      function handlePreSubmit(event, form) {
-        const catSelect = form.querySelector('select[name="category"]');
-        if (!catSelect || catSelect.selectedIndex === -1) return;
+        const container = document.getElementById(containerId);
+        const selectedText = selectElement.options[selectElement.selectedIndex].text.trim().toLowerCase();
         
-        const catName = catSelect.options[catSelect.selectedIndex].text.toLowerCase();
-        const isJsonCategory = jsonCategories.some(c => catName.includes(c));
+        container.innerHTML = '';
 
-        if (isJsonCategory) {
-          let jsonObj = {};
-          const dynamicInputs = form.querySelectorAll('.dynamic-json-field');
-          
-          dynamicInputs.forEach(input => {
-            if (input.type === 'checkbox' || input.type === 'radio') {
-              if (input.checked) jsonObj[input.name] = input.value;
-            } else {
-              jsonObj[input.name] = input.value;
+        let matchedKey = null;
+
+        // 1. Intercept storage types specifically
+        if (selectedText.includes('ssd') || selectedText.includes('hdd') || selectedText.includes('m.2')) {
+          matchedKey = 'ssd';
+        } else {
+          // 2. Default loop for everything else (cpu, ram, gpu, etc.)
+          for(let key in categoryTemplates) {
+            if (selectedText.includes(key)) {
+              matchedKey = key;
+              break;
             }
-          });
-
-          const hiddenField = form.querySelector('.json-specs-field');
-          if (hiddenField) {
-            hiddenField.value = JSON.stringify(jsonObj);
           }
         }
+
+        if (matchedKey) {
+          container.innerHTML = `
+            <div class="col-span-1 md:col-span-2 mt-2 border-t border-white/10 pt-4">
+              <h4 class="text-xs font-bold text-brand-400 uppercase tracking-widest mb-4">Specific Parameters</h4>
+            </div>
+            ${categoryTemplates[matchedKey]}
+          `;
+        }
+      }
+
+      function handlePreSubmit(e, form) {
+        const specsField = form.querySelector(".json-specs-field");
+
+        // Dynamically find the correct container (works for both Add and Edit modals)
+        const container = form.querySelector('[id$="DynamicFields"]');
+        const inputs = container ? container.querySelectorAll("input, select") : [];
+
+        let specs = {};
+
+        inputs.forEach(input => {
+          if (!input.name) return;
+
+          if (input.type === "checkbox") {
+            if (!specs[input.name]) specs[input.name] = [];
+            if (input.checked) specs[input.name].push(input.value);
+          } 
+          else {
+            specs[input.name] = input.value;
+          }
+        });
+
+        specsField.value = JSON.stringify(specs);
+        console.log("Specs JSON Payload:", specsField.value); // Check your browser console to verify!
       }
 
       // --- OPEN EDIT MODAL ---

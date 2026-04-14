@@ -1,0 +1,648 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nexus Tech | Delivery</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: ["class", '[data-theme="dark"]'],
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Outfit"', "sans-serif"],
+              mono: ['"Space Grotesk"', "monospace"],
+            },
+            colors: {
+              brand: {
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                glow: "rgba(14, 165, 233, 0.3)",
+              },
+              accent: {
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                glow: "rgba(139, 92, 246, 0.3)",
+              },
+              dark: { bg: "#0b0f19", card: "#111827", border: "#1f2937" },
+              success: "#10b981",
+              danger: "#ef4444",
+              warning: "#f59e0b",
+            },
+            backgroundImage: {
+              "grid-pattern":
+                "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
+            },
+            boxShadow: {
+              neon: "0 0 12px -3px var(--tw-shadow-color)",
+              glass: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+            },
+            animation: {
+              "slide-in": "slideIn 0.4s ease-out forwards",
+            },
+            keyframes: {
+              slideIn: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style type="text/tailwindcss">
+      /* Global Styles */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #a4a4a4;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+      }
+
+      .bg-grid {
+        background-size: 40px 40px;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          5% white,
+          95% white,
+          transparent
+        );
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          5% white,
+          95% white,
+          transparent
+        );
+      }
+
+      /* Sidebar Active State */
+      .nav-item.active {
+        background: rgba(14, 165, 233, 0.1);
+        color: #38bdf8;
+        border-right: 3px solid #38bdf8;
+      }
+
+      /* Table Styles */
+      .glass-table th {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+      .glass-table tr:hover td {
+        background-color: rgba(255, 255, 255, 0.02);
+      }
+
+      /* --- LIQUID GLASS MOBILE NAV STYLES --- */
+      .liquid-glass-nav {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(24px) saturate(200%);
+        -webkit-backdrop-filter: blur(24px) saturate(200%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+      }
+      [data-theme="dark"] .liquid-glass-nav {
+        background: rgba(15, 23, 42, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+      }
+
+      .mobile-nav-link {
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        z-index: 1;
+      }
+      
+      .mobile-nav-link::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(circle at 50% 120%, rgba(14, 165, 233, 0.25), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+      }
+      .mobile-nav-link:hover::after {
+        opacity: 1;
+      }
+      
+      .mobile-nav-link.active {
+        color: #0ea5e9;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px);
+      }
+      [data-theme="dark"] .mobile-nav-link.active {
+        color: #38bdf8;
+        background: rgba(14, 165, 233, 0.15);
+        border: 1px solid rgba(14, 165, 233, 0.3);
+        box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      }
+    </style>
+
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        if (savedTheme === "dark")
+          document.documentElement.classList.add("dark");
+      })();
+    </script>
+  </head>
+  <body
+    class="bg-slate-50 dark:bg-dark-bg text-slate-600 dark:text-slate-300 antialiased font-sans transition-colors duration-300 h-screen overflow-hidden flex selection:bg-brand-500 selection:text-white pb-24 lg:pb-0"
+  >
+    <div class="fixed inset-0 z-0 pointer-events-none">
+      <div class="absolute inset-0 bg-grid-pattern bg-grid opacity-[0.03] dark:opacity-[0.05]"></div>
+      <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[100px] mix-blend-screen"></div>
+      <div class="absolute bottom-[20%] right-[-10%] w-[500px] h-[500px] bg-accent-500/10 rounded-full blur-[100px] mix-blend-screen"></div>
+    </div>
+
+    <div id="toast-container" class="fixed top-24 right-4 md:right-8 z-[200] flex flex-col gap-3 pointer-events-none">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="toast flex items-center gap-3 px-4 py-3 rounded-xl bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-l-4 {% if message.tags == 'success' %}border-emerald-500{% else %}border-brand-500{% endif %} border-y border-r border-slate-200 dark:border-white/10 shadow-2xl pointer-events-auto transform translate-x-full transition-all duration-500">
+            <div class="w-8 h-8 rounded-full {% if message.tags == 'success' %}bg-emerald-500/10 text-emerald-500{% else %}bg-brand-500/10 text-brand-500{% endif %} flex items-center justify-center shrink-0">
+              <i class="bi {% if message.tags == 'success' %}bi-check-lg{% else %}bi-info-circle{% endif %} text-lg"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-800 dark:text-white pr-4">{{ message }}</p>
+            <button onclick="this.closest('.toast').remove()" class="ml-auto text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+              <i class="bi bi-x-lg text-xs"></i>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <aside
+      id="sidebar"
+      class="w-64 flex-shrink-0 bg-white/80 dark:bg-dark-card/80 backdrop-blur-xl border-r border-slate-200 dark:border-white/5 h-full flex-col hidden lg:flex z-50 transition-all duration-300 relative"
+    >
+      <div class="h-20 flex items-center px-6 border-b border-slate-200 dark:border-white/5">
+        <a href="{% url 'employee:dashboard' %}" class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold shadow-lg shadow-brand-500/20">
+            <i class="bi bi-cpu-fill" aria-hidden="true"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-white font-mono uppercase">Nexus<span class="text-brand-400">Tech</span></span>
+            <span class="text-[10px] font-bold tracking-widest text-slate-500 uppercase">Employee Portal</span>
+          </div>
+        </a>
+      </div>
+      
+      <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+        <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">My Workspace</p>
+
+        <a href="{% url 'employee:tasks' %}" class="nav-item flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-100 dark:hover:bg-white/5 hover:text-brand-400">
+          <div class="flex items-center gap-3">
+            <i class="bi bi-list-task text-lg drop-shadow-sm"></i> My Tasks
+          </div>
+          <span class="bg-brand-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ stats.pending_tasks|default:"0" }}</span>
+        </a>
+
+        <a href="{% url 'employee:services_task' %}" class="nav-item {% if request.resolver_match.url_name == 'services_task' %}active{% endif %} flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-100 dark:hover:bg-white/5 hover:text-brand-400">
+          <i class="bi bi-wrench-adjustable text-lg drop-shadow-sm"></i> Services Task
+        </a>
+
+        <a href="{% url 'employee:builds' %}" class="nav-item {% if request.resolver_match.url_name == 'builds' %}active{% endif %} flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-100 dark:hover:bg-white/5 hover:text-brand-400">
+          <i class="bi bi-pc-display text-lg drop-shadow-sm"></i> Builds
+        </a>
+
+        <a href="{% url 'employee:delivery' %}" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-100 dark:hover:bg-white/5 hover:text-brand-400">
+          <i class="bi bi-truck text-lg drop-shadow-sm"></i> Delivery
+        </a>
+
+        <a href="{% url 'employee:completed' %}" class="nav-item {% if request.resolver_match.url_name == 'completed' %}active{% endif %} flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:bg-slate-100 dark:hover:bg-white/5 hover:text-brand-400">
+          <i class="bi bi-check-circle-fill text-lg drop-shadow-sm"></i> Completed Work
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-slate-200 dark:border-white/5">
+        <a href="{% url 'accounts:singout' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-500/10 transition-all">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-full relative z-10 w-full min-w-0 lg:w-[calc(100%-16rem)]">
+      
+      <header class="h-20 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-slate-200 dark:border-white/5 flex items-center justify-between px-4 md:px-8 z-40 sticky top-0">
+        <div class="flex items-center gap-4 flex-1">
+          <div class="lg:hidden flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold">
+              <i class="bi bi-cpu-fill"></i>
+            </div>
+          </div>
+          <div class="relative hidden md:block w-full max-w-md">
+            <i class="bi bi-search absolute left-4 top-3 text-slate-400"></i>
+            <input
+              type="text"
+              id="deliverySearch"
+              onkeyup="filterDeliveries()"
+              placeholder="Search deliveries by ID, customer, or address..."
+              class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full pl-10 pr-4 py-2.5 text-sm text-slate-700 dark:text-white outline-none focus:border-brand-500 transition-all"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-4">
+          <button id="themeToggle" class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 hover:text-brand-400 transition-colors">
+            <i class="bi bi-moon-stars-fill"></i>
+          </button>
+          <div class="h-8 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
+          <div class="flex items-center gap-3 pl-2 cursor-pointer group">
+            <div class="text-right hidden sm:block">
+              <p class="text-sm font-bold text-slate-900 dark:text-white leading-none">
+                {{ request.user.get_full_name|default:"Alex Tech" }}
+              </p>
+              <p class="text-[10px] text-slate-500 font-mono mt-1">Delivery & Tech Agent</p>
+            </div>
+            <img
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ request.user.username|default:'Delivery' }}"
+              class="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-white/10 group-hover:border-brand-500 transition-all"
+            />
+          </div>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 animate-slide-in gap-4">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white font-mono mb-2">
+              Delivery & Dispatch
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+              Manage outgoing shipments, assigned routes, and delivery confirmations.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-slide-in" style="animation-delay: 0.1s">
+          <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-center relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-slate-500 group-hover:scale-110 transition-transform"><i class="bi bi-box-seam text-6xl"></i></div>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Assigned Today</p>
+            <h3 class="text-3xl font-mono font-bold text-slate-900 dark:text-white">{{ stats.total_assigned|default:"0" }}</h3>
+          </div>
+          
+          <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 border-b-4 border-b-brand-500 rounded-2xl p-4 flex flex-col justify-center relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-brand-500 group-hover:translate-x-2 transition-transform"><i class="bi bi-truck text-6xl"></i></div>
+            <p class="text-[10px] font-bold text-brand-500 uppercase tracking-widest mb-1">Out for Delivery</p>
+            <h3 class="text-3xl font-mono font-bold text-brand-400">{{ stats.out_for_delivery|default:"0" }}</h3>
+          </div>
+
+          <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-center relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-warning group-hover:scale-110 transition-transform"><i class="bi bi-clock-history text-6xl"></i></div>
+            <p class="text-[10px] font-bold text-warning uppercase tracking-widest mb-1">Pending Dispatch</p>
+            <h3 class="text-3xl font-mono font-bold text-warning">{{ stats.pending_dispatch|default:"0" }}</h3>
+          </div>
+
+          <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-center relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-emerald-500 group-hover:scale-110 transition-transform"><i class="bi bi-check2-circle text-6xl"></i></div>
+            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">Successfully Delivered</p>
+            <h3 class="text-3xl font-mono font-bold text-emerald-500">{{ stats.delivered|default:"0" }}</h3>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-xl animate-slide-in" style="animation-delay: 0.2s">
+          <div class="p-6 border-b border-slate-200 dark:border-white/10 flex justify-between items-center bg-slate-50/50 dark:bg-white/[0.02]">
+            <h3 class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="bi bi-map text-brand-500"></i> Dispatch Queue
+            </h3>
+            <div class="flex items-center gap-2">
+              <select id="statusFilter" onchange="filterDeliveries()" class="text-xs font-bold text-slate-500 bg-white dark:bg-white/5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 shadow-sm outline-none focus:border-brand-500 appearance-none cursor-pointer">
+                <option value="">Filter: All</option>
+                <option value="pending dispatch">Pending Dispatch</option>
+                <option value="out for delivery">Out for Delivery</option>
+                <option value="delivered">Delivered</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left text-sm glass-table min-w-[900px]">
+              <thead>
+                <tr class="text-slate-500 border-b border-slate-200 dark:border-white/10 bg-white dark:bg-transparent">
+                  <th class="px-6 py-4 font-bold uppercase text-[10px] tracking-widest whitespace-nowrap w-32">Tracking ID</th>
+                  <th class="px-6 py-4 font-bold uppercase text-[10px] tracking-widest whitespace-nowrap">Customer Info</th>
+                  <th class="px-6 py-4 font-bold uppercase text-[10px] tracking-widest whitespace-nowrap">Order Details</th>
+                  <th class="px-6 py-4 font-bold uppercase text-[10px] tracking-widest whitespace-nowrap">Delivery Status</th>
+                  <th class="px-6 py-4 font-bold uppercase text-[10px] tracking-widest text-center whitespace-nowrap">Action</th>
+                </tr>
+              </thead>
+              <tbody id="deliveryTableBody" class="divide-y divide-slate-200 dark:divide-white/5">
+                
+                {% for delivery in deliveries %}
+                <tr class="text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-200 data-row group {% if delivery.status == 'Delivered' %}opacity-60 hover:opacity-100{% endif %}">
+                  <td class="px-6 py-4">
+                    <span class="font-mono font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-white/5 px-2 py-1 rounded border border-slate-200 dark:border-white/10">{{ delivery.tracking_id }}</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <button 
+                      onclick="openDeliveryModal('{{ delivery.tracking_id|escapejs }}', '{{ delivery.customer_name|escapejs }}', '{{ delivery.customer_phone|escapejs }}', '{{ delivery.customer_address|escapejs }}', '{{ delivery.order_type|escapejs }} ({{ delivery.order_ref|escapejs }})', '{{ delivery.status|escapejs }}')"
+                      class="text-left group w-full outline-none focus:outline-none">
+                      <span class="font-bold block text-slate-900 dark:text-white group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors">
+                        {{ delivery.customer_name }} <i class="bi bi-box-arrow-up-right text-xs opacity-0 group-hover:opacity-100 transition-opacity ml-1"></i>
+                      </span>
+                      <span class="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><i class="bi bi-geo-alt"></i> {{ delivery.customer_address|truncatechars:30 }}</span>
+                    </button>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      {% if delivery.order_type_icon %}
+                      <i class="bi {{ delivery.order_type_icon }} text-brand-400"></i>
+                      {% else %}
+                      <i class="bi bi-box text-brand-400"></i>
+                      {% endif %}
+                      <span class="text-sm font-medium">{{ delivery.order_type }}</span>
+                    </div>
+                    <span class="text-[10px] text-slate-500 block mt-0.5">Ref: {{ delivery.order_ref }}</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    {% if delivery.status == "Out for Delivery" %}
+                    <span class="flex w-max items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-500/10 text-brand-500 text-[10px] font-bold uppercase tracking-wider border border-brand-500/20">
+                      <i class="bi bi-truck"></i> {{ delivery.status }}
+                    </span>
+                    {% elif delivery.status == "Pending Dispatch" %}
+                    <span class="flex w-max items-center gap-1.5 px-2.5 py-1 rounded-md bg-warning/10 text-warning text-[10px] font-bold uppercase tracking-wider border border-warning/20">
+                      <i class="bi bi-box-seam"></i> {{ delivery.status }}
+                    </span>
+                    {% elif delivery.status == "Delivered" %}
+                    <span class="flex w-max items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-500 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">
+                      <i class="bi bi-check-circle"></i> {{ delivery.status }}
+                    </span>
+                    {% else %}
+                    <span class="flex w-max items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-500/10 text-slate-500 text-[10px] font-bold uppercase tracking-wider border border-slate-500/20">
+                      {{ delivery.status }}
+                    </span>
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <button 
+                      onclick="openDeliveryModal('{{ delivery.tracking_id|escapejs }}', '{{ delivery.customer_name|escapejs }}', '{{ delivery.customer_phone|escapejs }}', '{{ delivery.customer_address|escapejs }}', '{{ delivery.order_type|escapejs }} ({{ delivery.order_ref|escapejs }})', '{{ delivery.status|escapejs }}')"
+                      class="px-4 py-2 rounded-lg {% if delivery.status == 'Pending Dispatch' %}bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-white/10 border-slate-300 dark:border-white/10{% else %}bg-brand-500/10 text-brand-500 hover:bg-brand-500 hover:text-white border-brand-500/20{% endif %} font-bold text-xs transition-all border whitespace-nowrap shadow-sm">
+                      {% if delivery.status == 'Pending Dispatch' %}Start Route{% elif delivery.status == 'Delivered' %}View Log{% else %}Update Log{% endif %}
+                    </button>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="px-6 py-8 text-center text-slate-500">No active deliveries assigned to you.</td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <nav class="lg:hidden fixed bottom-4 left-3 right-3 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:max-w-2xl liquid-glass-nav p-1.5 rounded-3xl z-50 flex justify-around items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <a href="{% url 'employee:tasks' %}" class="mobile-nav-link flex-shrink-0 flex flex-col items-center justify-center w-16 h-[60px] rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-500 relative">
+        <i class="bi bi-list-task text-lg drop-shadow-sm mb-0.5"></i>
+        <span class="text-[9px] font-medium tracking-wide">Tasks</span>
+        <span class="absolute top-1 right-2 w-2 h-2 bg-brand-500 rounded-full animate-pulse"></span>
+      </a>
+
+      <a href="{% url 'employee:services_task' %}" class="mobile-nav-link flex-shrink-0 flex flex-col items-center justify-center w-16 h-[60px] rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-500">
+        <i class="bi bi-wrench-adjustable text-lg drop-shadow-sm mb-0.5"></i>
+        <span class="text-[9px] font-medium tracking-wide">Services</span>
+      </a>
+
+      <a href="{% url 'employee:builds' %}" class="mobile-nav-link flex-shrink-0 flex flex-col items-center justify-center w-16 h-[60px] rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-500">
+        <i class="bi bi-pc-display text-lg drop-shadow-sm mb-0.5"></i>
+        <span class="text-[9px] font-medium tracking-wide">Builds</span>
+      </a>
+
+      <a href="{% url 'employee:delivery' %}" class="mobile-nav-link active flex-shrink-0 flex flex-col items-center justify-center w-16 h-[60px] rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-500">
+        <i class="bi bi-truck text-lg drop-shadow-sm mb-0.5"></i>
+        <span class="text-[9px] font-medium tracking-wide">Delivery</span>
+      </a>
+
+      <a href="{% url 'employee:completed' %}" class="mobile-nav-link flex-shrink-0 flex flex-col items-center justify-center w-16 h-[60px] rounded-2xl text-slate-500 dark:text-slate-400 hover:text-brand-500">
+        <i class="bi bi-check-circle-fill text-lg drop-shadow-sm mb-0.5"></i>
+        <span class="text-[9px] font-medium tracking-wide">Done</span>
+      </a>
+    </nav>
+
+    <div id="deliveryModal" class="fixed inset-0 z-[100] hidden">
+      <div
+        class="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity duration-300"
+        onclick="closeDeliveryModal()"
+      ></div>
+
+      <div
+        class="absolute right-0 top-0 h-full w-full md:w-[500px] bg-[#0f172a] border-l border-white/10 shadow-2xl p-0 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out flex flex-col"
+        id="deliveryModalPanel"
+      >
+        <div class="sticky top-0 z-10 bg-[#0f172a]/95 backdrop-blur-xl border-b border-white/5 px-8 py-6 flex justify-between items-start shadow-sm">
+          <div>
+            <span id="modalDelId" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-brand-500/20 text-brand-400 mb-2 inline-block">--</span>
+            <h2 class="text-xl font-bold text-white tracking-tight leading-tight flex items-center gap-2">
+              <i class="bi bi-person-circle text-slate-500"></i> <span id="modalDelCustomer">--</span>
+            </h2>
+          </div>
+          <button
+            onclick="closeDeliveryModal()"
+            class="group w-10 h-10 rounded-full bg-white/5 border border-white/5 hover:bg-red-500/10 hover:border-red-500/50 flex items-center justify-center transition-all duration-300 shrink-0 ml-4"
+          >
+            <i class="bi bi-x-lg text-slate-400 group-hover:text-red-500 transition-colors"></i>
+          </button>
+        </div>
+
+        <div class="p-8 space-y-6 flex-1">
+          
+          <div class="p-5 rounded-xl border border-white/10 bg-[#1e293b]/50 space-y-4">
+            
+            <div>
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-2">
+                <i class="bi bi-geo-alt-fill text-brand-400"></i> Destination Address
+              </p>
+              <p id="modalDelAddress" class="text-sm font-medium text-slate-200 leading-relaxed pl-5 border-l-2 border-brand-500/30 ml-1">
+                --
+              </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 pt-3 border-t border-white/5">
+              <div>
+                <p class="text-xs text-slate-500 mb-1"><i class="bi bi-telephone"></i> Contact</p>
+                <p id="modalDelPhone" class="text-sm font-bold text-white">--</p>
+              </div>
+              <div>
+                <p class="text-xs text-slate-500 mb-1"><i class="bi bi-box"></i> Order Ref</p>
+                <p id="modalDelOrder" class="text-sm font-bold text-white truncate">--</p>
+              </div>
+            </div>
+          </div>
+
+          <form id="updateDeliveryForm" class="space-y-6">
+            
+            <div class="group">
+              <label class="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-2 block group-focus-within:text-brand-300 transition-colors">
+                Delivery Status
+              </label>
+              <div class="relative">
+                <select id="modalDelStatus" class="w-full bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white font-medium focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 focus:shadow-[0_0_15px_rgba(56,189,248,0.1)] transition-all duration-300 appearance-none cursor-pointer">
+                  <option value="Pending Dispatch">Pending Dispatch</option>
+                  <option value="Out for Delivery">Out for Delivery</option>
+                  <option value="Delivered">Delivered / Handed Over</option>
+                  <option value="Failed Attempt">Attempted / Failed</option>
+                </select>
+                <i class="bi bi-chevron-down absolute right-4 top-4 text-slate-400 pointer-events-none"></i>
+              </div>
+            </div>
+
+            <div class="group">
+              <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 block group-focus-within:text-brand-400 transition-colors">
+                Driver Notes / Proof of Delivery
+              </label>
+              <textarea
+                rows="4"
+                class="w-full bg-[#1e293b]/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white leading-relaxed placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:bg-brand-500/5 resize-none transition-all"
+                placeholder="Log delivery notes, who signed for it, or reason for failed attempt..."
+              ></textarea>
+            </div>
+
+            <div class="border border-dashed border-white/20 rounded-xl p-6 text-center hover:bg-white/5 transition-colors cursor-pointer group">
+              <i class="bi bi-camera text-2xl text-slate-500 group-hover:text-brand-400 transition-colors"></i>
+              <p class="text-xs font-bold text-slate-400 mt-2">Tap to upload delivery photo</p>
+            </div>
+
+          </form>
+        </div>
+
+        <div class="p-6 border-t border-white/10 bg-[#0f172a] mt-auto">
+          <button type="button" onclick="closeDeliveryModal()" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
+            <i class="bi bi-send-check text-lg"></i> UPDATE DELIVERY LOG
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- Delivery Modal Logic ---
+      function openDeliveryModal(trackingId, customer, phone, address, orderRef, currentStatus) {
+        // Set Data into Modal
+        document.getElementById('modalDelId').innerText = trackingId;
+        document.getElementById('modalDelCustomer').innerText = customer;
+        document.getElementById('modalDelPhone').innerText = phone;
+        document.getElementById('modalDelAddress').innerText = address;
+        document.getElementById('modalDelOrder').innerText = orderRef;
+        
+        // Set Select Dropdown
+        const statusSelect = document.getElementById('modalDelStatus');
+        for(let i=0; i<statusSelect.options.length; i++) {
+          if(statusSelect.options[i].value === currentStatus) {
+            statusSelect.selectedIndex = i;
+            break;
+          }
+        }
+
+        // Animate In
+        const modal = document.getElementById('deliveryModal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('deliveryModalPanel').classList.remove('translate-x-full');
+        }, 10);
+      }
+
+      function closeDeliveryModal() {
+        // Animate Out
+        document.getElementById('deliveryModalPanel').classList.add('translate-x-full');
+        setTimeout(() => {
+          document.getElementById('deliveryModal').classList.add('hidden');
+        }, 300);
+      }
+
+      // --- Toast Initialization ---
+      document.addEventListener("DOMContentLoaded", () => {
+        const toasts = document.querySelectorAll(".toast");
+        toasts.forEach((toast, index) => {
+          setTimeout(() => { toast.classList.remove("translate-x-full"); }, 100 + (index * 150));
+          setTimeout(() => {
+            toast.classList.add("translate-x-full");
+            setTimeout(() => { if (toast && toast.parentNode) toast.remove(); }, 500);
+          }, 4000 + (index * 150));
+        });
+      });
+
+      // --- Theme Toggle logic ---
+      const html = document.documentElement;
+      const themeToggle = document.getElementById("themeToggle");
+      const icon = themeToggle.querySelector("i");
+
+      function initTheme() {
+        const saved = localStorage.getItem("theme") || "dark";
+        html.setAttribute("data-theme", saved);
+        if (saved === "dark") {
+          html.classList.add("dark");
+          if(icon) icon.classList.replace("bi-moon-stars-fill", "bi-sun-fill");
+        } else {
+          html.classList.remove("dark");
+          if(icon) icon.classList.replace("bi-sun-fill", "bi-moon-stars-fill");
+        }
+      }
+      initTheme();
+
+      if(themeToggle) {
+        themeToggle.addEventListener("click", () => {
+          const isDark = html.getAttribute("data-theme") === "dark";
+          const newTheme = isDark ? "light" : "dark";
+          html.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+          initTheme();
+        });
+      }
+
+      // --- Filter logic for text search AND dropdown status ---
+      function filterDeliveries() {
+        const searchInput = document.getElementById("deliverySearch").value.toLowerCase();
+        const statusFilter = document.getElementById("statusFilter").value.toLowerCase();
+        const tbody = document.getElementById("deliveryTableBody");
+        const rows = tbody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+          const textContent = rows[i].textContent || rows[i].innerText;
+          // Delivery Status is in the 4th column (index 3)
+          const statusCell = rows[i].getElementsByTagName("td")[3];
+          const statusText = statusCell ? statusCell.textContent.toLowerCase() : "";
+
+          const matchesSearch = textContent.toLowerCase().indexOf(searchInput) > -1;
+          const matchesStatus = statusFilter === "" || statusText.indexOf(statusFilter) > -1;
+
+          if (matchesSearch && matchesStatus) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

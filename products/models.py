@@ -167,6 +167,42 @@ class PSU(HardwareSpec):
         default=False, help_text="16-pin connector for modern GPUs")
 
 
+class Cooler(HardwareSpec):
+    """
+    CPU cooler — covers both air tower coolers and AIO liquid coolers.
+    Inherits `variant` (OneToOneField -> ProductVariant) and `tdp` (fan/pump draw in Watts)
+    from HardwareSpec.
+    """
+    COOLER_TYPES = [
+        ('AIR', 'Air Cooler'),
+        ('AIO', 'AIO Liquid Cooler'),
+    ]
+
+    cooler_type = models.CharField(
+        max_length=10,
+        choices=COOLER_TYPES,
+        help_text="AIR = tower fan cooler  |  AIO = all-in-one liquid cooler"
+    )
+    # JSONField stores a Python list of socket strings, e.g. ["AM5", "LGA1700"]
+    # Django serialises this to/from JSON automatically.
+    supported_sockets = models.JSONField(
+        default=list,
+        help_text='Compatible CPU sockets, e.g. ["AM5", "LGA1700"]'
+    )
+    height_mm = models.PositiveIntegerField(
+        help_text="Tower height in mm — checked against case max_cooler_height_mm. "
+                  "Set to 0 for AIO coolers where tower height is not applicable."
+    )
+    radiator_size_mm = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Radiator length in mm (120, 240, 280, 360 …). Leave blank for air coolers."
+    )
+
+    def __str__(self):
+        return f"{self.get_cooler_type_display()} — {self.variant}"
+
+
 class ProductReview(models.Model):
     review_id = models.AutoField(primary_key=True)
     variant = models.ForeignKey(

@@ -50,6 +50,7 @@ EXTERNAL_APPS = [
     'services',
     'builds',
     'payments',
+    'employee',
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS

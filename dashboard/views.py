@@ -14,9 +14,10 @@ from inventory.models import *
 from locations.models import *
 from products.models import *
 from orders.models import Order
+from products.models import Cooler
 
 import csv
-
+import json
 import re
 
 
@@ -402,6 +403,24 @@ def dashboard_product(request):
 
                     # 5. Insert Hardware Specific Data based on Category
                     cat_name = category_obj.category_name.lower()
+
+                    if 'cooler' in cat_name:
+
+                        specs_json = request.POST.get("specs_json")
+
+                        try:
+                            specs = json.loads(specs_json) if specs_json else {}
+                        except:
+                            specs = {}
+
+                        Cooler.objects.create(
+                            variant=variant,
+                            cooler_type=specs.get("cooler_type"),
+                            tdp=safe_int(specs.get("tdp")),
+                            height_mm=safe_int(specs.get("height_mm")),
+                            radiator_size_mm=safe_int(specs.get("radiator_mm")),
+                            supported_sockets=specs.get("sockets", [])
+                        )
 
                     if 'cpu' in cat_name:
                         CPU.objects.create(
@@ -1264,7 +1283,9 @@ def dashboard_per_built(request):
         product__category__category_name__icontains='cabinet'))
 
     # Fetch active Pre-Built PCs and structure them for the frontend table
-    builds = PCBuild.objects.prefetch_related('items__variant__product').all()
+    # Inside dashboard_per_built view, change the query:
+    builds = PCBuild.objects.filter(is_prebuilt=True).prefetch_related('items__variant__product')
+    
     prebuilt_pcs = []
 
     for build in builds:

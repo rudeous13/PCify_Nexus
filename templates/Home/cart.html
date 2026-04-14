@@ -131,158 +131,109 @@
     class="fixed bottom-24 left-1/2 -translate-x-1/2 md:bottom-8 md:left-auto md:right-8 md:translate-x-0 z-[110] flex flex-col gap-2 pointer-events-none"
     aria-live="polite"></div>
 
-  <header
-    class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-dark-bg/80 border-b border-slate-200/60 dark:border-white/5 transition-all duration-300">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between">
-      <a href="{% url 'core:homepage'%}" class="flex items-center gap-2 sm:gap-3 group">
-        <div
-          class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform duration-300">
-          <i class="bi bi-cpu-fill" aria-hidden="true"></i>
-        </div>
-        <div class="flex flex-col">
-          <span
-            class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white font-mono Monaco uppercase">
-            Nexus<span class="text-brand-400">Build</span>
-          </span>
-          <span
-            class="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block">Premium
-            Hardware</span>
-        </div>
-      </a>
-
-      <nav
-        class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
-        <a href="{% url 'core:homepage'%}"
-          class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Home</a>
-        <a href="{% url 'core:prebuilt'%}"
-          class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Prebuilt</a>
-        <a href="{% url 'core:built'%}"
-          class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Builder</a>
-        <a href="{% url 'core:accessories'%}"
-          class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all font-mono Monaco">Accessories</a>
-        <a href="{% url 'core:cart'%}"
-          class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10 transition-all relative font-mono Monaco">Cart
-          <span id="cart-badge"
-            class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"></span>
+  <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-dark-bg/80 border-b border-slate-200/60 dark:border-white/5 transition-all duration-300">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between">
+        <a href="{% url 'core:homepage'%}" class="flex items-center gap-2 sm:gap-3 group">
+          <div class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform duration-300">
+            <i class="bi bi-cpu-fill" aria-hidden="true"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white font-mono Monaco">
+              Nexus<span class="text-brand-400">Build</span>
+            </span>
+            <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block">Premium Hardware</span>
+          </div>
         </a>
-      </nav>
 
-      <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 relative z-[100]">
-        <button id="themeToggle"
-          class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:border-brand-400/50 dark:hover:border-brand-500/50 hover:bg-white dark:hover:bg-white/10 hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] transition-all duration-300 group overflow-hidden"
-          aria-label="Toggle Theme">
-          <div
-            class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12">
-          </div>
-          <div
-            class="relative z-10 text-slate-500 dark:text-slate-400 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors duration-300">
-            <i class="bi bi-moon-stars-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] inline-block"
-              aria-hidden="true"></i>
-          </div>
-        </button>
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          <a href="{% url 'core:homepage'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Home</a>
+          <a href="{% url 'core:prebuilt'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Prebuilt</a>
+          <a href="{% url 'core:built'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Builder</a>
+          <a href="{% url 'core:accessories'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Accessories</a>
+          <a href="{% url 'core:cart'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10 font-mono Monaco">Cart
+            <span id="cart-badge" class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"></span>
+          </a>
+        </nav>
 
-        <div
-          class="h-5 sm:h-6 w-px bg-gradient-to-b from-transparent via-slate-300 dark:via-white/20 to-transparent mx-0 sm:mx-0.5 hidden sm:block">
-        </div>
-
-        {% if request.session.active %}
-        <div class="relative hidden sm:block">
-          <button id="profileMenuBtn"
-            class="group flex items-center gap-2 sm:gap-2.5 pl-1 sm:pl-1.5 pr-3 sm:pr-4 py-1 sm:py-1.5 rounded-full bg-white/60 dark:bg-[#0b0f19]/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)] hover:border-brand-500/40 dark:hover:border-brand-400/40 hover:bg-white dark:hover:bg-[#111827]/90 hover:shadow-[0_4px_20px_rgba(14,165,233,0.15)] transition-all duration-300 ease-out outline-none">
-            <div
-              class="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full z-10 before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-brand-400 before:to-accent-500 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10">
-              <div
-                class="w-full h-full rounded-full overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center flex-shrink-0 border-2 border-white dark:border-[#0b0f19] z-10 shadow-inner transition-transform duration-300 group-hover:scale-[0.95]">
-                {% if request.session.user_image %}
-                <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
-                {% else %}
-                <span class="text-[9px] sm:text-[11px] font-bold tracking-widest font-mono drop-shadow-sm ml-[1px]">
-                  {{ request.user.first_name|default:request.session.user_name|make_list|first|upper }}{{ request.user.last_name|default:request.session.user_lname|make_list|first|upper }}
-                </span>
-                {% endif %}
-              </div>
-              <span
-                class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-white dark:border-[#0b0f19] rounded-full z-20 shadow-[0_0_8px_rgba(34,197,94,0.6)] group-hover:scale-110 transition-transform duration-300"></span>
-            </div>
-            <div class="flex items-center gap-1 sm:gap-2">
-              <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.user.first_name|default:request.session.user_name }}</span>
-              <i id="profileMenuChevron"
-                class="bi bi-chevron-down text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-400 ease-[cubic-bezier(0.87,0,0.13,1)]"></i>
+        <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 relative z-[100]">
+          <button id="themeToggle" class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:border-brand-400/50 dark:hover:border-brand-500/50 hover:bg-white dark:hover:bg-white/10 hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] transition-all duration-300 group overflow-hidden" aria-label="Toggle Theme">
+            <div class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+            <div class="relative z-10 text-slate-500 dark:text-slate-400 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors duration-300">
+              <i class="bi bi-moon-stars-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] inline-block" aria-hidden="true"></i>
             </div>
           </button>
 
-          <div id="profileDropdown"
-            class="absolute right-0 top-[calc(100%+8px)] sm:top-[calc(100%+12px)] w-56 sm:w-64 opacity-0 translate-y-4 scale-[0.97] pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top-right z-50">
-            <div
-              class="p-1.5 sm:p-2 rounded-[16px] sm:rounded-[20px] bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-2xl border-x border-b border-slate-200/60 dark:border-white/10 border-t-2 border-t-brand-500/50 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] flex flex-col relative overflow-hidden">
-              <div
-                class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-brand-500/20 blur-2xl rounded-full pointer-events-none">
+          <div class="h-5 sm:h-6 w-px bg-gradient-to-b from-transparent via-slate-300 dark:via-white/20 to-transparent mx-0 sm:mx-0.5 hidden sm:block"></div>
+
+          {% if request.session.active %}
+          <div class="relative hidden sm:block">
+            <button id="profileMenuBtn" class="group flex items-center gap-2 sm:gap-2.5 pl-1 sm:pl-1.5 pr-3 sm:pr-4 py-1 sm:py-1.5 rounded-full bg-white/60 dark:bg-[#0b0f19]/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)] hover:border-brand-500/40 dark:hover:border-brand-400/40 hover:bg-white dark:hover:bg-[#111827]/90 hover:shadow-[0_4px_20px_rgba(14,165,233,0.15)] transition-all duration-300 ease-out outline-none">
+              <div class="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full z-10 before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-brand-400 before:to-accent-500 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10">
+                <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center flex-shrink-0 border-2 border-white dark:border-[#0b0f19] z-10 shadow-inner transition-transform duration-300 group-hover:scale-[0.95]">
+                  {% if request.session.user_image %}
+                    <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
+                  {% else %}
+                    <span class="text-[9px] sm:text-[11px] font-bold tracking-widest font-mono drop-shadow-sm ml-[1px]">
+                      {{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}
+                    </span>
+                  {% endif %}
+                </div>
+                <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-white dark:border-[#0b0f19] rounded-full z-20 shadow-[0_0_8px_rgba(34,197,94,0.6)] group-hover:scale-110 transition-transform duration-300"></span>
               </div>
-              <div
-                class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 mb-1 bg-slate-50/50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-                <div
-                  class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
-                  <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
-                  <span class="relative z-10">{{ request.user.first_name|default:request.session.user_name|make_list|first|upper }}{{ request.user.last_name|default:request.session.user_lname|make_list|first|upper }}</span>
-                </div>
-                <div class="flex flex-col min-w-0">
-                  <p
-                    class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">
-                    Nexus Member</p>
-                  <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.user.first_name|default:request.session.user_name }} {{ request.user.last_name|default:request.session.user_lname }}</p>
-                </div>
+              <div class="flex items-center gap-1 sm:gap-2">
+                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.session.user_name }}</span>
+                <i id="profileMenuChevron" class="bi bi-chevron-down text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-400 ease-[cubic-bezier(0.87,0,0.13,1)]"></i>
               </div>
-              <div class="flex flex-col gap-0.5 mt-1 relative z-10">
-                <a href="{% url 'core:profile' %}"
-                  class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-white/10 hover:shadow-sm transition-all duration-300">
-                  <div class="flex items-center gap-2 sm:gap-3">
-                    <div
-                      class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-brand-500 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-                      <i class="bi bi-person-circle text-[10px] sm:text-sm" aria-hidden="true"></i>
-                    </div>
-                    Account Settings
+            </button>
+            <div id="profileDropdown" class="absolute right-0 top-[calc(100%+8px)] sm:top-[calc(100%+12px)] w-56 sm:w-64 opacity-0 translate-y-4 scale-[0.97] pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top-right z-50">
+              <div class="p-1.5 sm:p-2 rounded-[16px] sm:rounded-[20px] bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-2xl border-x border-b border-slate-200/60 dark:border-white/10 border-t-2 border-t-brand-500/50 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-brand-500/20 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 mb-1 bg-slate-50/50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
+                    <span class="relative z-10">{{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}</span>
                   </div>
-                  <i
-                    class="bi bi-chevron-right text-[8px] sm:text-[10px] text-slate-300 dark:text-slate-600 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300"></i>
-                </a>
-                <div
-                  class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent my-1">
+                  <div class="flex flex-col min-w-0">
+                    <p class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">Nexus Member</p>
+                    <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.session.user_name }} {{ request.session.user_lname }}</p>
+                  </div>
                 </div>
-                <a href="{% url 'accounts:singout' %}"
-                  class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300">
-                  <div class="flex items-center gap-2 sm:gap-3">
-                    <div
-                      class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-red-500 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-                      <i class="bi bi-power text-[10px] sm:text-sm drop-shadow-sm" aria-hidden="true"></i>
+                <div class="flex flex-col gap-0.5 mt-1 relative z-10">
+                  <a href="{% url 'core:profile' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-white/10 hover:shadow-sm transition-all duration-300">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                      <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-brand-500 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <i class="bi bi-person-circle text-[10px] sm:text-sm" aria-hidden="true"></i>
+                      </div>
+                      Account Settings
                     </div>
-                    Sign Out
-                  </div>
-                </a>
+                    <i class="bi bi-chevron-right text-[8px] sm:text-[10px] text-slate-300 dark:text-slate-600 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300"></i>
+                  </a>
+                  <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent my-1"></div>
+                  <a href="{% url 'accounts:singout' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                      <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-red-500 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <i class="bi bi-power text-[10px] sm:text-sm drop-shadow-sm" aria-hidden="true"></i>
+                      </div>
+                      Sign Out
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
+          {% else %}
+          <a href="{% url 'accounts:signin'%}" class="relative hidden sm:flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 group border border-slate-200 dark:border-white/10 hover:border-brand-500/50">
+            <div class="absolute inset-0 bg-white dark:bg-[#0b0f19] transition-colors duration-300"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"></div>
+            <div class="relative z-10 flex items-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-200 group-hover:text-white transition-colors duration-300 font-mono font-bold tracking-wide text-[10px] sm:text-xs">
+              <i class="bi bi-shield-lock text-xs sm:text-sm group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" aria-hidden="true"></i>
+              <span class="drop-shadow-sm">LOGIN</span>
+            </div>
+          </a>
+          {% endif %}
         </div>
-        {% else %}
-        <a href="{% url 'accounts:signin'%}"
-          class="relative hidden sm:flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 group border border-slate-200 dark:border-white/10 hover:border-brand-500/50">
-          <div class="absolute inset-0 bg-white dark:bg-[#0b0f19] transition-colors duration-300"></div>
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out">
-          </div>
-          <div
-            class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 z-0">
-          </div>
-          <div
-            class="relative z-10 flex items-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-200 group-hover:text-white transition-colors duration-300 font-mono font-bold tracking-wide text-[10px] sm:text-xs">
-            <i class="bi bi-shield-lock text-xs sm:text-sm group-hover:scale-110 transition-transform duration-300 drop-shadow-sm"
-              aria-hidden="true"></i>
-            <span class="drop-shadow-sm">LOGIN</span>
-          </div>
-        </a>
-        {% endif %}
       </div>
-    </div>
-  </header>
+    </header>
 
   <main class="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-12 min-h-[60vh]">
     <h1 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-8 font-mono animate-slide-up">
@@ -651,233 +602,153 @@
     </div>
   </nav>
 
+  <div id="productViewModal" class="fixed inset-0 z-[120] bg-black/60 backdrop-blur-md hidden items-center justify-center opacity-0 transition-opacity duration-300 px-4">
+    <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+      <div class="w-[300px] h-[300px] bg-brand-500/20 rounded-full blur-[80px]"></div>
+    </div>
+
+    <div class="bg-white dark:bg-dark-card border border-slate-200 dark:border-white/10 rounded-[2rem] w-full max-w-3xl overflow-hidden shadow-2xl transform scale-95 transition-all duration-300 relative z-10" id="productViewContent">
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-400 via-accent-500 to-brand-600"></div>
+      
+      <button onclick="closeProductView()" class="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all z-20">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div class="flex flex-col md:flex-row">
+        <div class="md:w-2/5 p-8 flex items-center justify-center bg-slate-50 dark:bg-black/20 border-r border-slate-100 dark:border-white/5 relative group">
+           <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/5 dark:to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+           <img id="pvImage" src="" alt="Product" class="max-w-full max-h-48 md:max-h-full object-contain drop-shadow-2xl mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-105">
+        </div>
+        
+        <div class="md:w-3/5 p-6 md:p-8 flex flex-col justify-center">
+          <div class="flex items-center gap-2 mb-3">
+            <span id="pvType" class="text-[10px] font-bold text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-brand-500/20"></span>
+            <span id="pvStockBadge" class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest border border-emerald-500/20"><i class="bi bi-check-circle mr-1"></i> In Stock</span>
+          </div>
+          
+          <h2 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight tracking-tight" id="pvName"></h2>
+          
+          <div class="flex items-end gap-3 mb-6">
+            <div class="text-3xl font-black text-brand-500 font-mono tracking-tighter">₹<span id="pvPrice"></span></div>
+            <div class="text-sm text-slate-400 mb-1 line-through hidden" id="pvOldPrice"></div>
+          </div>
+          
+          <div class="space-y-3 text-sm text-slate-600 dark:text-slate-400 mb-8 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-white/5">
+              <span class="flex items-center gap-2"><i class="bi bi-box-seam text-slate-400"></i> Quantity in Cart</span>
+              <span class="font-bold text-slate-900 dark:text-white font-mono bg-white dark:bg-black/30 px-3 py-0.5 rounded-lg" id="pvQty"></span>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-white/5">
+              <span class="flex items-center gap-2"><i class="bi bi-upc-scan text-slate-400"></i> Reference ID</span>
+              <span class="font-bold text-slate-900 dark:text-white font-mono text-xs" id="pvId"></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="flex items-center gap-2"><i class="bi bi-truck text-slate-400"></i> Shipping</span>
+              <span class="font-bold text-emerald-500">Free Express</span>
+            </div>
+          </div>
+
+          <div id="pvBuildDetails" class="hidden flex-col gap-2">
+             <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Configuration Overview</h4>
+             <div id="pvBuildItemsList" class="flex flex-wrap gap-2 text-[10px] font-mono">
+                </div>
+          </div>
+          
+          <div id="pvStandardDetails" class="hidden">
+             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed italic">Standard component backed by Nexus Build's premium warranty and return policy.</p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const IS_LOGGED_IN = {% if request.session.active %}true{% else %}false{% endif %};
     const toastContainer = document.getElementById("toast-container");
-    let lastDeletedItem = null;
-    let lastDeletedIndex = null;
     let appliedDiscount = 0;
 
     function getCSRFToken() {
-      let token = document.querySelector('[name=csrfmiddlewaretoken]');
-      if (token) return token.value;
-
-      token = document.querySelector('#csrf-token');
-      if (token) return token.value;
-
-      const name = 'csrftoken';
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue || '';
+      const match = document.cookie.match(new RegExp('(^| )csrftoken=([^;]+)'));
+      return match ? match[2] : (document.querySelector('[name=csrfmiddlewaretoken]')?.value || '');
     }
 
     function postCartAction(action, dataObj) {
       const formData = new FormData();
       formData.append('action', action);
-      for (const key in dataObj) {
-        formData.append(key, dataObj[key]);
-      }
-
+      for (const key in dataObj) formData.append(key, dataObj[key]);
       return fetch('/cart', {
         method: 'POST',
-        headers: {
-          'X-CSRFToken': getCSRFToken(),
-          'X-Requested-With': 'XMLHttpRequest'
-        },
+        headers: { 'X-CSRFToken': getCSRFToken(), 'X-Requested-With': 'XMLHttpRequest' },
         body: formData
-      }).then((response) => response.json());
+      }).then(r => r.json());
     }
 
-    async function syncServerCartFromLocal() {
-      if (!IS_LOGGED_IN) return;
-      if (sessionStorage.getItem('cart_synced') === '1') return;
-
-      let cart = [];
-      try {
-        cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      } catch (e) {
-        cart = [];
-      }
-
-      // Clear server cart first, then re-add from localStorage for accuracy.
-      try {
-        await postCartAction('clear', {});
-        for (const item of cart) {
-          if (item.variant_id) {
-            await postCartAction('add', {
-              variant_id: item.variant_id,
-              quantity: item.quantity || 1
-            });
-          }
-        }
-        sessionStorage.setItem('cart_synced', '1');
-      } catch (e) {
-        console.warn('Cart sync failed', e);
-      }
-    }
-
-    function showToast(message, type = "success", hasUndo = false) {
-      const toast = document.createElement("div");
-      toast.className =
-        "bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-xl shadow-2xl flex items-center justify-between gap-4 animate-toast-in pointer-events-auto min-w-[300px] border border-slate-700 dark:border-white/10";
-      toast.setAttribute("role", "alert");
-
-      let iconClass = type === "success" ? "bi-check-lg" : "bi-info-circle";
-      let bgClass = type === "success" ? "bg-green-500" : "bg-brand-500";
-
-      let innerHTML = `
-          <div class="flex items-center gap-3">
-            <div class="w-6 h-6 rounded-full ${bgClass} text-white flex items-center justify-center shrink-0">
-                <i class="bi ${iconClass} text-sm"></i>
-            </div>
-            <span class="font-bold text-sm">${message}</span>
-          </div>
-        `;
-
-      if (hasUndo) {
-        innerHTML += `<button onclick="undoDelete()" class="text-xs font-bold text-brand-400 hover:text-brand-300 underline uppercase tracking-wider">Undo</button>`;
-      }
-
-      toast.innerHTML = innerHTML;
-      toastContainer.appendChild(toast);
-
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.style.opacity = "0";
-          toast.style.transform = "translateY(100%)";
-          toast.style.transition = "all 0.3s ease";
-          setTimeout(() => toast.remove(), 300);
-        }
-      }, 4000);
+    function showToast(message) {
+      const t = document.createElement("div");
+      t.className = "bg-slate-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-toast-in";
+      t.innerHTML = `<i class="bi bi-check-circle-fill text-brand-500"></i><span class="text-sm font-bold">${message}</span>`;
+      toastContainer.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
     }
 
     function loadCart() {
-      let cart = [];
-      try {
-        cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      } catch (e) {
-        console.error("Cart data corrupted, resetting.", e);
-        localStorage.removeItem("cart");
-        cart = [];
-      }
-
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const container = document.getElementById("cart-items-container");
       const emptyState = document.getElementById("empty-cart");
       const contentState = document.getElementById("cart-content");
-      const mobileFooter = document.getElementById("mobile-cart-footer");
 
-      if (!cart || cart.length === 0) {
-        emptyState.classList.remove("hidden");
-        emptyState.classList.add("flex");
-        contentState.classList.add("hidden");
-        mobileFooter.classList.add("hidden");
-        return;
+      if (cart.length === 0) {
+        emptyState.classList.replace("hidden", "flex");
+        contentState.classList.add("hidden"); return;
       }
 
-      emptyState.classList.add("hidden");
-      emptyState.classList.remove("flex");
+      emptyState.classList.replace("flex", "hidden");
       contentState.classList.remove("hidden");
-      mobileFooter.classList.remove("hidden");
-
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
+      container.innerHTML = "";
 
       let subtotal = 0;
-
       cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
-
-        const itemDiv = document.createElement("div");
-        itemDiv.className =
-          "flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-dark-card p-4 rounded-2xl border border-slate-200 dark:border-white/5 shadow-sm group hover:border-brand-500/30 transition-all";
-        itemDiv.role = "listitem";
-
-        const imgSrc =
-          item.image && item.image !== "undefined" && item.image !== "null"
-            ? item.image
-            : "https://placehold.co/100x100/1e293b/ffffff?text=No+Img";
-
-        itemDiv.innerHTML = `
-            <div class="w-24 h-24 shrink-0 bg-slate-100 dark:bg-white/5 rounded-xl p-2 flex items-center justify-center relative">
-               ${item.quantity > 1 ? `<span class="absolute -top-2 -right-2 bg-brand-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-lg">${item.quantity}</span>` : ""}
-               <img src="${imgSrc}" alt="Product Image" class="max-w-full max-h-full object-contain mix-blend-multiply dark:mix-blend-normal" loading="lazy">
-            </div>
-            
-            <div class="flex-1 text-center sm:text-left w-full">
-               <div class="flex justify-between items-start">
-                 <div>
-                   <h3 class="font-bold text-slate-900 dark:text-white text-lg leading-tight mb-1 product-name"></h3>
-                   <p class="text-xs font-mono text-brand-500 uppercase tracking-widest mb-2 product-type"></p>
-                 </div>
-                 <div class="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded hidden sm:block border border-emerald-500/20">IN STOCK</div>
-               </div>
-               <div class="flex justify-between items-center mt-2">
-                 <div class="text-sm text-slate-500 dark:text-slate-400">₹${item.price.toLocaleString()} x ${item.quantity}</div>
-                 <div class="text-lg font-bold text-slate-900 dark:text-white">₹${itemTotal.toLocaleString()}</div>
-               </div>
-            </div>
-
-            <div class="flex flex-row sm:flex-col items-center gap-3 w-full sm:w-auto justify-between sm:justify-start border-t sm:border-t-0 border-slate-100 dark:border-white/5 pt-3 sm:pt-0">
-               <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
-                  <button onclick="updateQuantity(${index}, -1)" class="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-brand-500 hover:bg-white dark:hover:bg-white/10 rounded-l-lg transition-colors font-bold" aria-label="Decrease quantity">-</button>
-                  <span class="w-8 text-center text-sm font-mono font-bold text-slate-900 dark:text-white">${item.quantity}</span>
-                  <button onclick="updateQuantity(${index}, 1)" class="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-brand-500 hover:bg-white dark:hover:bg-white/10 rounded-r-lg transition-colors font-bold" aria-label="Increase quantity">+</button>
-               </div>
-               <button onclick="deleteItem(${index})" class="text-xs text-red-500 hover:text-red-400 underline font-medium p-2" aria-label="Remove item">Remove</button>
-            </div>
-          `;
-
-        itemDiv.querySelector(".product-name").textContent = item.name;
-        itemDiv.querySelector(".product-type").textContent = item.type || "Component";
-
-        container.appendChild(itemDiv);
+        subtotal += (item.price * item.quantity);
+        const imgSrc = item.image && item.image !== "null" ? item.image : "https://placehold.co/100x100/1e293b/ffffff?text=Build";
+        
+        container.innerHTML += `
+            <div class="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-dark-card p-4 rounded-2xl border border-slate-200 dark:border-white/5 group hover:border-brand-500/30 transition-all animate-slide-up">
+                <div class="w-24 h-24 shrink-0 bg-slate-100 dark:bg-white/5 rounded-xl p-2 flex items-center justify-center cursor-pointer" onclick="openProductView(${index})">
+                   <img src="${imgSrc}" class="max-w-full max-h-full object-contain">
+                </div>
+                <div class="flex-1 text-center sm:text-left w-full cursor-pointer" onclick="openProductView(${index})">
+                   <h3 class="font-bold text-slate-900 dark:text-white text-lg">${item.name}</h3>
+                   <p class="text-xs font-mono text-brand-500 uppercase">${item.type}</p>
+                   <div class="text-lg font-bold text-slate-900 dark:text-white mt-2">₹${(item.price * item.quantity).toLocaleString("en-IN")}</div>
+                </div>
+                <div class="flex items-center gap-3">
+                   <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
+                      <button onclick="updateQuantity(${index}, -1)" class="w-8 h-8 font-bold">-</button>
+                      <span class="w-8 text-center text-sm font-bold">${item.quantity}</span>
+                      <button onclick="updateQuantity(${index}, 1)" class="w-8 h-8 font-bold">+</button>
+                   </div>
+                   <button onclick="deleteItem(${index})" class="text-xs text-red-500 underline">Remove</button>
+                </div>
+            </div>`;
       });
-
       updateTotals(subtotal);
     }
 
     function updateTotals(subtotal) {
       const tax = Math.round((subtotal - appliedDiscount) * 0.18);
-      const total = subtotal - appliedDiscount + tax;
-
       document.getElementById("summary-subtotal").innerText = subtotal.toLocaleString("en-IN");
       document.getElementById("summary-tax").innerText = tax.toLocaleString("en-IN");
-      document.getElementById("summary-total").innerText = total.toLocaleString("en-IN");
-
-      const discountRow = document.getElementById("row-discount");
-      const discountEl = document.getElementById("summary-discount");
-      if (appliedDiscount > 0) {
-        discountRow.classList.remove("hidden");
-        discountEl.innerText = appliedDiscount.toLocaleString("en-IN");
-      } else if (discountRow) {
-        discountRow.classList.add("hidden");
-      }
-
-      const mobileTotal = document.getElementById("mobile-total");
-      if (mobileTotal) mobileTotal.innerText = total.toLocaleString("en-IN");
+      document.getElementById("summary-total").innerText = (subtotal - appliedDiscount + tax).toLocaleString("en-IN");
     }
 
     window.updateQuantity = function (index, change) {
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
       if (cart[index]) {
-        cart[index].quantity += change;
-        if (cart[index].quantity < 1) cart[index].quantity = 1;
+        cart[index].quantity = Math.max(1, cart[index].quantity + change);
         localStorage.setItem("cart", JSON.stringify(cart));
-        if (IS_LOGGED_IN && cart[index].variant_id) {
-          const updateType = change > 0 ? 'increase' : 'decrease';
-          postCartAction('update', { variant_id: cart[index].variant_id, update_type: updateType })
-            .catch((e) => console.warn('Failed to sync quantity', e));
+        if (IS_LOGGED_IN && cart[index].cart_item_id) {
+          postCartAction('update', { cart_item_id: cart[index].cart_item_id, update_type: change > 0 ? 'increase' : 'decrease' });
         }
         loadCart();
       }
@@ -885,122 +756,139 @@
 
     window.deleteItem = function (index) {
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      lastDeletedItem = cart[index];
-      lastDeletedIndex = index;
-      if (IS_LOGGED_IN && lastDeletedItem && lastDeletedItem.variant_id) {
-        postCartAction('delete', { variant_id: lastDeletedItem.variant_id })
-          .catch((e) => console.warn('Failed to sync delete', e));
-      }
+      const item = cart[index];
+      if (IS_LOGGED_IN && item.cart_item_id) postCartAction('delete', { cart_item_id: item.cart_item_id });
       cart.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
       loadCart();
-      showToast("Item removed from cart", "info", true);
-    };
-
-    window.undoDelete = function () {
-      if (!lastDeletedItem) return;
-      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-      if (lastDeletedIndex !== null && lastDeletedIndex <= cart.length) {
-        cart.splice(lastDeletedIndex, 0, lastDeletedItem);
-      } else {
-        cart.push(lastDeletedItem);
-      }
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-      loadCart();
-      lastDeletedItem = null;
-      lastDeletedIndex = null;
-
-      const toasts = document.querySelectorAll("#toast-container > div");
-      if (toasts.length > 0) toasts[toasts.length - 1].remove();
+      showToast("Item removed");
     };
 
     window.clearCart = function () {
-      if (confirm("Are you sure you want to clear your entire cart?")) {
-        localStorage.removeItem("cart");
-        if (IS_LOGGED_IN) {
-          postCartAction('clear', {})
-            .catch((e) => console.warn('Failed to sync clear', e));
-        }
-        appliedDiscount = 0;
+      if (confirm("Clear your entire loadout?")) {
+        localStorage.setItem("cart", "[]");
+        if (IS_LOGGED_IN) postCartAction('clear', {});
         loadCart();
-        showToast("Cart cleared");
       }
     };
 
     window.addAccessory = function (name, price) {
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const existing = cart.find((i) => i.name === name);
-      if (existing) {
-        existing.quantity += 1;
-        showToast(`${name} quantity increased`);
-      } else {
-        cart.push({
-          name: name,
-          price: price,
-          quantity: 1,
-          type: "Accessory",
-          image: "https://placehold.co/100x100/1e293b/ffffff?text=Acc",
-        });
-        showToast(`${name} added to cart`);
-      }
+      const existing = cart.find(i => i.name === name);
+      if (existing) existing.quantity++;
+      else cart.push({ name, price, quantity: 1, type: "Accessory", image: "https://placehold.co/100x100/1e293b/ffffff?text=Acc" });
       localStorage.setItem("cart", JSON.stringify(cart));
       loadCart();
+      showToast(`${name} added`);
     };
 
-    window.applyPromo = function () {
+    window.applyPromo = function() {
       const code = document.getElementById("promo-input").value.toUpperCase();
       const msg = document.getElementById("promo-message");
-      const input = document.getElementById("promo-input");
-
-      msg.classList.remove("hidden", "text-green-500", "text-red-500");
-
       if (code === "SAVE10") {
-        let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        let subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const subtotal = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
         appliedDiscount = Math.round(subtotal * 0.1);
-        msg.innerText = "Coupon applied! You saved 10%.";
-        msg.classList.add("text-green-500");
-        input.classList.add("border-green-500");
-        loadCart();
-      } else if (code === "NEXUS") {
-        appliedDiscount = 500;
-        msg.innerText = "Flat ₹500 off applied!";
-        msg.classList.add("text-green-500");
-        input.classList.add("border-green-500");
-        loadCart();
+        msg.innerText = "10% Discount Applied!"; msg.className = "text-xs mt-2 text-green-500";
+        document.getElementById("row-discount").classList.remove("hidden");
+        document.getElementById("summary-discount").innerText = appliedDiscount.toLocaleString("en-IN");
       } else {
-        appliedDiscount = 0;
-        msg.innerText = "Invalid coupon code.";
-        msg.classList.add("text-red-500");
-        input.classList.add("border-red-500");
-        loadCart();
+        appliedDiscount = 0; msg.innerText = "Invalid Code"; msg.className = "text-xs mt-2 text-red-500";
+        document.getElementById("row-discount").classList.add("hidden");
       }
-    };
-
-    window.checkShipping = function () {
-      const pin = document.getElementById("pincode-input").value;
-      const msg = document.getElementById("shipping-msg");
-      const shipEl = document.getElementById("summary-shipping");
-
-      if (pin.length === 6 && !isNaN(pin)) {
-        msg.innerText = `Delivery to ${pin}: Estimated 2-4 Days`;
-        msg.classList.add("text-green-500");
-        msg.classList.remove("text-slate-500", "text-red-500");
-        shipEl.innerText = "FREE";
-        shipEl.classList.add("text-green-500");
-      } else {
-        msg.innerText = "Please enter a valid 6-digit Pincode.";
-        msg.classList.add("text-red-500");
-        msg.classList.remove("text-slate-500", "text-green-500");
-      }
-    };
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      await syncServerCartFromLocal();
       loadCart();
+    }
+
+    window.checkShipping = function() {
+        const pin = document.getElementById("pincode-input").value;
+        const msg = document.getElementById("shipping-msg");
+        if (pin.length === 6) {
+            msg.innerText = "Express Delivery Available: 2-3 Days"; msg.className = "text-xs mt-2 text-green-500";
+            document.getElementById("summary-shipping").innerText = "FREE";
+        } else {
+            msg.innerText = "Invalid Pincode"; msg.className = "text-xs mt-2 text-red-500";
+        }
+    }
+
+    // --- Product View Modal Logic ---
+    window.openProductView = function(index) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const item = cart[index];
+      if (!item) return;
+
+      const modal = document.getElementById("productViewModal");
+      const content = document.getElementById("productViewContent");
+      const buildItemsContainer = document.getElementById("pvBuildItemsList");
+      
+      document.getElementById("pvImage").src = item.image && item.image !== "null" ? item.image : "https://placehold.co/400x400/1e293b/ffffff?text=Build";
+      document.getElementById("pvType").textContent = item.type;
+      document.getElementById("pvName").textContent = item.name;
+      document.getElementById("pvPrice").textContent = item.price.toLocaleString("en-IN");
+      document.getElementById("pvQty").textContent = item.quantity;
+      document.getElementById("pvId").textContent = item.build_id ? `BUILD-${item.build_id}` : `VAR-${item.variant_id || 'ACC'}`;
+
+      const isBuild = item.type.toLowerCase().includes('build');
+      document.getElementById("pvBuildDetails").classList.toggle("hidden", !isBuild);
+      document.getElementById("pvBuildDetails").classList.toggle("flex", isBuild);
+      document.getElementById("pvStandardDetails").classList.toggle("hidden", isBuild);
+      
+      if (isBuild) {
+         buildItemsContainer.innerHTML = "";
+         if (item.build_items && item.build_items.length > 0) {
+            item.build_items.forEach(name => {
+                buildItemsContainer.innerHTML += `
+                <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
+                   <i class="bi bi-cpu-fill text-brand-500"></i>
+                   <span class="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">${name}</span>
+                </div>`;
+            });
+         } else { buildItemsContainer.innerHTML = `<div class="text-xs text-slate-500 italic">Configuration details protected.</div>`; }
+      }
+
+      modal.classList.remove("hidden"); modal.classList.add("flex");
+      setTimeout(() => { modal.classList.add("opacity-100"); content.classList.remove("scale-95"); }, 10);
+    };
+
+    window.closeProductView = function() {
+      const modal = document.getElementById("productViewModal");
+      const content = document.getElementById("productViewContent");
+      modal.classList.remove("opacity-100"); content.classList.add("scale-95");
+      setTimeout(() => { modal.classList.add("hidden"); modal.classList.remove("flex"); }, 300);
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const serverCart = [
+        {% for item in cart_items %}
+        {
+          cart_item_id: "{{ item.cart_item_id }}",
+          variant_id: "{{ item.variant_id|default:'' }}",
+          build_id: "{{ item.build_id|default:'' }}",
+          name: "{{ item.name|escapejs }}",
+          type: "{{ item.type|escapejs }}",
+          price: {{ item.price|default:0 }},
+          quantity: {{ item.quantity|default:1 }},
+          image: "{{ item.image_url|default:'' }}",
+          build_items: [{% for b_item in item.build_items %}"{{ b_item|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+      if (IS_LOGGED_IN) localStorage.setItem("cart", JSON.stringify(serverCart));
+      loadCart();
+      
+      // Theme and Dropdown logic
+      const toggleBtn = document.getElementById("themeToggle");
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+          const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+          document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+          localStorage.setItem("theme", isDark ? "light" : "dark");
+        });
+      }
+      const profileBtn = document.getElementById("profileMenuBtn");
+      const profileDropdown = document.getElementById("profileDropdown");
+      if (profileBtn) profileBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); profileDropdown.classList.toggle("opacity-0"); profileDropdown.classList.toggle("pointer-events-none");
+      });
     });
   </script>
 
@@ -1049,28 +937,6 @@
         initTheme();
       }
 
-      // --- Profile Dropdown Logic ---
-      const profileBtn = document.getElementById("profileMenuBtn");
-      const profileDropdown = document.getElementById("profileDropdown");
-      const profileChevron = document.getElementById("profileMenuChevron");
-
-      if (profileBtn && profileDropdown && profileChevron) {
-        profileBtn.addEventListener("click", function (event) {
-          event.stopPropagation();
-          profileDropdown.classList.toggle("opacity-0");
-          profileDropdown.classList.toggle("pointer-events-none");
-          profileDropdown.classList.toggle("translate-y-4");
-          profileDropdown.classList.toggle("scale-[0.97]");
-          profileChevron.classList.toggle("rotate-180");
-        });
-
-        document.addEventListener("click", function (event) {
-          if (!profileBtn.contains(event.target) && !profileDropdown.contains(event.target)) {
-            profileDropdown.classList.add("opacity-0", "pointer-events-none", "translate-y-4", "scale-[0.97]");
-            profileChevron.classList.remove("rotate-180");
-          }
-        });
-      }
     });
   </script>
 </body>

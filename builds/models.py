@@ -13,6 +13,8 @@ class PCBuild(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     description = models.TextField(blank=True, null=True)
     image_url = models.ImageField(upload_to='prebuilt_pcs/', blank=True, null=True)
+    is_prebuilt = models.BooleanField(default=True) # Admin PCs are True
+    is_custom = models.BooleanField(default=False)  # User-created builds are True
     def __str__(self):
         return f"{self.name} ({self.user})"
 

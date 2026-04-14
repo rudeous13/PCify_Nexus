@@ -1,0 +1,19 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "chat.tools.terminal.autoApprove": {
+        "C:/Users/vp484/miniconda3/Scripts/conda.exe": true,
+        "/^python manage\\.py shell -c \"from payments\\.models import CashfreeOrder; from orders\\.models import Payment; qs=CashfreeOrder\\.objects\\.filter\\(payment_method__isnull=True\\); print\\('to update',qs\\.count\\(\\)\\);\nfor c in qs:\n    p=Payment\\.objects\\.filter\\(gateway_order_id=c\\.cf_order_id\\)\\.first\\(\\)\n    if p and p\\.payment_method:\n        c\\.payment_method=p\\.payment_method\n        c\\.save\\(update_fields=\\['payment_method'\\]\\)\n        print\\('updated',c\\.cf_order_id,c\\.payment_method\\)\n    else:\n        print\\('no match or no method for',c\\.cf_order_id\\)\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^from orders\\.models import Order; print\\(\"All Orders:\"\\); \\[print\\(f\"ID: \\{o\\.order_id\\}, User: \\{o\\.user\\}, Amount: \\{o\\.total_amount\\}, Status: \\{o\\.status\\}, Created: \\{o\\.created_at\\}\"\\) for o in Order\\.objects\\.all\\(\\)\\]$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^python manage\\.py test payments\\.tests\\.PaymentMethodDetectionTest -v 2$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

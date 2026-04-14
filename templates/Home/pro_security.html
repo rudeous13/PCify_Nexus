@@ -30,39 +30,11 @@
           <div class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-brand-500/30 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300"><i class="bi bi-cpu-fill"></i></div>
           <div class="flex flex-col"><span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white font-mono uppercase">Nexus<span class="text-brand-400">Build</span></span><span class="text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block">Premium Hardware</span></div>
         </a>
-        <nav
-          class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md"
-        >
-          <a
-            href="{% url 'core:homepage'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Home</a
-          >
-          <a
-            href="{% url 'core:prebuilt'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Prebuilt</a
-          >
-          <a
-            href="{% url 'core:built'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Builder</a
-          >
-          <a
-            href="{% url 'core:accessories'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all"
-            >Accessories</a
-          >
-          <a
-            href="{% url 'core:cart'%}"
-            class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all relative"
-            >Cart
-            <span
-              id="cart-badge"
-              class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"
-            ></span>
-          </a>
-          <a href="{% url 'core:profile'%}" class="px-6 py-2 rounded-full text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10">Profile</a>
+        <nav class="hidden lg:flex items-center gap-1 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          <a href="{% url 'core:homepage' %}" class="px-6 py-2 rounded-full text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Home</a>
+          <a href="{% url 'core:prebuilt' %}" class="px-6 py-2 rounded-full text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Prebuilt</a>
+          <a href="{% url 'core:built' %}" class="px-6 py-2 rounded-full text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Builder</a>
+          <a href="{% url 'core:profile' %}" class="px-6 py-2 rounded-full text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10">Profile</a>
         </nav>
         <div class="flex items-center gap-3">
           <button id="themeToggle" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10 dark:text-slate-400 transition-colors border border-transparent dark:hover:border-white/20"><i class="bi bi-moon-stars-fill text-sm"></i></button>
@@ -76,11 +48,16 @@
           <div class="bg-white/80 dark:bg-dark-card/80 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-3xl p-6 text-center shadow-xl shadow-slate-200/20 dark:shadow-none relative overflow-hidden group hover:border-brand-500/30 transition-colors duration-300">
             <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-brand-500/20 to-accent-500/20"></div>
             <div class="relative w-28 h-28 mx-auto mb-5 p-1 rounded-full border-2 border-dashed border-brand-500/50 group-hover:border-brand-500 group-hover:rotate-45 transition-all duration-500">
-              <img src="{% if request.user.profile.image %}
-                          {{ request.user.profile.image.url }}
+              <img src="{% if request.session.user_image %}
+                          {{ request.session.user_image }}
+                        {% elif request.user.profile_image %}
+                          {{ request.user.profile_image.url }}
                         {% else %}
-                          https://ui-avatars.com/api/?name={{ request.session.user_name }}+{{request.session.user_lname}}&background=0ea5e9&color=fff{% endif %}" alt="User" class="w-full h-full rounded-full object-cover group-hover:-rotate-45 transition-all duration-500" />
-              <div class="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 border-4 border-white dark:border-dark-card rounded-full shadow-md" title="Online"></div>
+                          https://ui-avatars.com/api/?name={{ request.session.user_name }}+{{request.session.user_lname}}&background=0ea5e9&color=fff
+                        {% endif %}" 
+                   alt="User" 
+                   class="w-full h-full rounded-full object-cover group-hover:-rotate-45 transition-all duration-500" />
+                   <div class="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 border-4 border-white dark:border-dark-card rounded-full shadow-md" title="Online"></div>
             </div>
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-1">
               {{ request.session.user_name }}{{request.session.user_lname}}

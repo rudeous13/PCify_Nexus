@@ -171,20 +171,30 @@
                     const body = new URLSearchParams();
                     body.append("address_id", selectedAddress.value);
 
+                    // Re-added your required POST methods, headers, and body here
                     const response = await fetch("{% url 'payments:create_order' %}", {
                         method: "POST",
                         headers: {
                             "X-CSRFToken": csrfToken,
                             "X-Requested-With": "XMLHttpRequest",
                         },
-                        body,
+                        body: body,
                     });
 
-                    const data = await response.json();
+                    // Our new graceful error handling
                     if (!response.ok) {
-                        showError(data.error || "Unable to create order.");
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            const data = await response.json();
+                            showError(data.error || "Unable to create order.");
+                        } else {
+                            showError("Server error occurred. Check backend terminal for crash logs.");
+                        }
                         return;
                     }
+
+                    // Safe to parse JSON since response.ok is true
+                    const data = await response.json();
 
                     const cashfree = Cashfree({ mode: "{{ cashfree_mode }}" });
                     await cashfree.checkout({
@@ -192,7 +202,8 @@
                         redirectTarget: "_self",
                     });
                 } catch (error) {
-                    showError("Payment initialization failed.");
+                    console.error("Checkout Error:", error);
+                    showError("Payment initialization failed. Check browser console.");
                 } finally {
                     payBtn.disabled = false;
                     payBtn.classList.remove("opacity-70", "cursor-not-allowed");

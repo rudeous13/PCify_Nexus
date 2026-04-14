@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),
     path('payments/', include('payments.urls')),
+    path('employee/', include('employee.urls')),
 ]
 
 if settings.DEBUG:

@@ -63,6 +63,10 @@ def _make_json_serializable(obj):
 
 
 def create_cashfree_order(amount, currency, customer_details, order_meta):
+    # Check if Cashfree is available
+    if CustomerDetails is None or CreateOrderRequest is None:
+        raise ImportError("cashfree_pg package is not installed. Please install it to use payment functionality.")
+    
     x_api_version = settings.CASHFREE_API_VERSION
     customer = CustomerDetails(**customer_details)
     meta = OrderMeta(**order_meta) if order_meta else None

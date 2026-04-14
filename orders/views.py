@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 from orders.models import Order
+from builds.models import PCBuild, PCBuildItem
 
 
 # Render an invoice/receipt page for an order. The template includes a
