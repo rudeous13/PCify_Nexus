@@ -3,6 +3,7 @@ import json
 import logging
 from urllib.parse import urlencode
 
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import transaction
 from django.http import JsonResponse
@@ -35,8 +36,9 @@ def _get_user_from_session(request):
 
 def _calculate_cart_totals(cart):
     # Updated to select "build" from the database as well
-    items = cart.items.select_related("variant", "variant__product", "build").all()
-    
+    items = cart.items.select_related(
+        "variant", "variant__product", "build").all()
+
     subtotal = Decimal("0.00")
     for item in items:
         # Safely check if it's a Component or a Custom Build
@@ -162,6 +164,8 @@ def _create_order_records(user, cart, address, total, items):
                     OrderItem(
                         order=order,
                         variant=item.variant,
+                        # Preserve build source
+                        build_source=getattr(item, 'build_source', None),
                         quantity=item.quantity,
                         unit_price=item.variant.price,
                     )
@@ -170,11 +174,29 @@ def _create_order_records(user, cart, address, total, items):
                 order_items_to_create.append(
                     OrderItem(
                         order=order,
-                        build=item.build, # Assumes your OrderItem model has a 'build' ForeignKey
+                        build=item.build,  # Assumes your OrderItem model has a 'build' ForeignKey
                         quantity=item.quantity,
                         unit_price=item.build.price,
                     )
                 )
+
+        # Validate each item before bulk creation
+        for i, order_item in enumerate(order_items_to_create):
+            try:
+                logger.info("Validating order item %s: variant=%s, build=%s", i, getattr(
+                    order_item, 'variant', None), getattr(order_item, 'build', None))
+                order_item.clean()
+                logger.info("✓ Order item %s validation passed", i)
+            except ValidationError as e:
+                logger.error("✗ Validation error in OrderItem %s: %s", i, e)
+                # Clean up the order if validation fails
+                order.delete()
+                raise e
+            except Exception as e:
+                logger.error(
+                    "✗ Unexpected error validating OrderItem %s: %s", i, e)
+                order.delete()
+                raise e
 
         OrderItem.objects.bulk_create(order_items_to_create)
 
@@ -274,25 +296,18 @@ def checkout(request):
     if cart:
         items, subtotal, tax, total = _calculate_cart_totals(cart)
         for item in items:
-            # Safely check if it's a Component or a Custom Build
             if getattr(item, 'variant', None):
-                cart_items.append(
-                    {
-                        "name": item.variant.product.product_name,
-                        "quantity": item.quantity,
-                        "price": item.variant.price,
-                        "total": item.variant.price * item.quantity,
-                    }
-                )
-            elif getattr(item, 'build', None):
-                cart_items.append(
-                    {
-                        "name": item.build.name,
-                        "quantity": item.quantity,
-                        "price": item.build.price,
-                        "total": item.build.price * item.quantity,
-                    }
-                )
+                cart_item_data = {
+                    "name": item.variant.product.product_name,
+                    "quantity": item.quantity,
+                    "price": item.variant.price,
+                    "total": item.variant.price * item.quantity,
+                }
+                # Add build source information if available
+                if getattr(item, 'build_source', None):
+                    cart_item_data["build_source"] = item.build_source.name
+                    cart_item_data["is_from_build"] = True
+                cart_items.append(cart_item_data)
 
     context = {
         "cart_items": cart_items,
@@ -322,6 +337,7 @@ def create_order(request):
 
     # Allow client to send a cart snapshot to avoid desync between localStorage and DB.
     cart_json = request.POST.get("cart_json")
+    logger.info("Received cart JSON: %s", cart_json)
 
     # Load server cart if present
     try:
@@ -332,6 +348,8 @@ def create_order(request):
     address = _get_address_for_user(user, request.POST.get("address_id"))
     if not address:
         return JsonResponse({"error": "Please select a delivery address."}, status=400)
+
+    from builds.models import PCBuild
 
     # If the client provided a cart snapshot, prefer it and sync the DB cart.
     if cart_json:
@@ -345,16 +363,29 @@ def create_order(request):
 
         for entry in client_cart:
             variant_id = entry.get("variant_id")
+            build_id = entry.get("build_id")
             qty = int(entry.get("quantity", 1) or 1)
-            if not variant_id:
-                continue
-            variant = ProductVariant.objects.filter(
-                variant_id=variant_id).first()
-            if not variant:
-                continue
-            # Create a small item-like object to pass to order creation
-            items.append(type("_", (), {"variant": variant, "quantity": qty}))
-            subtotal += variant.price * qty
+            logger.info(
+                "Processing cart entry: variant_id=%s, build_id=%s, quantity=%s", variant_id, build_id, qty)
+            if variant_id:
+                variant = ProductVariant.objects.filter(
+                    variant_id=variant_id).first()
+                if not variant:
+                    continue
+                items.append(
+                    type("_", (), {"variant": variant, "build": None, "quantity": qty}))
+                subtotal += variant.price * qty
+            elif build_id:
+                build = PCBuild.objects.filter(build_id=build_id).first()
+                if not build:
+                    continue
+                # Extract all components from the build and add them individually
+                for build_item in build.items.all():
+                    items.append(
+                        type("_", (), {"variant": build_item.variant, "build": None, "quantity": qty}))
+                    subtotal += build_item.variant.price * qty
+            else:
+                continue  # skip invalid entries
 
         tax = (subtotal * TAX_RATE).quantize(Decimal("0.01"),
                                              rounding=ROUND_HALF_UP)
@@ -365,22 +396,40 @@ def create_order(request):
             cart.items.all().delete()
             for entry in client_cart:
                 variant_id = entry.get("variant_id")
+                build_id = entry.get("build_id")
                 qty = int(entry.get("quantity", 1) or 1)
-                variant = ProductVariant.objects.filter(
-                    variant_id=variant_id).first()
-                if variant:
-                    CartItem.objects.create(
-                        cart=cart, variant=variant, quantity=qty)
+                if variant_id:
+                    variant = ProductVariant.objects.filter(
+                        variant_id=variant_id).first()
+                    if variant:
+                        CartItem.objects.create(
+                            cart=cart, variant=variant, quantity=qty)
+                elif build_id:
+                    build = PCBuild.objects.filter(build_id=build_id).first()
+                    if build:
+                        # Add all components from the build individually to cart
+                        for build_item in build.items.all():
+                            CartItem.objects.create(
+                                cart=cart, variant=build_item.variant, quantity=qty)
         else:
             cart = Cart.objects.create(user=user)
             for entry in client_cart:
                 variant_id = entry.get("variant_id")
+                build_id = entry.get("build_id")
                 qty = int(entry.get("quantity", 1) or 1)
-                variant = ProductVariant.objects.filter(
-                    variant_id=variant_id).first()
-                if variant:
-                    CartItem.objects.create(
-                        cart=cart, variant=variant, quantity=qty)
+                if variant_id:
+                    variant = ProductVariant.objects.filter(
+                        variant_id=variant_id).first()
+                    if variant:
+                        CartItem.objects.create(
+                            cart=cart, variant=variant, quantity=qty)
+                elif build_id:
+                    build = PCBuild.objects.filter(build_id=build_id).first()
+                    if build:
+                        # Add all components from the build individually to cart
+                        for build_item in build.items.all():
+                            CartItem.objects.create(
+                                cart=cart, variant=build_item.variant, quantity=qty)
 
         if total <= 0:
             return JsonResponse({"error": "Your cart total is invalid."}, status=400)
@@ -391,7 +440,11 @@ def create_order(request):
         if total <= 0:
             return JsonResponse({"error": "Your cart total is invalid."}, status=400)
 
-    order, invoice = _create_order_records(user, cart, address, total, items)
+    try:
+        order, invoice = _create_order_records(
+            user, cart, address, total, items)
+    except ValidationError as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
     return_url = request.build_absolute_uri(reverse("payments:payment_return"))
     return_url = f"{return_url}?{urlencode({'business_order_id': order.order_id})}"
@@ -418,14 +471,14 @@ def create_order(request):
         )
     except Exception as exc:
         logger.exception("Cashfree order creation failed")
-        
+
         # FIX: Safely delete the attached Invoice first to prevent database crashes
         try:
             Invoice.objects.filter(order=order).delete()
             order.delete()
         except Exception:
             pass
-            
+
         if settings.DEBUG:
             return JsonResponse(
                 {"error": f"Cashfree API Error. The amount might exceed sandbox limits! Details: {str(exc)}"},
@@ -440,7 +493,6 @@ def create_order(request):
         except Exception:
             pass
         return JsonResponse({"error": "Cashfree did not return an order."}, status=502)
-    
 
     order.cf_order_id = order_data.get("order_id")
     order.payment_session_id = order_data.get("payment_session_id")

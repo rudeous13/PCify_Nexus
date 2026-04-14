@@ -269,10 +269,19 @@
           </div>
         </div>
 
-        <form id="buildForm" method="POST" action="">
+        <form id="buildForm" method="POST" action="{% url 'core:save_pc_build' %}">
           {% csrf_token %}
+          <!-- Build name input (moved inside form) -->
+          <input 
+            type="text" 
+            id="build_name" 
+            name="build_name" 
+            placeholder="Enter build name" 
+            class="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#0a1120] border border-brand-500/30 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 font-medium focus:outline-none focus:border-brand-500 focus:shadow-[0_0_15px_rgba(14,165,233,0.2)] transition-all duration-300 mb-4"
+            required
+          >
           <!-- Build name display -->
-          <div id="current-build-name" class="mb-4 text-lg font-bold text-brand-500" style="display:none;"></div>
+          <div id="current-build-name" class="mb-4 text-2xl font-black text-brand-400 bg-brand-500/10 p-4 rounded-xl border border-brand-500/30" style="display:none;"></div>
           <div class="space-y-4 relative" id="component-list-container"></div>
         </form>
       </section>
@@ -348,7 +357,7 @@
                 <span class="text-2xl font-black font-mono text-white tracking-tight">₹ <span id="price-total">0</span></span>
               </div>
               <div class="grid grid-cols-2 gap-3">
-                <button type="button" onclick="saveBuild()" class="py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="shareBuild()" class="py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all">
                   <i class="bi bi-share"></i> Share
                 </button>
                 <button type="button" id="addToCartBtn" onclick="addToCart()" class="py-3 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20 transition-all">
@@ -592,7 +601,7 @@
 
       const label = `${opt.name}${opt.price > 0 ? " — ₹" + opt.price.toLocaleString("en-IN") : ""}`;
       const disabledAttr = disabled ? " disabled" : "";
-      return `<option value="${opt.id}" ${da}${disabledAttr}>${label}</option>`;
+      return `<option value="${opt.id.toString()}" ${da}${disabledAttr}>${label}</option>`;
     }
 
     // Build full <option> string from an options array
@@ -734,6 +743,7 @@
     function onComponentChange() {
       cascadeFilter();
       updateSystem();
+      validateCoolerSelection();
     }
 
 
@@ -1014,6 +1024,32 @@
     }
     document.addEventListener("keydown", e => { if (e.key === "Escape") closeImageModal(); });
 
+    // Validate cooler selection on change
+    function validateCoolerSelection() {
+        const airCoolerSelect = document.getElementById('cooler_air');
+        const aioCoolerSelect = document.getElementById('cooler_aio');
+        const airCoolerValue = airCoolerSelect ? airCoolerSelect.value : '';
+        const aioCoolerValue = aioCoolerSelect ? aioCoolerSelect.value : '';
+        
+        if (airCoolerValue === 'none' && aioCoolerValue === 'none') {
+            showWarning('cooler_air', 'Select at least one cooler');
+            showWarning('cooler_aio', 'Select at least one cooler');
+            markError('cooler_air');
+            markError('cooler_aio');
+        } else {
+            // Clear warnings if at least one cooler is selected
+            const airWarnEl = document.getElementById('warn-cooler_air');
+            const aioWarnEl = document.getElementById('warn-cooler_aio');
+            if (airWarnEl) airWarnEl.classList.add('hidden');
+            if (aioWarnEl) aioWarnEl.classList.add('hidden');
+            
+            // Restore normal status
+            const airCard = document.getElementById('comp-cooler_air')?.querySelector('.card-container');
+            const aioCard = document.getElementById('comp-cooler_aio')?.querySelector('.card-container');
+            if (airCard && airCoolerValue !== '') airCard.classList.add('status-ok');
+            if (aioCard && aioCoolerValue !== '') aioCard.classList.add('status-ok');
+        }
+    }
 
     // ─────────────────────────────────────────────────────────────────────
     //  10.  TOAST / SHARE HELPERS
@@ -1024,7 +1060,7 @@
       t.classList.remove("opacity-0", "-translate-y-10");
       setTimeout(() => t.classList.add("opacity-0", "-translate-y-10"), 2500);
     }
-    function saveBuild()  { showToast("Link copied to clipboard!"); }
+    function shareBuild()  { showToast("Link copied to clipboard!"); }
     function copyList()   { showToast("Build list copied!"); }
 
 
@@ -1144,44 +1180,88 @@
             buildNameDiv.innerText = '';
             buildNameDiv.style.display = 'none';
         }
+        // Clear build name input
+        const buildNameInput = document.getElementById('build_name');
+        if (buildNameInput) {
+            buildNameInput.value = '';
+        }
     }
     
-    /** Prompt for build name and save configuration */
+    /** Save build configuration with name from input field */
     async function saveBuild() {
-        const buildName = prompt('Enter a name for your build:');
+        const buildNameInput = document.getElementById('build_name');
+        const buildName = buildNameInput ? buildNameInput.value.trim() : '';
         
-        if (!buildName || buildName.trim() === '') {
+        if (!buildName) {
             showToast('Build name is required');
+            if (buildNameInput) {
+                buildNameInput.focus();
+                buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                // Remove error styling after 2 seconds
+                setTimeout(() => {
+                    buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                }, 2000);
+            }
             return;
         }
         
         if (buildName.length > 100) {
             showToast('Build name too long (max 100 characters)');
+            if (buildNameInput) {
+                buildNameInput.focus();
+                buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                // Remove error styling after 2 seconds
+                setTimeout(() => {
+                    buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                }, 2000);
+            }
             return;
         }
         
-        // Gather form data
-        const formData = new FormData();
-        formData.append('build_name', buildName.trim());
+        // Validate that at least one cooler is selected (not "none")
+        const airCoolerSelect = document.getElementById('cooler_air');
+        const aioCoolerSelect = document.getElementById('cooler_aio');
+        const airCoolerValue = airCoolerSelect ? airCoolerSelect.value : '';
+        const aioCoolerValue = aioCoolerSelect ? aioCoolerSelect.value : '';
         
-        // Add current build ID if editing
+        if (airCoolerValue === 'none' && aioCoolerValue === 'none') {
+            showToast('Please select either an Air Cooler or Liquid AIO Cooler');
+            // Show warnings on both cooler components
+            showWarning('cooler_air', 'Select at least one cooler');
+            showWarning('cooler_aio', 'Select at least one cooler');
+            markError('cooler_air');
+            markError('cooler_aio');
+            
+            // Scroll to coolers section
+            const coolersSection = document.getElementById('comp-cooler_air');
+            if (coolersSection) {
+                coolersSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            return;
+        } else {
+            // Clear any previous warnings if validation passes
+            const airWarnEl = document.getElementById('warn-cooler_air');
+            const aioWarnEl = document.getElementById('warn-cooler_aio');
+            if (airWarnEl) airWarnEl.classList.add('hidden');
+            if (aioWarnEl) aioWarnEl.classList.add('hidden');
+        }
+        
+        // Use the form data directly
+        const formData = new FormData(document.getElementById('buildForm'));
+        
+        // Add current build ID if editing (not in form)
         const currentBuild = localStorage.getItem(CURRENT_BUILD_KEY);
         if (currentBuild) {
             formData.append('build_id', currentBuild);
         }
         
-        // Add all component selections
-        const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
-        componentIds.forEach(compId => {
-            const selectEl = document.getElementById(compId);
-            if (selectEl) {
-                formData.append(compId, selectEl.value || '');
-                
-                // Add quantity for relevant components
-                if (compId === 'ram' || compId === 'storage_m2' || compId === 'storage_hdd') {
-                    const qtyEl = document.getElementById(`qty-${compId}`);
-                    formData.append(`qty_${compId}`, qtyEl ? parseInt(qtyEl.innerText) : 1);
-                }
+        // Add component quantities (not in form)
+        const quantityComponents = ["ram", "storage_m2", "storage_hdd"];
+        quantityComponents.forEach(compId => {
+            const qtyEl = document.getElementById(`qty-${compId}`);
+            if (qtyEl) {
+                formData.append(`qty_${compId}`, parseInt(qtyEl.innerText) || 1);
             }
         });
         
@@ -1225,8 +1305,19 @@
     /** Load a specific build for editing */
     async function loadBuild(buildId) {
         try {
-            const response = await fetch(`/load-build/${buildId}/`);
+            console.log('Loading build ID:', buildId); // Debug
+            const url = `/load-build/${buildId}/`;
+            console.log('Fetching from URL:', url); // Debug
+            const response = await fetch(url);
+            console.log('Response status:', response.status); // Debug
+            
+            if (!response.ok) {
+                console.error('HTTP error:', response.status, response.statusText);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const data = await response.json();
+            console.log('Full response data:', data); // Debug
             
             if (data.status === 'success') {
                 // Store current build ID
@@ -1234,15 +1325,40 @@
                 
                 // Load configuration
                 const config = data.config;
+                console.log('Build config object:', config); // Debug
+                console.log('Build name in config:', config.build_name); // Debug
+                console.log('All config keys:', Object.keys(config)); // Debug
                 
                 // Set build name in the UI
                 const buildNameDiv = document.getElementById('current-build-name');
-                if (config.build_name) {
-                    buildNameDiv.innerText = `Editing: ${config.build_name}`;
-                    buildNameDiv.style.display = '';
+                const buildNameInput = document.getElementById('build_name');
+                
+                if (buildNameDiv) {
+                    console.log('Build name div found');
+                    if (config.build_name) {
+                        buildNameDiv.innerText = `Editing: ${config.build_name}`;
+                        buildNameDiv.style.display = 'block';
+                        console.log('Build name set:', config.build_name); // Debug
+                    } else {
+                        buildNameDiv.innerText = 'Editing: Unnamed Build';
+                        buildNameDiv.style.display = 'block';
+                        console.log('No build name found, showing default'); // Debug
+                    }
                 } else {
-                    buildNameDiv.innerText = '';
-                    buildNameDiv.style.display = 'none';
+                    console.error('Build name div NOT found!');
+                }
+                
+                // Set build name in input field
+                if (buildNameInput) {
+                    if (config.build_name) {
+                        buildNameInput.value = config.build_name;
+                        console.log('Build name input set:', config.build_name); // Debug
+                    } else {
+                        buildNameInput.value = '';
+                        console.log('Build name input cleared'); // Debug
+                    }
+                } else {
+                    console.error('Build name input NOT found!');
                 }
                 
                 // Set component values
@@ -1311,6 +1427,99 @@
     
     // Auto-save draft on component changes
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded - build management initialized');
+        
+        // ...existing code...
+        
+        // Validate cooler selection on initial load
+        validateCoolerSelection();
+        
+        // Test functions - call these from browser console
+        window.testBuildNameDisplay = function() {
+            const buildNameDiv = document.getElementById('current-build-name');
+            if (buildNameDiv) {
+                buildNameDiv.innerText = 'TEST: My Custom Build Name';
+                buildNameDiv.style.display = 'block';
+                console.log('Test build name displayed');
+            }
+        };
+        
+        window.testLoadBuild = function() {
+            const mockResponse = {
+                status: 'success',
+                config: {
+                    build_name: 'Test Gaming PC',
+                    cpu: '1',
+                    mobo: '2',
+                }
+            };
+            
+            const buildNameDiv = document.getElementById('current-build-name');
+            const buildNameInput = document.getElementById('build_name');
+            if (mockResponse.status === 'success') {
+                const config = mockResponse.config;
+                if (config.build_name) {
+                    buildNameDiv.innerText = `Editing: ${config.build_name}`;
+                    buildNameDiv.style.display = 'block';
+                    console.log('Mock build name set:', config.build_name);
+                    
+                    // Also set the input field
+                    if (buildNameInput) {
+                        buildNameInput.value = config.build_name;
+                        console.log('Mock build name input set:', config.build_name);
+                    }
+                }
+            }
+        };
+        
+        // Auto-test: Show that build name div exists and works
+        setTimeout(() => {
+            const buildNameDiv = document.getElementById('current-build-name');
+            if (buildNameDiv) {
+                console.log('✓ Build name div is ready');
+                // Uncomment to auto-show test message:
+                // buildNameDiv.innerText = 'Ready to show build names';
+                // buildNameDiv.style.display = 'block';
+            }
+        }, 500);
+
+        // Form submission handler
+        document.getElementById('buildForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const buildNameInput = document.getElementById('build_name');
+            const buildName = buildNameInput ? buildNameInput.value.trim() : '';
+            
+            // Validate build name
+            if (!buildName) {
+                showToast('Build name is required');
+                if (buildNameInput) {
+                    buildNameInput.focus();
+                    buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    // Remove error styling after 2 seconds
+                    setTimeout(() => {
+                        buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    }, 2000);
+                }
+                return;
+            }
+            
+            if (buildName.length > 100) {
+                showToast('Build name too long (max 100 characters)');
+                if (buildNameInput) {
+                    buildNameInput.focus();
+                    buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    // Remove error styling after 2 seconds
+                    setTimeout(() => {
+                        buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    }, 2000);
+                }
+                return;
+            }
+            
+            // Use the existing saveBuild function to handle the AJAX request
+            await saveBuild();
+        });
         // Add change listeners to all component selects
         const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
         
@@ -1342,8 +1551,12 @@
                 // Check if we have a build ID in URL for editing
                 const urlParams = new URLSearchParams(window.location.search);
                 const buildId = urlParams.get('edit');
+                console.log('URL params buildId:', buildId); // Debug
                 if (buildId) {
+                    console.log('Loading build from URL parameter');
                     loadBuild(buildId);
+                } else {
+                    console.log('No build ID in URL parameters');
                 }
             }
         }, 500);
@@ -1354,6 +1567,73 @@
     // ─────────────────────────────────────────────────────────────────────
     renderComponents();
     initTheme();
+    
+    // Check for prebuilt parameter and load configuration AFTER components are rendered
+    const urlParams = new URLSearchParams(window.location.search);
+    const prebuiltId = urlParams.get('prebuilt');
+    if (prebuiltId) {
+        console.log('Loading prebuilt configuration:', prebuiltId);
+        fetch(`/load-prebuilt/${prebuiltId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Prebuilt config received:', data.config);
+                    // Prefill all component selections
+                    Object.keys(data.config).forEach(key => {
+                        if (key.startsWith('qty_')) {
+                          // Handle quantity fields
+                          const compId = key.replace('qty_', '');
+                          const qtyEl = document.getElementById(`qty-${compId}`);
+                          if (qtyEl) {
+                            qtyEl.innerText = data.config[key];
+                            console.log('Set quantity for', compId, 'to', data.config[key]);
+                          } else {
+                            console.log('Quantity element not found for', compId);
+                          }
+                        } else if (key !== 'build_id' && key !== 'build_name') {
+                          // Handle component selections
+                          const selectEl = document.getElementById(key);
+                          if (selectEl && data.config[key]) {
+                            const val = data.config[key].toString();
+                            const options = Array.from(selectEl.options).map(o => o.value);
+                            console.log('Available options for', key, ':', options, 'Trying to set:', val);
+                            if (options.includes(val)) {
+                              selectEl.value = val;
+                              console.log('Set select value for', key, 'to', val);
+                            } else {
+                              selectEl.selectedIndex = 0;
+                              console.warn('Value', val, 'not found for', key, '. Defaulted to first option.');
+                            }
+                          } else {
+                            console.log('Select element not found or no value for', key);
+                          }
+                        }
+                    });
+                    
+                    // Set build name if available
+                    if (data.config.build_name) {
+                        const buildNameInput = document.getElementById('build_name');
+                        const buildNameDiv = document.getElementById('current-build-name');
+                        if (buildNameInput) {
+                            buildNameInput.value = data.config.build_name;
+                        }
+                        if (buildNameDiv) {
+                            buildNameDiv.innerText = `Editing: ${data.config.build_name}`;
+                            buildNameDiv.style.display = 'block';
+                        }
+                    }
+                    
+                    // Trigger component change to update UI
+                    onComponentChange();
+                    console.log('Prebuilt configuration loaded successfully');
+                } else {
+                    console.error('Failed to load prebuilt:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading prebuilt:', error);
+            });
+    }
     </script>
 
     <script>

@@ -348,13 +348,37 @@ def accessories(request):
         variants__price__lte=current_max
     ).distinct()
 
+    def _is_low_quality_image(image_path):
+        """Check if image filename indicates low quality (small dimensions)"""
+        if not image_path:
+            return True
+        low_quality_indicators = [
+            '_SS40_', '_AC_US40_', '_SX38_', '_SY50_', '_CR00',
+            '_SL40_', '_US40_', '_SX40_', '_SY40_'
+        ]
+        return any(indicator in str(image_path) for indicator in low_quality_indicators)
+
+    def _get_best_image(images):
+        """Get the best quality image from a list of images"""
+        if not images:
+            return None
+
+        # First try to find a high quality image
+        for img in images:
+            if img.image and not _is_low_quality_image(img.image.name):
+                return img
+
+        # If no high quality found, return the first available
+        return images[0] if images else None
+
     products_list = []
     for product in products_qs:
         variant = product.variants.first()
         if variant:
             all_imgs = variant.images.all()
-            primary_image = all_imgs.filter(
-                is_primary=True).first() or all_imgs.first()
+            # Get the best quality image instead of just primary/first
+            best_image = _get_best_image(list(all_imgs))
+            primary_image = best_image or all_imgs.first()
             img_urls = [img.image.url for img in all_imgs if img.image]
             all_images_str = ",".join(img_urls) if img_urls else ""
 
@@ -364,7 +388,7 @@ def accessories(request):
                 'name':           product.product_name,
                 'category':       product.category,
                 'price':          variant.price,
-                'image':          primary_image.image if primary_image else None,
+                'image':          primary_image.image if primary_image and primary_image.image else None,
                 'all_images_str': all_images_str,
             })
 
@@ -396,6 +420,12 @@ def accessories(request):
 def cart(request):
     user_id = request.session.get('user_id')
 
+    # Clean up: Remove any existing build items from all carts (one-time safety)
+    from orders.models import CartItem
+    build_items = CartItem.objects.filter(build__isnull=False)
+    if build_items.exists():
+        build_items.delete()
+
     if request.method == "POST":
         if not user_id:
             return JsonResponse({'status': 'error', 'message': 'Please login to add items.'})
@@ -407,17 +437,25 @@ def cart(request):
 
             if action == "add":
                 variant_id = request.POST.get("variant_id")
-                pc_id = request.POST.get("pc_id")  # THIS IS THE MISSING PIECE!
+                pc_id = request.POST.get("pc_id")
                 quantity = int(request.POST.get("quantity", 1))
 
-                # 1. If it's a Prebuilt PC
+                # 1. If it's a Prebuilt PC: decompose into variants
                 if pc_id:
                     build = PCBuild.objects.get(build_id=pc_id)
-                    cart_item, created = CartItem.objects.get_or_create(
-                        cart=cart_obj,
-                        build=build,
-                        defaults={'quantity': quantity}
-                    )
+                    for build_item in build.items.all():
+                        variant = build_item.variant
+                        # Check if this variant is already in the cart
+                        cart_item, created = CartItem.objects.get_or_create(
+                            cart=cart_obj,
+                            variant=variant,
+                            build_source=build,  # Track the source build
+                            defaults={
+                                'quantity': build_item.quantity * quantity}
+                        )
+                        if not created:
+                            cart_item.quantity += build_item.quantity * quantity
+                            cart_item.save()
                 # 2. If it's an Accessory/Component
                 elif variant_id:
                     variant = ProductVariant.objects.get(variant_id=variant_id)
@@ -426,12 +464,11 @@ def cart(request):
                         variant=variant,
                         defaults={'quantity': quantity}
                     )
+                    if not created:
+                        cart_item.quantity += quantity
+                        cart_item.save()
                 else:
                     raise Exception("No valid product or PC ID provided.")
-
-                if not created:
-                    cart_item.quantity += quantity
-                    cart_item.save()
 
             elif action == "delete":
                 cart_item_id = request.POST.get("cart_item_id")
@@ -739,8 +776,68 @@ def load_pc_build(request, build_id):
         return JsonResponse({'status': 'error', 'message': f'Error loading build: {str(e)}'})
 
 
+def load_prebuilt_config(request, build_id):
+    """Load a prebuilt PC configuration for customization"""
+    try:
+        build = PCBuild.objects.get(build_id=build_id, is_prebuilt=True)
+
+        # Prepare build configuration
+        config = {'build_id': build.build_id, 'build_name': build.name}
+        # Component type mapping from database to frontend
+        component_map = {
+            'm2': 'storage_m2',
+            'cabinet': 'case'
+        }
+
+        for item in build.items.all():
+            # Map database component types to frontend expected types
+            frontend_type = component_map.get(
+                item.component_type, item.component_type)
+            config[frontend_type] = item.variant.variant_id
+            config[f'qty_{frontend_type}'] = item.quantity
+
+        return JsonResponse({'status': 'success', 'config': config})
+
+    except PCBuild.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Prebuilt configuration not found'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Error loading prebuilt: {str(e)}'})
+
+
 def pro_order(request):
-    return render(request, "Home/pro_order_history.html")
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return redirect("accounts:signin")
+
+    user = User.objects.get(user_id=user_id)
+    orders_qs = Order.objects.filter(user=user).order_by(
+        '-created_at').prefetch_related('items__variant__product')
+    orders = []
+    for order in orders_qs:
+        # Compose a summary for each order
+        order_items = order.items.all()
+        # Show the first item as the main title, summarize the rest
+        if order_items:
+            first_item = order_items[0]
+            title = str(first_item.variant.product.product_name) if first_item.variant and first_item.variant.product else str(
+                first_item.variant or first_item.build or "Item")
+            description = f"{len(order_items)} item(s)"
+            quantity = sum([it.quantity for it in order_items])
+        else:
+            title = "No items"
+            description = "-"
+            quantity = 0
+        orders.append({
+            'order_number': order.order_id,
+            'status': order.status.title(),
+            'created_at': order.created_at,
+            'total_price': order.total_amount,
+            'title': title,
+            'description': description,
+            'quantity': quantity,
+            'build_status': order.status.title(),
+        })
+    return render(request, "Home/pro_order_history.html", {'orders': orders})
 
 
 def pro_security(request):

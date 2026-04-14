@@ -720,6 +720,7 @@
                 <div class="flex-1 text-center sm:text-left w-full cursor-pointer" onclick="openProductView(${index})">
                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">${item.name}</h3>
                    <p class="text-xs font-mono text-brand-500 uppercase">${item.type}</p>
+                   {% if item.is_from_build %}<p class="text-xs text-slate-500 dark:text-slate-400 italic">Part of: ${item.build_source}</p>{% endif %}
                    <div class="text-lg font-bold text-slate-900 dark:text-white mt-2">₹${(item.price * item.quantity).toLocaleString("en-IN")}</div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -868,7 +869,9 @@
           price: {{ item.price|default:0 }},
           quantity: {{ item.quantity|default:1 }},
           image: "{{ item.image_url|default:'' }}",
-          build_items: [{% for b_item in item.build_items %}"{{ b_item|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+          build_items: [{% for b_item in item.build_items %}"{{ b_item|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+          {% if item.is_from_build %}is_from_build: true,
+          build_source: "{{ item.build_source|escapejs }}",{% endif %}
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
       ];

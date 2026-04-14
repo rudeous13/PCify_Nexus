@@ -108,6 +108,7 @@
                             <div>
                                 <div class="font-semibold text-slate-900 dark:text-white">{{ item.name }}</div>
                                 <div class="text-xs text-slate-500">Qty {{ item.quantity }}</div>
+                                {% if item.is_from_build %}<div class="text-xs text-slate-400 italic">From: {{ item.build_source }}</div>{% endif %}
                             </div>
                             <div class="font-mono text-slate-900 dark:text-white">₹{{ item.total }}</div>
                         </div>

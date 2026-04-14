@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Cart(models.Model):
@@ -10,7 +11,7 @@ class Cart(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
- 
+
     def __str__(self):
         return f"Cart of {self.user}"
 
@@ -36,18 +37,42 @@ class CartItem(models.Model):
         blank=True,
         related_name='cart_items',
     )
+    # Track if this item came from a prebuilt PC
+    build_source = models.ForeignKey(
+        'builds.PCBuild',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='source_cart_items',
+        help_text="If this item came from a prebuilt PC, reference the original build"
+    )
     quantity = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
- 
+
     def __str__(self):
         if self.variant:
+            if self.build_source:
+                return f"{self.variant.sku} × {self.quantity} (From: {self.build_source.name})"
             return f"{self.variant.sku} × {self.quantity}"
         elif self.build:
             return f"Build: {self.build.name} × {self.quantity}"
         return f"Empty Cart Item × {self.quantity}"
- 
- 
+
+    def clean(self):
+        """
+        Validate that at least one of variant or build is set.
+        """
+        super().clean()
+        if not self.variant and not self.build:
+            raise ValidationError(
+                "CartItem must have either a variant or a build.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
+
 class Order(models.Model):
     SHIPPING_METHODS = [
         ('standard', 'Standard'),
@@ -70,7 +95,7 @@ class Order(models.Model):
         ('paypal', 'PayPal'),
         ('cod', 'Cash on Delivery'),
     ]
- 
+
     order_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         'accounts.User',
@@ -109,7 +134,7 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=20, null=True, blank=True)
     payment_raw = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
- 
+
     def __str__(self):
         return f"Order-{self.order_id} ({self.user})"
 
@@ -117,47 +142,72 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order_item_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(
-        Order, 
-        on_delete=models.CASCADE, 
+        Order,
+        on_delete=models.CASCADE,
         related_name='items'
     )
-    
+
     # 1. Variant is now nullable so it can be empty when ordering a Build
     variant = models.ForeignKey(
         'products.ProductVariant',
         on_delete=models.RESTRICT,
         related_name='order_items',
-        null=True, 
+        null=True,
         blank=True
     )
-    
+
     # 2. Added the Build field (Update 'builds.CustomBuild' to your actual app and model name!)
     build = models.ForeignKey(
- # <--- Replace with your actual Build model path
+        # <--- Replace with your actual Build model path
         'builds.PCBuild',
         on_delete=models.SET_NULL,
         related_name='order_items',
-        null=True, 
+        null=True,
         blank=True
     )
-    
+
+    # Track if this item came from a prebuilt PC
+    build_source = models.ForeignKey(
+        'builds.PCBuild',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='source_order_items',
+        help_text="If this item came from a prebuilt PC, reference the original build"
+    )
+
     quantity = models.PositiveIntegerField(default=1)
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    unit_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        # Note: In Django, if 'variant' is NULL, most databases will allow multiple 
+        # Note: In Django, if 'variant' is NULL, most databases will allow multiple
         # rows with the same 'order' and a NULL 'variant', so this is safe to keep.
         unique_together = [('order', 'variant')]
 
     def __str__(self):
         # 3. Updated to safely display either the Variant or the Build
         if self.variant:
+            if self.build_source:
+                return f"{self.variant.sku} × {self.quantity} (From: {self.build_source.name})"
             return f"{self.variant.sku} × {self.quantity} (Order-{self.order_id})"
         elif self.build:
-            # Assuming your Build model has a 'name' field. Change to match your model.
             return f"Build: {self.build.name} × {self.quantity} (Order-{self.order_id})"
         return f"Unknown Item × {self.quantity} (Order-{self.order_id})"
+
+    def clean(self):
+        """
+        Validate that at least one of variant or build is set.
+        """
+        super().clean()
+        if not self.variant and not self.build:
+            raise ValidationError(
+                "OrderItem must have either a variant or a build.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 
 class Invoice(models.Model):
