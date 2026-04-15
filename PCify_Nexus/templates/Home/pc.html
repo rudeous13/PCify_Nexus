@@ -1,0 +1,1751 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nexus Builder | Ultimate PC Configurator</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: ["class", '[data-theme="dark"]'],
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Outfit"', "sans-serif"],
+              mono: ['"Space Grotesk"', "monospace"],
+            },
+            colors: {
+              brand: {
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                glow: "rgba(14, 165, 233, 0.3)",
+              },
+              accent: {
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                glow: "rgba(139, 92, 246, 0.3)",
+              },
+              dark: {
+                bg: "#0b0f19",
+                card: "#111827",
+                border: "#1f2937",
+              },
+            },
+            backgroundImage: {
+              "grid-pattern":
+                "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
+            },
+            boxShadow: {
+              neon: "0 0 12px -3px var(--tw-shadow-color)",
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              "slide-in": "slideIn 0.3s ease-out forwards",
+              pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-6px)" },
+              },
+              slideIn: {
+                "0%": { opacity: "0", transform: "translateX(-10px)" },
+                "100%": { opacity: "1", transform: "translateX(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #030712; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; border: 2px solid #030712; }
+      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+      .bg-grid {
+        background-size: 40px 40px;
+        mask-image: linear-gradient(to bottom, transparent, 10% white, 90% white, transparent);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, 5% white, 95% white, transparent);
+      }
+
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2338bdf8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25em 1.25em;
+      }
+
+      .circuit-line {
+        position: absolute; left: 23px; top: 35px; bottom: -35px; width: 2px;
+        background: linear-gradient(to bottom, #334155 0%, #0ea5e9 50%, #334155 100%);
+        opacity: 0.2; z-index: 0;
+      }
+      .component:last-child .circuit-line { display: none; }
+      .component.active .circuit-line {
+        background: linear-gradient(to bottom, #0ea5e9 0%, #8b5cf6 100%);
+        opacity: 0.8; box-shadow: 0 0 8px rgba(14, 165, 233, 0.6);
+      }
+
+      .status-ok  { border-color: rgba(16,185,129,0.5); box-shadow: 0 0 15px -3px rgba(16,185,129,0.2); }
+      .status-warn{ border-color: rgba(245,158,11,0.5); box-shadow: 0 0 15px -3px rgba(245,158,11,0.2); }
+      .status-err { border-color: rgba(239,68,68,0.5);  box-shadow: 0 0 15px -3px rgba(239,68,68,0.2); }
+
+      select option[disabled] { color: #4b5563; font-style: italic; }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-50 dark:bg-dark-bg text-slate-600 dark:text-slate-300 antialiased transition-colors duration-500 pb-40 selection:bg-brand-500 selection:text-white overflow-x-hidden"
+  >
+    <div class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute inset-0 bg-grid-pattern bg-grid opacity-[0.03] dark:opacity-[0.05]"></div>
+      <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 mix-blend-screen"></div>
+      <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent-500/10 rounded-full blur-[100px] translate-x-1/2 translate-y-1/2 mix-blend-screen"></div>
+    </div>
+
+    <!-- ═══════ HEADER ═══════ -->
+    <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/80 dark:bg-dark-bg/80 border-b border-slate-200/60 dark:border-white/5 transition-all duration-300">
+      <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-16 sm:h-20 flex items-center justify-between">
+        <a href="{% url 'core:homepage'%}" class="flex items-center gap-2 sm:gap-3 group">
+          <div class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform duration-300">
+            <i class="bi bi-cpu-fill" aria-hidden="true"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white font-mono Monaco">
+              Nexus<span class="text-brand-400">Build</span>
+            </span>
+            <span class="text-[9px] sm:text-[10px] font-bold tracking-widest text-slate-500 uppercase hidden sm:block">Premium Hardware</span>
+          </div>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-1 xl:gap-2 bg-slate-100/50 dark:bg-white/5 p-1.5 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-md">
+          <a href="{% url 'core:homepage'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Home</a>
+          <a href="{% url 'core:prebuilt'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Prebuilt</a>
+          <a href="{% url 'core:built'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-bold bg-white dark:bg-brand-600 text-brand-600 dark:text-white shadow-md shadow-brand-500/10 font-mono Monaco">Builder</a>
+          <a href="{% url 'core:accessories'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all">Accessories</a>
+          <a href="{% url 'core:cart'%}" class="px-4 xl:px-6 py-2 rounded-full text-xs xl:text-sm font-medium hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 dark:hover:text-white transition-all relative">Cart
+            <span id="cart-badge" class="absolute top-1 right-1 xl:right-2 w-2 h-2 rounded-full bg-red-500 opacity-0 transition-opacity duration-300"></span>
+          </a>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 relative z-[100]">
+          <button id="themeToggle" class="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:border-brand-400/50 dark:hover:border-brand-500/50 hover:bg-white dark:hover:bg-white/10 hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] transition-all duration-300 group overflow-hidden" aria-label="Toggle Theme">
+            <div class="absolute inset-0 -translate-x-full group-hover:animate-[slideRight_1s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+            <div class="relative z-10 text-slate-500 dark:text-slate-400 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors duration-300">
+              <i class="bi bi-moon-stars-fill text-xs sm:text-sm drop-shadow-sm group-hover:rotate-[360deg] transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] inline-block" aria-hidden="true"></i>
+            </div>
+          </button>
+
+          <div class="h-5 sm:h-6 w-px bg-gradient-to-b from-transparent via-slate-300 dark:via-white/20 to-transparent mx-0 sm:mx-0.5 hidden sm:block"></div>
+
+          {% if request.session.active %}
+          <div class="relative hidden sm:block">
+            <button id="profileMenuBtn" class="group flex items-center gap-2 sm:gap-2.5 pl-1 sm:pl-1.5 pr-3 sm:pr-4 py-1 sm:py-1.5 rounded-full bg-white/60 dark:bg-[#0b0f19]/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.2)] hover:border-brand-500/40 dark:hover:border-brand-400/40 hover:bg-white dark:hover:bg-[#111827]/90 hover:shadow-[0_4px_20px_rgba(14,165,233,0.15)] transition-all duration-300 ease-out outline-none">
+              <div class="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full z-10 before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-brand-400 before:to-accent-500 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300 before:-z-10">
+                <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center flex-shrink-0 border-2 border-white dark:border-[#0b0f19] z-10 shadow-inner transition-transform duration-300 group-hover:scale-[0.95]">
+                  {% if request.session.user_image %}
+                    <img src="{{ request.session.user_image }}" alt="Profile" class="w-full h-full object-cover">
+                  {% else %}
+                    <span class="text-[9px] sm:text-[11px] font-bold tracking-widest font-mono drop-shadow-sm ml-[1px]">
+                      {{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}
+                    </span>
+                  {% endif %}
+                </div>
+                <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-white dark:border-[#0b0f19] rounded-full z-20 shadow-[0_0_8px_rgba(34,197,94,0.6)] group-hover:scale-110 transition-transform duration-300"></span>
+              </div>
+              <div class="flex items-center gap-1 sm:gap-2">
+                <span class="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight font-mono tracking-tight transition-colors duration-300">{{ request.session.user_name }}</span>
+                <i id="profileMenuChevron" class="bi bi-chevron-down text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-400 ease-[cubic-bezier(0.87,0,0.13,1)]"></i>
+              </div>
+            </button>
+            <div id="profileDropdown" class="absolute right-0 top-[calc(100%+8px)] sm:top-[calc(100%+12px)] w-56 sm:w-64 opacity-0 translate-y-4 scale-[0.97] pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-top-right z-50">
+              <div class="p-1.5 sm:p-2 rounded-[16px] sm:rounded-[20px] bg-white/80 dark:bg-[#0b0f19]/80 backdrop-blur-2xl border-x border-b border-slate-200/60 dark:border-white/10 border-t-2 border-t-brand-500/50 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-brand-500/20 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 mb-1 bg-slate-50/50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                  <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold font-mono shadow-inner flex-shrink-0 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/20 blur-[2px] translate-y-[-50%] rounded-full"></div>
+                    <span class="relative z-10">{{ request.session.user_name|make_list|first|upper }}{{ request.session.user_lname|make_list|first|upper }}</span>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <p class="text-[8px] sm:text-[10px] bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-accent-500 uppercase tracking-widest font-black mb-0.5">Nexus Member</p>
+                    <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate font-mono">{{ request.session.user_name }} {{ request.session.user_lname }}</p>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-0.5 mt-1 relative z-10">
+                  <a href="{% url 'core:profile' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-white/10 hover:shadow-sm transition-all duration-300">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                      <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-brand-500 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <i class="bi bi-person-circle text-[10px] sm:text-sm" aria-hidden="true"></i>
+                      </div>
+                      Account Settings
+                    </div>
+                    <i class="bi bi-chevron-right text-[8px] sm:text-[10px] text-slate-300 dark:text-slate-600 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300"></i>
+                  </a>
+                  <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-white/10 to-transparent my-1"></div>
+                  <a href="{% url 'accounts:singout' %}" class="group/item flex items-center justify-between px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium font-mono text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                      <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200/50 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover/item:text-red-500 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 group-hover/item:-translate-y-0.5 transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                        <i class="bi bi-power text-[10px] sm:text-sm drop-shadow-sm" aria-hidden="true"></i>
+                      </div>
+                      Sign Out
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <a href="{% url 'accounts:signin'%}" class="relative hidden sm:flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0.5 group border border-slate-200 dark:border-white/10 hover:border-brand-500/50">
+            <div class="absolute inset-0 bg-white dark:bg-[#0b0f19] transition-colors duration-300"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-500 via-brand-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"></div>
+            <div class="relative z-10 flex items-center gap-1.5 sm:gap-2 text-slate-700 dark:text-slate-200 group-hover:text-white transition-colors duration-300 font-mono font-bold tracking-wide text-[10px] sm:text-xs">
+              <i class="bi bi-shield-lock text-xs sm:text-sm group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" aria-hidden="true"></i>
+              <span class="drop-shadow-sm">LOGIN</span>
+            </div>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══════ MAIN ═══════ -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT — Component Selectors -->
+      <section class="lg:col-span-8 animate-slide-up">
+        <div class="mb-8 space-y-6">
+          <div class="pl-2 border-l-4 border-brand-500 flex justify-between items-end">
+            <div>
+              <h1 class="text-3xl md:text-5xl font-black mb-2 tracking-tight text-slate-900 dark:text-white font-mono">
+                SYSTEM <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-accent-500">INITIATED</span>
+              </h1>
+              <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl font-light">
+                Select separate components. Real-time compatibility checks & power estimation enabled.
+              </p>
+            </div>
+            <div class="hidden md:block w-48 text-right">
+              <div class="flex justify-between text-[10px] font-bold uppercase text-slate-400 mb-1">
+                <span>Completion</span>
+                <span id="progress-text">0%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-brand-500 to-accent-500 w-0 transition-all duration-500"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex pb-2">
+            <button type="submit" form="buildForm"
+              class="group relative inline-flex items-center justify-center gap-3 px-8 py-3 rounded-xl bg-white dark:bg-[#0a1120] border border-brand-500/30 text-brand-600 dark:text-brand-400 font-bold uppercase tracking-widest text-xs overflow-hidden transition-all duration-300 hover:border-brand-500 hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] hover:-translate-y-0.5">
+              <div class="absolute inset-0 bg-brand-500/10 group-hover:bg-brand-500/20 transition-colors"></div>
+              <i class="bi bi-floppy2-fill text-lg relative z-10 transition-transform group-hover:scale-110"></i>
+              <span class="relative z-10">Save Build PC</span>
+            </button>
+          </div>
+        </div>
+
+        <form id="buildForm" method="POST" action="{% url 'core:save_pc_build' %}">
+          {% csrf_token %}
+          <!-- Build name input (moved inside form) -->
+          <input 
+            type="text" 
+            id="build_name" 
+            name="build_name" 
+            placeholder="Enter build name" 
+            class="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#0a1120] border border-brand-500/30 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 font-medium focus:outline-none focus:border-brand-500 focus:shadow-[0_0_15px_rgba(14,165,233,0.2)] transition-all duration-300 mb-4"
+            required
+          >
+          <!-- Build name display -->
+          <div id="current-build-name" class="mb-4 text-2xl font-black text-brand-400 bg-brand-500/10 p-4 rounded-xl border border-brand-500/30" style="display:none;"></div>
+          <div class="space-y-4 relative" id="component-list-container"></div>
+        </form>
+      </section>
+
+      <!-- RIGHT — System Health Sidebar -->
+      <aside class="lg:col-span-4 sticky top-24 z-30">
+        <div class="relative group">
+          <div class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-accent-600 rounded-[2rem] blur-md opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+          <div class="relative backdrop-blur-xl bg-white/90 dark:bg-[#0a1120]/95 border border-slate-200/50 dark:border-white/10 rounded-3xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/5 flex flex-col h-[calc(100vh-8rem)] max-h-[750px]">
+
+            <!-- System stats header -->
+            <div class="h-auto py-6 bg-[#02040a] relative overflow-hidden shrink-0 border-b border-white/5">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(14,165,233,0.15),transparent_70%)]"></div>
+              <div class="relative px-6 z-10 text-center">
+                <h3 class="font-mono font-bold text-xs tracking-[0.2em] text-brand-400 uppercase mb-3">System Health</h3>
+                <div id="build-status" class="w-full text-xs font-mono font-bold text-slate-400 bg-slate-800/50 border border-slate-500/20 py-2 rounded-lg flex items-center justify-center gap-2 mb-3 transition-colors">
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-slate-500"></span>
+                  </span>
+                  INCOMPLETE
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                  <div class="bg-white/5 rounded p-2 border border-white/5">
+                    <div class="text-slate-500 uppercase tracking-wide">Wattage</div>
+                    <div class="text-white font-bold text-sm">
+                      <span id="watts-total">0</span>W
+                      <span id="watts-max" class="text-slate-500">/ --</span>
+                    </div>
+                  </div>
+                  <div class="bg-white/5 rounded p-2 border border-white/5">
+                    <div class="text-slate-500 uppercase tracking-wide">FPS Est.</div>
+                    <div class="text-white font-bold text-sm">
+                      <span id="fps-est">--</span>
+                      <span class="text-slate-500">1440p</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Component list -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/50 dark:bg-[#080e1a]/50">
+              <div class="flex items-center justify-between border-b border-slate-200 dark:border-white/5 pb-2">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Component List</span>
+                <button type="button" onclick="copyList()" class="text-[10px] font-bold text-brand-400 uppercase tracking-widest hover:text-brand-300">
+                  <i class="bi bi-copy"></i> Copy
+                </button>
+              </div>
+              <ul class="space-y-2" id="summary-list">
+                <li class="text-center py-8 text-slate-400 text-xs italic">Components will appear here…</li>
+              </ul>
+            </div>
+
+            <!-- Pricing footer -->
+            <div class="p-6 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a1120] z-20">
+              <div class="space-y-1 mb-4 text-xs font-mono text-slate-500">
+                <div class="flex justify-between">
+                  <span>Subtotal:</span>
+                  <span class="text-slate-300">₹ <span id="price-subtotal">0</span></span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Tax (18%):</span>
+                  <span class="text-slate-300">₹ <span id="price-tax">0</span></span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Shipping:</span>
+                  <span class="text-green-400">FREE</span>
+                </div>
+              </div>
+              <div class="flex justify-between items-end mb-4 border-t border-white/10 pt-3">
+                <span class="text-xs text-brand-400 font-bold uppercase tracking-widest">Total</span>
+                <span class="text-2xl font-black font-mono text-white tracking-tight">₹ <span id="price-total">0</span></span>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="shareBuild()" class="py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                  <i class="bi bi-share"></i> Share
+                </button>
+                <button type="button" id="addToCartBtn" onclick="addToCart()" class="py-3 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20 transition-all">
+                  <i class="bi bi-cart-plus"></i> Add to Cart
+                </button>
+              </div>
+              <div class="mt-3 text-center">
+                <a href="#" class="text-[10px] text-slate-500 hover:text-slate-300 underline">Warranty &amp; Return Policy</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Mobile total bar -->
+    <div class="md:hidden fixed bottom-[80px] left-4 right-4 bg-slate-900/95 dark:bg-white/95 backdrop-blur-xl text-white dark:text-slate-900 p-4 rounded-2xl z-40 shadow-2xl flex items-center justify-between border border-white/10 dark:border-slate-200 ring-1 ring-white/10">
+      <div>
+        <div class="text-[10px] opacity-70 uppercase tracking-widest font-bold font-mono">Total</div>
+        <div class="text-xl font-black font-mono">₹ <span id="total-price-mobile">0</span></div>
+      </div>
+      <button class="bg-brand-500 hover:bg-brand-400 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-brand-500/30" onclick="document.getElementById('addToCartBtn').click()">Checkout</button>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-full font-bold shadow-lg flex items-center gap-3 z-[100] transition-all duration-300 opacity-0 -translate-y-10 pointer-events-none border border-slate-800 dark:border-slate-100" role="status">
+      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+        <i class="bi bi-check text-white text-lg" aria-hidden="true"></i>
+      </div>
+      <span class="font-mono text-sm" id="toast-msg">Action Successful!</span>
+    </div>
+
+    <!-- Image lightbox -->
+    <div id="imageModal" class="fixed inset-0 z-[110] bg-black/90 backdrop-blur-md hidden flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeImageModal()">
+      <button class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2" onclick="closeImageModal()">
+        <i class="bi bi-x-lg text-2xl"></i>
+      </button>
+      <div class="max-w-4xl max-h-[85vh] p-4 flex flex-col items-center pointer-events-none">
+        <img id="modalImageSrc" src="" class="max-w-full max-h-[70vh] rounded-2xl shadow-2xl shadow-brand-500/20 object-contain pointer-events-auto" alt="Full Image">
+        <h3 id="modalImageTitle" class="text-white mt-6 font-bold font-mono text-xl tracking-wide text-center pointer-events-auto"></h3>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         MAIN JS — Component data (from Django), cascade compat, rendering
+    ═══════════════════════════════════════════════════════════════════ -->
+    <script>
+    // ─────────────────────────────────────────────────────────────────────
+    //  1.  MASTER DATA  —  All options injected from Django context
+    //  Every option carries the data-attributes needed for compat checks.
+    //  Extra fields (m2_slots, pcie_x16, length_mm, sockets, etc.) are
+    //  stored on the option objects and written as data-* on the <option>.
+    // ─────────────────────────────────────────────────────────────────────
+    const masterData = {
+
+      cpu: [
+        {% for item in cpus %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          socket: "{{ item.socket|default:''|escapejs }}",
+          score: {{ item.score|default:0 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      mobo: [
+        {% for item in motherboards %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          socket: "{{ item.socket|default:''|escapejs }}",
+          memory: "{{ item.memory_type|default:''|escapejs }}",
+          m2_slots: {{ item.m2_slots|default:0 }},
+          sata_ports: {{ item.sata_ports|default:0 }},
+          pcie_x16: {{ item.pcie_x16|default:0 }},
+          pcie_x1: {{ item.pcie_x1|default:0 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      gpu: [
+        {% for item in gpus %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          length_mm: {{ item.length_mm|default:0 }},
+          score: {{ item.score|default:0 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      ram: [
+        {% for item in rams %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          ram_type: "{{ item.ram_type|default:''|escapejs }}",
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      storage_m2: [
+        {% for item in storage_m2 %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      storage_hdd: [
+        { id: "none", name: "None", price: 0, watts: 0, img: "" },
+        {% for item in storage_hdd %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      cooler_air: [
+        { id: "none", name: "None (Use AIO)", price: 0, watts: 0, height_mm: 0, sockets: [], img: "" },
+        {% for item in air_coolers %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          height_mm: {{ item.height_mm|default:0 }},
+          sockets: {{ item.sockets_json|safe }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      cooler_aio: [
+        { id: "none", name: "None (Use Air)", price: 0, watts: 0, height_mm: 0, radiator_mm: 0, sockets: [], img: "" },
+        {% for item in aio_coolers %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          height_mm: 0,
+          radiator_mm: {{ item.radiator_mm|default:0 }},
+          sockets: {{ item.sockets_json|safe }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      psu: [
+        {% for item in psus %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          watts: {{ item.watts|default:0 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+
+      case: [
+        {% for item in pc_cases %}
+        {
+          id: "{{ item.id }}",
+          name: "{{ item.name|escapejs }}",
+          price: {{ item.price|default:0 }},
+          max_gpu_length: {{ item.max_gpu_length|default:9999 }},
+          max_cooler_height: {{ item.max_cooler_height|default:9999 }},
+          {% if item.image %}img: "{{ item.image.url }}"{% else %}img: ""{% endif %}
+        },
+        {% endfor %}
+      ],
+    };
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  2.  COMPONENT DEFINITIONS  (label, icon, which masterData key)
+    // ─────────────────────────────────────────────────────────────────────
+    const componentsDB = [
+      { id: "cpu",         label: "CPU",                    icon: "bi-cpu-fill",            hasQty: false },
+      { id: "mobo",        label: "Motherboard",            icon: "bi-motherboard-fill",     hasQty: false },
+      { id: "gpu",         label: "Graphics Card",          icon: "bi-gpu-card",             hasQty: false },
+      { id: "ram",         label: "Memory (RAM)",           icon: "bi-memory",               hasQty: true  },
+      { id: "storage_m2",  label: "Primary Storage (M.2)",  icon: "bi-device-ssd-fill",      hasQty: true  },
+      { id: "storage_hdd", label: "Secondary Storage (HDD)",icon: "bi-device-hdd-fill",      hasQty: true  },
+      { id: "cooler_air",  label: "CPU Air Cooler",         icon: "bi-fan",                  hasQty: false },
+      { id: "cooler_aio",  label: "AIO Liquid Cooler",      icon: "bi-snow2",                hasQty: false },
+      { id: "psu",         label: "Power Supply",           icon: "bi-lightning-charge-fill", hasQty: false },
+      { id: "case",        label: "PC Case",                icon: "bi-pc-display",           hasQty: false },
+    ];
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  3.  OPTION HTML BUILDER  — shared by both initial render & rebuild
+    // ─────────────────────────────────────────────────────────────────────
+    function buildOptionHTML(opt, defaultLabel, disabled = false) {
+      if (!opt.id) return `<option value="">Select ${defaultLabel}</option>`;
+
+      const imgUrl = (opt.id === "none" || !opt.img)
+        ? (opt.id === "none" ? "" : `https://placehold.co/600x600/1e293b/38bdf8?text=${encodeURIComponent((opt.name || '').split(' ').slice(0, 3).join('+'))}`)
+        : opt.img;
+
+      let da = `data-price="${opt.price || 0}" data-name="${(opt.name || '').replace(/"/g, '&quot;')}" data-img="${imgUrl}"`;
+      if (opt.watts)        da += ` data-watts="${opt.watts}"`;
+      if (opt.socket)       da += ` data-socket="${opt.socket}"`;
+      if (opt.memory)       da += ` data-memory="${opt.memory}"`;
+      if (opt.ram_type)     da += ` data-ramtype="${opt.ram_type}"`;
+      if (opt.score)        da += ` data-score="${opt.score}"`;
+      if (opt.m2_slots  !== undefined) da += ` data-m2="${opt.m2_slots}"`;
+      if (opt.sata_ports !== undefined) da += ` data-sata="${opt.sata_ports}"`;
+      if (opt.pcie_x16  !== undefined) da += ` data-pcie16="${opt.pcie_x16}"`;
+      if (opt.length_mm)    da += ` data-length="${opt.length_mm}"`;
+      if (opt.height_mm)    da += ` data-height="${opt.height_mm}"`;
+      if (opt.max_gpu_length)   da += ` data-maxgpu="${opt.max_gpu_length}"`;
+      if (opt.max_cooler_height) da += ` data-maxcooler="${opt.max_cooler_height}"`;
+      if (opt.sockets && opt.sockets.length)
+        da += ` data-sockets='${JSON.stringify(opt.sockets)}'`;
+
+      const label = `${opt.name}${opt.price > 0 ? " — ₹" + opt.price.toLocaleString("en-IN") : ""}`;
+      const disabledAttr = disabled ? " disabled" : "";
+      return `<option value="${opt.id.toString()}" ${da}${disabledAttr}>${label}</option>`;
+    }
+
+    // Build full <option> string from an options array
+    function buildOptionsHTML(opts, label) {
+      let html = `<option value="">Select ${label}</option>`;
+      opts.forEach(o => { html += buildOptionHTML(o, label); });
+      return html;
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  4.  INITIAL RENDER  — builds all component cards in the DOM once
+    // ─────────────────────────────────────────────────────────────────────
+    function renderComponents() {
+      const container = document.getElementById("component-list-container");
+      let html = "";
+
+      componentsDB.forEach((comp) => {
+        const opts = buildOptionsHTML(masterData[comp.id] || [], comp.label);
+
+        let qtyControls = "";
+        if (comp.hasQty) {
+          qtyControls = `
+            <div class="flex items-center gap-1 bg-slate-200 dark:bg-slate-800 rounded-lg p-1 shrink-0 mt-3 md:mt-0">
+              <button type="button" class="w-10 h-10 md:w-8 md:h-8 flex items-center justify-center rounded bg-white dark:bg-slate-700 hover:text-brand-500 transition-colors shadow-sm" onclick="changeQty('${comp.id}', -1)">
+                <i class="bi bi-dash"></i>
+              </button>
+              <input type="hidden" name="qty_${comp.id}" id="input-qty-${comp.id}" value="1">
+              <span id="qty-${comp.id}" class="w-8 text-center text-sm font-bold font-mono">1</span>
+              <button type="button" class="w-10 h-10 md:w-8 md:h-8 flex items-center justify-center rounded bg-white dark:bg-slate-700 hover:text-brand-500 transition-colors shadow-sm" onclick="changeQty('${comp.id}', 1)">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>`;
+        } else {
+          qtyControls = `<input type="hidden" name="qty_${comp.id}" id="input-qty-${comp.id}" value="1">`;
+        }
+
+        html += `
+          <div class="component group relative pl-12" id="comp-${comp.id}">
+            <div class="circuit-line transition-all duration-300"></div>
+            <div class="absolute left-[15px] top-10 w-4 h-4 rounded-full border-[2px] border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-dark-card group-hover:border-brand-400 group-hover:bg-brand-400 transition-all z-10 indicator-dot"></div>
+            <div class="card-container bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded-2xl p-1 transition-all duration-300 hover:shadow-neon hover:-translate-y-1">
+              <div class="relative p-5 bg-gradient-to-b from-transparent to-slate-50/50 dark:to-black/20 rounded-xl">
+                <div class="flex flex-col md:flex-row md:items-center gap-6">
+                  <div class="md:w-24 shrink-0 flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-white/5 dark:to-white/0 border border-white/10 flex items-center justify-center shadow-inner">
+                      <i class="bi ${comp.icon} text-2xl text-slate-400 dark:text-brand-400 group-hover:text-brand-300 transition-colors"></i>
+                    </div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-brand-400 transition-colors text-center">${comp.label}</label>
+                  </div>
+                  <div class="flex-1 w-full flex flex-col md:flex-row gap-3">
+                    <div class="flex-1 relative">
+                      <select name="${comp.id}" id="${comp.id}"
+                        class="peer w-full bg-slate-50 dark:bg-[#050a14] border border-slate-200 dark:border-slate-700 rounded-xl px-5 py-4 text-sm font-semibold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/50 outline-none transition-all cursor-pointer"
+                        onchange="onComponentChange()">
+                        ${opts}
+                      </select>
+                      <div id="warn-${comp.id}" class="hidden mt-2 text-[11px] font-bold text-amber-500 flex items-center gap-1"></div>
+                    </div>
+                    ${qtyControls}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  5.  CASCADE FILTER  — re-populates dependent dropdowns on change
+    // ─────────────────────────────────────────────────────────────────────
+
+    /** Rebuild one select's options from a filtered subset, preserving selection */
+    function rebuildSelect(id, filteredOpts, label) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const prev = el.value;
+      el.innerHTML = buildOptionsHTML(filteredOpts, label);
+      if (prev && el.querySelector(`option[value="${CSS.escape(prev)}"]`)) {
+        el.value = prev;
+      }
+    }
+
+    /** Get the selected <option> element for a component id */
+    function selOpt(id) {
+      const el = document.getElementById(id);
+      return el ? el.selectedOptions[0] : null;
+    }
+
+    function cascadeFilter() {
+      const cpuOpt  = selOpt("cpu");
+      const moboOpt = selOpt("mobo");
+
+      const cpuSocket  = cpuOpt?.dataset.socket  || null;
+      const moboMemory = moboOpt?.dataset.memory  || null;
+      const moboSocket = moboOpt?.dataset.socket  || null;
+
+      // CPU → Motherboard: filter by socket
+      if (cpuSocket) {
+        rebuildSelect("mobo",
+          masterData.mobo.filter(o => !o.socket || o.socket === cpuSocket),
+          "Motherboard");
+      } else {
+        rebuildSelect("mobo", masterData.mobo, "Motherboard");
+      }
+
+      // Mobo → RAM: filter by ram_type
+      if (moboMemory) {
+        rebuildSelect("ram",
+          masterData.ram.filter(o => !o.ram_type || o.ram_type === moboMemory),
+          "Memory (RAM)");
+      } else {
+        rebuildSelect("ram", masterData.ram, "Memory (RAM)");
+      }
+
+      // CPU socket → Coolers: only show coolers that support this socket
+      const socketForCooler = cpuSocket || moboSocket;
+      if (socketForCooler) {
+        rebuildSelect("cooler_air",
+          masterData.cooler_air.filter(o => o.id === "none" || !o.sockets.length || o.sockets.includes(socketForCooler)),
+          "CPU Air Cooler");
+        rebuildSelect("cooler_aio",
+          masterData.cooler_aio.filter(o => o.id === "none" || !o.sockets.length || o.sockets.includes(socketForCooler)),
+          "AIO Liquid Cooler");
+      } else {
+        rebuildSelect("cooler_air", masterData.cooler_air, "CPU Air Cooler");
+        rebuildSelect("cooler_aio", masterData.cooler_aio, "AIO Liquid Cooler");
+      }
+
+      // PSU and Case: these don't pre-filter (we show warnings instead),
+      // but we still reset them so stale selections are re-evaluated.
+      // (no-op rebuild keeps all options visible)
+    }
+
+    /** Entry point called by every onchange="onComponentChange()" */
+    function onComponentChange() {
+      cascadeFilter();
+      updateSystem();
+      validateCoolerSelection();
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  6.  QUANTITY HELPERS
+    // ─────────────────────────────────────────────────────────────────────
+    function changeQty(id, delta) {
+      const span  = document.getElementById(`qty-${id}`);
+      const input = document.getElementById(`input-qty-${id}`);
+      if (!span) return;
+      let newVal = Math.min(8, Math.max(1, parseInt(span.innerText) + delta));
+      span.innerText = newVal;
+      if (input) input.value = newVal;
+      onComponentChange();
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  7.  SYSTEM UPDATE  — state gathering + ALL compatibility checks
+    // ─────────────────────────────────────────────────────────────────────
+    const state = {};
+
+    function updateSystem() {
+      let subtotal   = 0;
+      let totalWatts = 50;   // base system load
+      let scoreCPU   = 0;
+      let scoreGPU   = 0;
+      let selectedCount = 0;
+      const warnings = [];
+
+      // ── Gather state ──────────────────────────────────────────────────
+      componentsDB.forEach((c) => {
+        const el  = document.getElementById(c.id);
+        const opt = el?.selectedOptions[0];
+
+        // Clear previous warning
+        const warnEl = document.getElementById(`warn-${c.id}`);
+        if (warnEl) warnEl.classList.add("hidden");
+
+        // Clear previous status classes
+        const compDiv  = document.getElementById(`comp-${c.id}`);
+        const cardDiv  = compDiv?.querySelector(".card-container");
+        const dotDiv   = compDiv?.querySelector(".indicator-dot");
+        if (cardDiv) cardDiv.classList.remove("status-ok", "status-warn", "status-err");
+        if (dotDiv)  dotDiv.classList.remove("bg-emerald-500", "border-emerald-500");
+
+        if (opt?.value && opt.value !== "" && opt.value !== "none") {
+          const qty      = parseInt(document.getElementById(`qty-${c.id}`)?.innerText || "1");
+          const price    = parseInt(opt.dataset.price || 0);
+          const watts    = parseInt(opt.dataset.watts || 0);
+
+          state[c.id] = {
+            name:   opt.dataset.name,
+            price:  price * qty,
+            watts:  watts * qty,
+            qty,
+            img:    opt.dataset.img,
+            socket: opt.dataset.socket,
+            memory: opt.dataset.memory,
+            ramtype: opt.dataset.ramtype,
+            score:  parseInt(opt.dataset.score || 0),
+            m2:     parseInt(opt.dataset.m2   || 0),
+            sata:   parseInt(opt.dataset.sata || 0),
+            pcie16: parseInt(opt.dataset.pcie16 || 0),
+            length: parseInt(opt.dataset.length || 0),
+            height: parseInt(opt.dataset.height || 0),
+            maxgpu: parseInt(opt.dataset.maxgpu || 9999),
+            maxcooler: parseInt(opt.dataset.maxcooler || 9999),
+          };
+
+          subtotal   += state[c.id].price;
+          totalWatts += state[c.id].watts;
+          if (c.id === "cpu") scoreCPU = state[c.id].score;
+          if (c.id === "gpu") scoreGPU = state[c.id].score;
+          selectedCount++;
+
+          if (cardDiv) cardDiv.classList.add("status-ok");
+          if (dotDiv)  dotDiv.classList.add("bg-emerald-500", "border-emerald-500");
+
+        } else if (opt?.value === "none") {
+          delete state[c.id];
+          selectedCount++;  // "None" counts as a deliberate choice
+          if (cardDiv) cardDiv.classList.add("status-ok");
+          if (dotDiv)  dotDiv.classList.add("bg-emerald-500", "border-emerald-500");
+        } else {
+          delete state[c.id];
+        }
+      });
+
+      // ── Compatibility checks ──────────────────────────────────────────
+
+      // 1. CPU ↔ Motherboard socket
+      if (state.cpu && state.mobo) {
+        if (state.cpu.socket && state.mobo.socket && state.cpu.socket !== state.mobo.socket) {
+          warnings.push(`CPU socket (${state.cpu.socket}) ≠ Motherboard socket (${state.mobo.socket})`);
+          markError("cpu"); markError("mobo");
+          showWarning("mobo", `Needs ${state.cpu.socket} socket`);
+        }
+      }
+
+      // 2. RAM ↔ Motherboard memory type
+      if (state.ram && state.mobo) {
+        const moboMem = selOpt("mobo")?.dataset.memory || "";
+        const ramType = selOpt("ram")?.dataset.ramtype || "";
+        if (moboMem && ramType && moboMem !== ramType) {
+          warnings.push(`Motherboard supports ${moboMem}, RAM is ${ramType}`);
+          markError("ram");
+          showWarning("ram", `Motherboard requires ${moboMem}`);
+        }
+      }
+
+      // 3. M.2 slot count vs qty
+      if (state.storage_m2 && state.mobo) {
+        const m2Slots = state.mobo.m2 || 0;
+        const m2Qty   = state.storage_m2.qty || 1;
+        if (m2Qty > m2Slots) {
+          warnings.push(`Only ${m2Slots} M.2 slot(s) on motherboard`);
+          markError("storage_m2");
+          showWarning("storage_m2", `Motherboard has ${m2Slots} M.2 slot(s), you picked ${m2Qty}`);
+        }
+      } else if (state.storage_m2 && !state.mobo) {
+        showWarning("storage_m2", "Select a motherboard first to verify M.2 slots");
+      }
+
+      // 4. SATA ports vs HDD qty
+      if (state.storage_hdd && state.mobo) {
+        const sataPorts = state.mobo.sata || 0;
+        const hddQty    = state.storage_hdd.qty || 1;
+        if (sataPorts === 0) {
+          warnings.push("Motherboard has no SATA ports — HDD won't connect");
+          markError("storage_hdd");
+          showWarning("storage_hdd", "Motherboard has 0 SATA ports");
+        } else if (hddQty > sataPorts) {
+          warnings.push(`Only ${sataPorts} SATA port(s), you chose ${hddQty} HDD(s)`);
+          markWarning("storage_hdd");
+          showWarning("storage_hdd", `Only ${sataPorts} SATA port(s) available`);
+        }
+      }
+
+      // 5. Cooler ↔ CPU socket compatibility
+      ["cooler_air", "cooler_aio"].forEach(coolerId => {
+        if (state[coolerId] && state.cpu) {
+          const rawSockets = selOpt(coolerId)?.dataset.sockets;
+          if (rawSockets) {
+            try {
+              const sockets = JSON.parse(rawSockets);
+              if (sockets.length && !sockets.includes(state.cpu.socket)) {
+                warnings.push(`Cooler doesn't support ${state.cpu.socket} socket`);
+                markError(coolerId);
+                showWarning(coolerId, `Not compatible with ${state.cpu.socket}`);
+              }
+            } catch(e) {}
+          }
+        }
+      });
+
+      // 6. GPU length vs case
+      if (state.gpu && state.case) {
+        const gpuLen = state.gpu.length || 0;
+        const maxGpu = state.case.maxgpu || 9999;
+        if (gpuLen > maxGpu) {
+          warnings.push(`GPU (${gpuLen}mm) too long for case (max ${maxGpu}mm)`);
+          markError("gpu"); markError("case");
+          showWarning("case", `GPU ${gpuLen}mm exceeds case max ${maxGpu}mm`);
+        }
+      }
+
+      // 7. Air cooler height vs case
+      if (state.cooler_air && state.case) {
+        const coolerH  = state.cooler_air.height || 0;
+        const maxCoolH = state.case.maxcooler || 9999;
+        if (coolerH > 0 && coolerH > maxCoolH) {
+          warnings.push(`Air cooler (${coolerH}mm) too tall for case (max ${maxCoolH}mm)`);
+          markError("cooler_air"); markError("case");
+          showWarning("case", `Cooler ${coolerH}mm > case max ${maxCoolH}mm`);
+        }
+      }
+
+
+
+      // 9. Mutual exclusion warning: can't have BOTH air + AIO selected
+      if (state.cooler_air && state.cooler_aio) {
+        warnings.push("You have both an air cooler and an AIO — pick one");
+        markWarning("cooler_air"); markWarning("cooler_aio");
+        showWarning("cooler_aio", "Remove air cooler or AIO");
+      }
+
+      // ── Update health bar ─────────────────────────────────────────────
+      const statusEl = document.getElementById("build-status");
+      if (warnings.length > 0) {
+        statusEl.className = "w-full text-xs font-mono font-bold text-red-400 bg-red-950/30 border border-red-500/20 py-2 rounded-lg flex items-center justify-center gap-2 mb-3";
+        statusEl.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${warnings[0]}`;
+      } else if (selectedCount < componentsDB.length) {
+        statusEl.className = "w-full text-xs font-mono font-bold text-slate-400 bg-slate-800/50 border border-slate-500/20 py-2 rounded-lg flex items-center justify-center gap-2 mb-3";
+        statusEl.innerHTML = `BUILD IN PROGRESS`;
+      } else {
+        statusEl.className = "w-full text-xs font-mono font-bold text-emerald-400 bg-emerald-950/30 border border-emerald-500/20 py-2 rounded-lg flex items-center justify-center gap-2 mb-3";
+        statusEl.innerHTML = `<i class="bi bi-check-circle-fill"></i> SYSTEM READY`;
+      }
+
+      // ── Stats ──────────────────────────────────────────────────────────
+      document.getElementById("watts-total").innerText = totalWatts;
+      const fps = (scoreCPU + scoreGPU) / 2;
+      document.getElementById("fps-est").innerText = fps > 0 ? Math.round(fps) + "+" : "--";
+
+      // ── Pricing ────────────────────────────────────────────────────────
+      const tax   = Math.round(subtotal * 0.18);
+      const total = subtotal + tax;
+      document.getElementById("price-subtotal").innerText  = subtotal.toLocaleString("en-IN");
+      document.getElementById("price-tax").innerText       = tax.toLocaleString("en-IN");
+      document.getElementById("price-total").innerText     = total.toLocaleString("en-IN");
+      document.getElementById("total-price-mobile").innerText = total.toLocaleString("en-IN");
+
+      // ── Component list ─────────────────────────────────────────────────
+      const listContainer = document.getElementById("summary-list");
+      const listItems = Object.values(state);
+      if (listItems.length > 0) {
+        listContainer.innerHTML = listItems.map(item => {
+          const thumbHTML = item.img
+            ? `<img src="${item.img}" alt="Thumb" class="w-8 h-8 rounded bg-slate-800 border border-white/10 object-cover cursor-pointer hover:ring-2 hover:ring-brand-400 transition-all shrink-0" onclick="openImageModal('${item.img}', '${item.name.replace(/'/g, "\\'")}')">`
+            : `<div class="w-8 h-8 rounded bg-slate-800 border border-white/10 shrink-0 flex items-center justify-center text-slate-500"><i class="bi bi-image"></i></div>`;
+          return `
+            <li class="flex items-center justify-between text-xs border-b border-white/5 pb-2 pt-1 gap-2">
+              <div class="flex items-center gap-3 overflow-hidden flex-1">
+                ${thumbHTML}
+                <span class="text-slate-300 truncate">
+                  ${item.qty > 1 ? `<span class="text-brand-400 font-bold">${item.qty}×</span> ` : ""}${item.name}
+                </span>
+              </div>
+              <span class="text-slate-500 font-mono shrink-0">₹${item.price.toLocaleString("en-IN")}</span>
+            </li>`;
+        }).join("");
+      } else {
+        listContainer.innerHTML = '<li class="text-center py-8 text-slate-400 text-xs italic">Components will appear here…</li>';
+      }
+
+      // ── Progress bar ───────────────────────────────────────────────────
+      const pct = (selectedCount / componentsDB.length) * 100;
+      document.getElementById("progress-bar").style.width = `${pct}%`;
+      document.getElementById("progress-text").innerText  = `${Math.round(pct)}%`;
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  8.  STATUS HELPERS
+    // ─────────────────────────────────────────────────────────────────────
+    function markError(id) {
+      const card = document.getElementById(`comp-${id}`)?.querySelector(".card-container");
+      if (card) { card.classList.remove("status-ok", "status-warn"); card.classList.add("status-err"); }
+    }
+    function markWarning(id) {
+      const card = document.getElementById(`comp-${id}`)?.querySelector(".card-container");
+      if (card) { card.classList.remove("status-ok", "status-err"); card.classList.add("status-warn"); }
+    }
+    function showWarning(id, msg) {
+      const el = document.getElementById(`warn-${id}`);
+      if (el) {
+        el.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${msg}`;
+        el.classList.remove("hidden");
+      }
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  9.  LIGHTBOX
+    // ─────────────────────────────────────────────────────────────────────
+    function openImageModal(src, title) {
+      const modal = document.getElementById("imageModal");
+      document.getElementById("modalImageSrc").src = src;
+      document.getElementById("modalImageTitle").innerText = title;
+      modal.classList.remove("hidden");
+      setTimeout(() => { modal.classList.remove("opacity-0"); modal.classList.add("opacity-100"); }, 10);
+    }
+    function closeImageModal() {
+      const modal = document.getElementById("imageModal");
+      modal.classList.remove("opacity-100"); modal.classList.add("opacity-0");
+      setTimeout(() => modal.classList.add("hidden"), 300);
+    }
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeImageModal(); });
+
+    // Validate cooler selection on change
+    function validateCoolerSelection() {
+        const airCoolerSelect = document.getElementById('cooler_air');
+        const aioCoolerSelect = document.getElementById('cooler_aio');
+        const airCoolerValue = airCoolerSelect ? airCoolerSelect.value : '';
+        const aioCoolerValue = aioCoolerSelect ? aioCoolerSelect.value : '';
+        
+        if (airCoolerValue === 'none' && aioCoolerValue === 'none') {
+            showWarning('cooler_air', 'Select at least one cooler');
+            showWarning('cooler_aio', 'Select at least one cooler');
+            markError('cooler_air');
+            markError('cooler_aio');
+        } else {
+            // Clear warnings if at least one cooler is selected
+            const airWarnEl = document.getElementById('warn-cooler_air');
+            const aioWarnEl = document.getElementById('warn-cooler_aio');
+            if (airWarnEl) airWarnEl.classList.add('hidden');
+            if (aioWarnEl) aioWarnEl.classList.add('hidden');
+            
+            // Restore normal status
+            const airCard = document.getElementById('comp-cooler_air')?.querySelector('.card-container');
+            const aioCard = document.getElementById('comp-cooler_aio')?.querySelector('.card-container');
+            if (airCard && airCoolerValue !== '') airCard.classList.add('status-ok');
+            if (aioCard && aioCoolerValue !== '') aioCard.classList.add('status-ok');
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  10.  TOAST / SHARE HELPERS
+    // ─────────────────────────────────────────────────────────────────────
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      document.getElementById("toast-msg").innerText = msg;
+      t.classList.remove("opacity-0", "-translate-y-10");
+      setTimeout(() => t.classList.add("opacity-0", "-translate-y-10"), 2500);
+    }
+    function shareBuild()  { showToast("Link copied to clipboard!"); }
+    function copyList()   { showToast("Build list copied!"); }
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  11.  THEME TOGGLE
+    // ─────────────────────────────────────────────────────────────────────
+    const toggleBtn = document.getElementById("themeToggle");
+    const html      = document.documentElement;
+    const themeIcon = toggleBtn.querySelector("i");
+
+    function initTheme() {
+      const saved = localStorage.getItem("theme") || "dark";
+      html.setAttribute("data-theme", saved);
+      themeIcon.classList.toggle("bi-sun-fill",        saved === "light");
+      themeIcon.classList.toggle("bi-moon-stars-fill", saved === "dark");
+    }
+    toggleBtn.addEventListener("click", () => {
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+      themeIcon.classList.toggle("bi-sun-fill");
+      themeIcon.classList.toggle("bi-moon-stars-fill");
+    });
+
+
+    // ─────────────────────────────────────────────────────────────────────
+    //  13.  BUILD MANAGEMENT - Draft persistence and save functionality
+    // ─────────────────────────────────────────────────────────────────────
+    
+    // Draft storage key
+    const DRAFT_STORAGE_KEY = 'pc_builder_draft';
+    const CURRENT_BUILD_KEY = 'pc_builder_current';
+    
+    /** Save current build state to localStorage */
+    function saveDraft() {
+        const state = {};
+        const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
+        
+        componentIds.forEach(compId => {
+            const selectEl = document.getElementById(compId);
+            if (selectEl) {
+                state[compId] = selectEl.value || '';
+                
+                // Save quantity for components that have it
+                if (compId === 'ram' || compId === 'storage_m2' || compId === 'storage_hdd') {
+                    const qtyEl = document.getElementById(`qty-${compId}`);
+                    state[`qty_${compId}`] = qtyEl ? parseInt(qtyEl.innerText) : 1;
+                }
+            }
+        });
+        
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(state));
+    }
+    
+    /** Restore draft from localStorage */
+    function restoreDraft() {
+        try {
+            const draft = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+            const currentBuild = localStorage.getItem(CURRENT_BUILD_KEY);
+            
+            // Don't restore draft if we're editing a specific build
+            if (currentBuild) {
+                localStorage.removeItem(DRAFT_STORAGE_KEY);
+                localStorage.removeItem(CURRENT_BUILD_KEY);
+                // Hide build name if any
+                const buildNameDiv = document.getElementById('current-build-name');
+                if (buildNameDiv) {
+                    buildNameDiv.innerText = '';
+                    buildNameDiv.style.display = 'none';
+                }
+                return false;
+            }
+            
+            if (Object.keys(draft).length === 0) return false;
+            
+            // Hide build name for draft
+            const buildNameDiv = document.getElementById('current-build-name');
+            if (buildNameDiv) {
+                buildNameDiv.innerText = '';
+                buildNameDiv.style.display = 'none';
+            }
+            // Restore component selections
+            Object.keys(draft).forEach(key => {
+                if (key.startsWith('qty_')) {
+                    const compId = key.replace('qty_', '');
+                    const qtyEl = document.getElementById(`qty-${compId}`);
+                    if (qtyEl) qtyEl.innerText = draft[key];
+                } else {
+                    const selectEl = document.getElementById(key);
+                    if (selectEl && draft[key]) {
+                        selectEl.value = draft[key];
+                        // Trigger change event to update compatibility
+                        const event = new Event('change');
+                        selectEl.dispatchEvent(event);
+                    }
+                }
+            });
+            
+            // Update system to reflect restored state
+            setTimeout(() => updateSystem(), 100);
+            showToast('Draft restored');
+            return true;
+            
+        } catch (e) {
+            console.error('Error restoring draft:', e);
+            return false;
+        }
+    }
+    
+    /** Clear draft from storage */
+    function clearDraft() {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        localStorage.removeItem(CURRENT_BUILD_KEY);
+        // Hide build name if any
+        const buildNameDiv = document.getElementById('current-build-name');
+        if (buildNameDiv) {
+            buildNameDiv.innerText = '';
+            buildNameDiv.style.display = 'none';
+        }
+        // Clear build name input
+        const buildNameInput = document.getElementById('build_name');
+        if (buildNameInput) {
+            buildNameInput.value = '';
+        }
+    }
+    
+    /** Save build configuration with name from input field */
+    async function saveBuild() {
+        const buildNameInput = document.getElementById('build_name');
+        const buildName = buildNameInput ? buildNameInput.value.trim() : '';
+        
+        if (!buildName) {
+            showToast('Build name is required');
+            if (buildNameInput) {
+                buildNameInput.focus();
+                buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                // Remove error styling after 2 seconds
+                setTimeout(() => {
+                    buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                }, 2000);
+            }
+            return;
+        }
+        
+        if (buildName.length > 100) {
+            showToast('Build name too long (max 100 characters)');
+            if (buildNameInput) {
+                buildNameInput.focus();
+                buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                // Remove error styling after 2 seconds
+                setTimeout(() => {
+                    buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                }, 2000);
+            }
+            return;
+        }
+        
+        // Validate that at least one cooler is selected (not "none")
+        const airCoolerSelect = document.getElementById('cooler_air');
+        const aioCoolerSelect = document.getElementById('cooler_aio');
+        const airCoolerValue = airCoolerSelect ? airCoolerSelect.value : '';
+        const aioCoolerValue = aioCoolerSelect ? aioCoolerSelect.value : '';
+        
+        if (airCoolerValue === 'none' && aioCoolerValue === 'none') {
+            showToast('Please select either an Air Cooler or Liquid AIO Cooler');
+            // Show warnings on both cooler components
+            showWarning('cooler_air', 'Select at least one cooler');
+            showWarning('cooler_aio', 'Select at least one cooler');
+            markError('cooler_air');
+            markError('cooler_aio');
+            
+            // Scroll to coolers section
+            const coolersSection = document.getElementById('comp-cooler_air');
+            if (coolersSection) {
+                coolersSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            return;
+        } else {
+            // Clear any previous warnings if validation passes
+            const airWarnEl = document.getElementById('warn-cooler_air');
+            const aioWarnEl = document.getElementById('warn-cooler_aio');
+            if (airWarnEl) airWarnEl.classList.add('hidden');
+            if (aioWarnEl) aioWarnEl.classList.add('hidden');
+        }
+        
+        // Use the form data directly
+        const formData = new FormData(document.getElementById('buildForm'));
+        
+        // Add current build ID if editing (not in form)
+        const currentBuild = localStorage.getItem(CURRENT_BUILD_KEY);
+        if (currentBuild) {
+            formData.append('build_id', currentBuild);
+        }
+        
+        // Add component quantities (not in form)
+        const quantityComponents = ["ram", "storage_m2", "storage_hdd"];
+        quantityComponents.forEach(compId => {
+            const qtyEl = document.getElementById(`qty-${compId}`);
+            if (qtyEl) {
+                formData.append(`qty_${compId}`, parseInt(qtyEl.innerText) || 1);
+            }
+        });
+        
+        // Get CSRF token
+        let csrftoken = '';
+        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) csrftoken = csrfInput.value;
+        
+        try {
+            const response = await fetch("{% url 'core:save_pc_build' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showToast('Build saved successfully!');
+                clearDraft(); // Clear draft after successful save
+                
+                // Redirect to builds page if this was a new build
+                if (!currentBuild) {
+                    setTimeout(() => {
+                        window.location.href = "{% url 'core:pro_builds' %}";
+                    }, 1500);
+                }
+            } else {
+                alert(data.message || 'Failed to save build');
+            }
+            
+        } catch (error) {
+            console.error('Save error:', error);
+            alert('Network error while saving build');
+        }
+    }
+    
+    /** Load a specific build for editing */
+    async function loadBuild(buildId) {
+        try {
+            console.log('Loading build ID:', buildId); // Debug
+            const url = `/load-build/${buildId}/`;
+            console.log('Fetching from URL:', url); // Debug
+            const response = await fetch(url);
+            console.log('Response status:', response.status); // Debug
+            
+            if (!response.ok) {
+                console.error('HTTP error:', response.status, response.statusText);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            console.log('Full response data:', data); // Debug
+            
+            if (data.status === 'success') {
+                // Store current build ID
+                localStorage.setItem(CURRENT_BUILD_KEY, buildId);
+                
+                // Load configuration
+                const config = data.config;
+                console.log('Build config object:', config); // Debug
+                console.log('Build name in config:', config.build_name); // Debug
+                console.log('All config keys:', Object.keys(config)); // Debug
+                
+                // Set build name in the UI
+                const buildNameDiv = document.getElementById('current-build-name');
+                const buildNameInput = document.getElementById('build_name');
+                
+                if (buildNameDiv) {
+                    console.log('Build name div found');
+                    if (config.build_name) {
+                        buildNameDiv.innerText = `Editing: ${config.build_name}`;
+                        buildNameDiv.style.display = 'block';
+                        console.log('Build name set:', config.build_name); // Debug
+                    } else {
+                        buildNameDiv.innerText = 'Editing: Unnamed Build';
+                        buildNameDiv.style.display = 'block';
+                        console.log('No build name found, showing default'); // Debug
+                    }
+                } else {
+                    console.error('Build name div NOT found!');
+                }
+                
+                // Set build name in input field
+                if (buildNameInput) {
+                    if (config.build_name) {
+                        buildNameInput.value = config.build_name;
+                        console.log('Build name input set:', config.build_name); // Debug
+                    } else {
+                        buildNameInput.value = '';
+                        console.log('Build name input cleared'); // Debug
+                    }
+                } else {
+                    console.error('Build name input NOT found!');
+                }
+                
+                // Set component values
+                Object.keys(config).forEach(key => {
+                    if (key.startsWith('qty_')) {
+                        const compId = key.replace('qty_', '');
+                        const qtyEl = document.getElementById(`qty-${compId}`);
+                        if (qtyEl) qtyEl.innerText = config[key];
+                    } else if (key !== 'build_id' && key !== 'build_name') {
+                        const selectEl = document.getElementById(key);
+                        if (selectEl && config[key]) {
+                            selectEl.value = config[key];
+                            // Trigger change event for compatibility
+                            const event = new Event('change');
+                            selectEl.dispatchEvent(event);
+                        }
+                    }
+                });
+                
+                // Update system state
+                setTimeout(() => updateSystem(), 100);
+                showToast(`Build "${config.build_name}" loaded`);
+                
+            } else {
+                alert(data.message || 'Failed to load build');
+            }
+            
+        } catch (error) {
+            console.error('Load error:', error);
+            alert('Network error while loading build');
+        }
+    }
+    
+    /** Delete a build with confirmation */
+    async function deleteBuild(buildId, buildName) {
+        if (!confirm(`Are you sure you want to delete "${buildName}"? This action cannot be undone.`)) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/delete-build/${buildId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showToast('Build deleted successfully');
+                // Reload the page if we're on the builds page
+                if (window.location.pathname.includes('profile/builds')) {
+                    window.location.reload();
+                }
+            } else {
+                alert(data.message || 'Failed to delete build');
+            }
+            
+        } catch (error) {
+            console.error('Delete error:', error);
+            alert('Network error while deleting build');
+        }
+    }
+    
+    // Auto-save draft on component changes
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded - build management initialized');
+        
+        // ...existing code...
+        
+        // Validate cooler selection on initial load
+        validateCoolerSelection();
+        
+        // Test functions - call these from browser console
+        window.testBuildNameDisplay = function() {
+            const buildNameDiv = document.getElementById('current-build-name');
+            if (buildNameDiv) {
+                buildNameDiv.innerText = 'TEST: My Custom Build Name';
+                buildNameDiv.style.display = 'block';
+                console.log('Test build name displayed');
+            }
+        };
+        
+        window.testLoadBuild = function() {
+            const mockResponse = {
+                status: 'success',
+                config: {
+                    build_name: 'Test Gaming PC',
+                    cpu: '1',
+                    mobo: '2',
+                }
+            };
+            
+            const buildNameDiv = document.getElementById('current-build-name');
+            const buildNameInput = document.getElementById('build_name');
+            if (mockResponse.status === 'success') {
+                const config = mockResponse.config;
+                if (config.build_name) {
+                    buildNameDiv.innerText = `Editing: ${config.build_name}`;
+                    buildNameDiv.style.display = 'block';
+                    console.log('Mock build name set:', config.build_name);
+                    
+                    // Also set the input field
+                    if (buildNameInput) {
+                        buildNameInput.value = config.build_name;
+                        console.log('Mock build name input set:', config.build_name);
+                    }
+                }
+            }
+        };
+        
+        // Auto-test: Show that build name div exists and works
+        setTimeout(() => {
+            const buildNameDiv = document.getElementById('current-build-name');
+            if (buildNameDiv) {
+                console.log('✓ Build name div is ready');
+                // Uncomment to auto-show test message:
+                // buildNameDiv.innerText = 'Ready to show build names';
+                // buildNameDiv.style.display = 'block';
+            }
+        }, 500);
+
+        // Form submission handler
+        document.getElementById('buildForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const buildNameInput = document.getElementById('build_name');
+            const buildName = buildNameInput ? buildNameInput.value.trim() : '';
+            
+            // Validate build name
+            if (!buildName) {
+                showToast('Build name is required');
+                if (buildNameInput) {
+                    buildNameInput.focus();
+                    buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    // Remove error styling after 2 seconds
+                    setTimeout(() => {
+                        buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    }, 2000);
+                }
+                return;
+            }
+            
+            if (buildName.length > 100) {
+                showToast('Build name too long (max 100 characters)');
+                if (buildNameInput) {
+                    buildNameInput.focus();
+                    buildNameInput.classList.add('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    // Remove error styling after 2 seconds
+                    setTimeout(() => {
+                        buildNameInput.classList.remove('border-red-500', 'shadow-[0_0_15px_rgba(239,68,68,0.3)]');
+                    }, 2000);
+                }
+                return;
+            }
+            
+            // Use the existing saveBuild function to handle the AJAX request
+            await saveBuild();
+        });
+        // Add change listeners to all component selects
+        const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
+        
+        componentIds.forEach(compId => {
+            const selectEl = document.getElementById(compId);
+            if (selectEl) {
+                selectEl.addEventListener('change', () => {
+                    setTimeout(saveDraft, 100); // Debounce auto-save
+                });
+            }
+        });
+        
+        // Add quantity change listeners
+        componentIds.filter(compId => 
+            compId === 'ram' || compId === 'storage_m2' || compId === 'storage_hdd'
+        ).forEach(compId => {
+            const buttons = document.querySelectorAll(`[onclick*="changeQty('${compId}'"`);
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(saveDraft, 100); // Debounce auto-save
+                });
+            });
+        });
+        
+        // Restore draft on page load
+        setTimeout(() => {
+            const restored = restoreDraft();
+            if (!restored) {
+                // Check if we have a build ID in URL for editing
+                const urlParams = new URLSearchParams(window.location.search);
+                const buildId = urlParams.get('edit');
+                console.log('URL params buildId:', buildId); // Debug
+                if (buildId) {
+                    console.log('Loading build from URL parameter');
+                    loadBuild(buildId);
+                } else {
+                    console.log('No build ID in URL parameters');
+                }
+            }
+        }, 500);
+    });
+    
+    // ─────────────────────────────────────────────────────────────────────
+    //  12.  INIT
+    // ─────────────────────────────────────────────────────────────────────
+    renderComponents();
+    initTheme();
+    
+    // Check for prebuilt parameter and load configuration AFTER components are rendered
+    const urlParams = new URLSearchParams(window.location.search);
+    const prebuiltId = urlParams.get('prebuilt');
+    if (prebuiltId) {
+        console.log('Loading prebuilt configuration:', prebuiltId);
+        fetch(`/load-prebuilt/${prebuiltId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Prebuilt config received:', data.config);
+                    // Prefill all component selections
+                    Object.keys(data.config).forEach(key => {
+                        if (key.startsWith('qty_')) {
+                          // Handle quantity fields
+                          const compId = key.replace('qty_', '');
+                          const qtyEl = document.getElementById(`qty-${compId}`);
+                          if (qtyEl) {
+                            qtyEl.innerText = data.config[key];
+                            console.log('Set quantity for', compId, 'to', data.config[key]);
+                          } else {
+                            console.log('Quantity element not found for', compId);
+                          }
+                        } else if (key !== 'build_id' && key !== 'build_name') {
+                          // Handle component selections
+                          const selectEl = document.getElementById(key);
+                          if (selectEl && data.config[key]) {
+                            const val = data.config[key].toString();
+                            const options = Array.from(selectEl.options).map(o => o.value);
+                            console.log('Available options for', key, ':', options, 'Trying to set:', val);
+                            if (options.includes(val)) {
+                              selectEl.value = val;
+                              console.log('Set select value for', key, 'to', val);
+                            } else {
+                              selectEl.selectedIndex = 0;
+                              console.warn('Value', val, 'not found for', key, '. Defaulted to first option.');
+                            }
+                          } else {
+                            console.log('Select element not found or no value for', key);
+                          }
+                        }
+                    });
+                    
+                    // Set build name if available
+                    if (data.config.build_name) {
+                        const buildNameInput = document.getElementById('build_name');
+                        const buildNameDiv = document.getElementById('current-build-name');
+                        if (buildNameInput) {
+                            buildNameInput.value = data.config.build_name;
+                        }
+                        if (buildNameDiv) {
+                            buildNameDiv.innerText = `Editing: ${data.config.build_name}`;
+                            buildNameDiv.style.display = 'block';
+                        }
+                    }
+                    
+                    // Trigger component change to update UI
+                    onComponentChange();
+                    console.log('Prebuilt configuration loaded successfully');
+                } else {
+                    console.error('Failed to load prebuilt:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading prebuilt:', error);
+            });
+    }
+    </script>
+
+    <script>
+    // Profile dropdown toggle
+    document.addEventListener("DOMContentLoaded", function () {
+      const profileBtn      = document.getElementById("profileMenuBtn");
+      const profileDropdown = document.getElementById("profileDropdown");
+      const profileChevron  = document.getElementById("profileMenuChevron");
+
+      if (profileBtn && profileDropdown && profileChevron) {
+        profileBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          profileDropdown.classList.toggle("opacity-0");
+          profileDropdown.classList.toggle("pointer-events-none");
+          profileDropdown.classList.toggle("translate-y-4");
+          profileDropdown.classList.toggle("scale-[0.97]");
+          profileChevron.classList.toggle("rotate-180");
+        });
+        document.addEventListener("click", function (e) {
+          if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+            profileDropdown.classList.add("opacity-0", "pointer-events-none", "translate-y-4", "scale-[0.97]");
+            profileChevron.classList.remove("rotate-180");
+          }
+        });
+      }
+    });
+    </script>
+    <script>
+    async function addToCart() {
+      // 1. Gather all selected component IDs
+      const selectedComponents = [];
+      const componentIds = ["cpu", "mobo", "gpu", "ram", "storage_m2", "storage_hdd", "cooler_air", "cooler_aio", "psu", "case"];
+      let totalPrice = 0;
+
+      componentIds.forEach(compId => {
+          const selectEl = document.getElementById(compId);
+          
+          if (selectEl && selectEl.value && selectEl.value !== "none") {
+              const qtyEl = document.getElementById(`qty-${compId}`);
+              const qty = qtyEl ? parseInt(qtyEl.innerText) : 1;
+              
+              // Calculate total build price
+              const price = selectEl.options[selectEl.selectedIndex].dataset.price || 0;
+              totalPrice += (parseInt(price) * qty);
+
+              selectedComponents.push({
+                  variant_id: selectEl.value,
+                  quantity: qty,
+                  component_type: compId
+              });
+          }
+      });
+
+      if (selectedComponents.length === 0) {
+          showToast('Please select at least one component to build.', 'error');
+          return;
+      }
+
+      // 2. Fetch the CSRF token
+      let csrftoken = '';
+      const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+      if (csrfInput) {
+          csrftoken = csrfInput.value;
+      } else {
+          const match = document.cookie.match(new RegExp('(^| )csrftoken=([^;]+)'));
+          if (match) csrftoken = match[2];
+      }
+
+      const btn = document.getElementById('addToCartBtn');
+      const originalHTML = btn ? btn.innerHTML : '';
+      if (btn) {
+          btn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin text-xl"></i> Packaging Build...`;
+          btn.disabled = true;
+      }
+
+      try {
+          // 3. Send ALL items as ONE single Custom Build package
+          const formData = new FormData();
+          formData.append('action', 'add_custom_build');
+          formData.append('build_price', totalPrice);
+          formData.append('components', JSON.stringify(selectedComponents));
+
+          const response = await fetch("{% url 'core:cart' %}", {
+              method: 'POST',
+              headers: {
+                  'X-CSRFToken': csrftoken,
+                  'X-Requested-With': 'XMLHttpRequest'
+              },
+              body: formData
+          });
+
+          const data = await response.json();
+          
+          if (data.status === 'success') {
+              showToast(`Custom Build added to cart!`);
+              setTimeout(() => {
+                  window.location.href = "{% url 'core:cart' %}";
+              }, 1000);
+          } else {
+              alert(data.message || 'Failed to add build to cart.');
+          }
+
+      } catch (error) {
+          console.error('Cart Error:', error);
+          alert('Network error while saving build.');
+      } finally {
+          if (btn) {
+              btn.innerHTML = originalHTML;
+              btn.disabled = false;
+          }
+      }
+  }
+    </script>
+  </body>
+</html>

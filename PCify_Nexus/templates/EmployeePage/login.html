@@ -1,0 +1,318 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nexus Tech | Secure Access</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: ["class", '[data-theme="dark"]'],
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Outfit"', "sans-serif"],
+              mono: ['"Space Grotesk"', "monospace"],
+            },
+            colors: {
+              brand: {
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                glow: "rgba(14, 165, 233, 0.4)",
+              },
+              accent: {
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                glow: "rgba(139, 92, 246, 0.4)",
+              },
+              dark: { 
+                bg: "#030712", 
+                card: "#0f172a", 
+                border: "#1e293b" 
+              },
+            },
+            animation: {
+              "blob": "blob 10s infinite",
+              "fade-in-up": "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              blob: {
+                "0%": { transform: "translate(0px, 0px) scale(1)" },
+                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                "100%": { transform: "translate(0px, 0px) scale(1)" },
+              },
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style type="text/tailwindcss">
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+      .bg-grid-slate {
+        background-image: linear-gradient(to right, rgb(148 163 184 / 0.1) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgb(148 163 184 / 0.1) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+      [data-theme="dark"] .bg-grid-slate {
+        background-image: linear-gradient(to right, rgb(255 255 255 / 0.03) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgb(255 255 255 / 0.03) 1px, transparent 1px);
+      }
+
+      .halo-glow {
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, #0ea5e9, #8b5cf6);
+        border-radius: inherit;
+        z-index: -1;
+        opacity: 0;
+        filter: blur(15px);
+        transition: opacity 0.5s ease;
+      }
+      [data-theme="dark"] .login-card:hover .halo-glow {
+        opacity: 0.4;
+      }
+
+      input:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+          transition: background-color 5000s ease-in-out 0s;
+      }
+      [data-theme="dark"] input:-webkit-autofill {
+          -webkit-text-fill-color: white !important;
+      }
+
+      .floating-input:focus ~ .floating-label,
+      .floating-input:not(:placeholder-shown) ~ .floating-label {
+        transform: translateY(-130%) scale(0.85);
+        color: #0ea5e9;
+      }
+    </style>
+
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        if (savedTheme === "dark") document.documentElement.classList.add("dark");
+      })();
+    </script>
+  </head>
+
+  <body class="bg-slate-50 dark:bg-dark-bg text-slate-600 dark:text-slate-300 antialiased font-sans min-h-screen flex items-center justify-center relative overflow-hidden selection:bg-brand-500 selection:text-white px-4">
+    
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center">
+      <div class="absolute inset-0 bg-grid-slate [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
+      <div class="absolute top-0 -left-4 w-96 h-96 bg-brand-500/30 dark:bg-brand-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-96 h-96 bg-accent-500/30 dark:bg-accent-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-70 animate-blob animation-delay-2000"></div>
+    </div>
+
+    <button id="themeToggle" class="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-white/80 dark:bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/10 shadow-sm flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-500 transition-all hover:scale-105">
+      <i class="bi bi-moon-stars-fill"></i>
+    </button>
+
+    <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[200] flex flex-col gap-3 pointer-events-none w-full max-w-md px-4">
+      {% if messages %}
+        {% for message in messages %}
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              showToast("{{ message }}", "{% if message.tags == 'success' %}success{% else %}error{% endif %}");
+            });
+          </script>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="w-full max-w-[420px] relative z-10 animate-fade-in-up">
+      
+      <div class="login-card relative bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-200 dark:border-white/10">
+        <div class="halo-glow"></div>
+
+        <div class="flex flex-col items-center mb-10">
+          <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-accent-600 flex items-center justify-center text-white shadow-[0_0_30px_rgba(14,165,233,0.3)] mb-5">
+            <i class="bi bi-cpu-fill text-3xl z-10 relative"></i>
+            <div class="absolute inset-0 rounded-2xl border border-white/40 animate-pulse-slow"></div>
+          </div>
+          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight text-center">
+            Nexus<span class="text-brand-500 dark:text-brand-400">Tech</span>
+          </h1>
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2">Internal Secure Access</p>
+        </div>
+
+        <form method="POST" action="{% url 'employee:login' %}" class="space-y-6" id="loginForm" onsubmit="return handleFormSubmit()">
+          {% csrf_token %}
+
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-brand-500 transition-colors">
+              <i class="bi bi-person-bounding-box text-lg"></i>
+            </div>
+            <input 
+              type="text" 
+              name="username" 
+              id="username"
+              class="floating-input w-full bg-slate-50 dark:bg-[#030712]/50 border border-slate-200 dark:border-white/10 rounded-xl pl-12 pr-4 pt-5 pb-2 text-sm text-slate-900 dark:text-white font-medium focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder-transparent"
+              placeholder="Email"
+              required
+            />
+            <label for="username" class="floating-label absolute left-12 top-[14px] text-sm font-bold text-slate-400 pointer-events-none transition-all duration-300 origin-left">
+              Email
+            </label>
+          </div>
+
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-brand-500 transition-colors">
+              <i class="bi bi-shield-lock text-lg"></i>
+            </div>
+            <input 
+              type="password" 
+              name="password" 
+              id="password"
+              class="floating-input w-full bg-slate-50 dark:bg-[#030712]/50 border border-slate-200 dark:border-white/10 rounded-xl pl-12 pr-12 pt-5 pb-2 text-sm text-slate-900 dark:text-white font-medium focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder-transparent"
+              placeholder="Password"
+              required
+            />
+            <label for="password" class="floating-label absolute left-12 top-[14px] text-sm font-bold text-slate-400 pointer-events-none transition-all duration-300 origin-left">
+              Password
+            </label>
+            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-brand-500 transition-colors outline-none">
+              <i id="toggleIcon" class="bi bi-eye"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <div class="relative flex items-center justify-center w-4 h-4 rounded border border-slate-300 dark:border-slate-600 group-hover:border-brand-400 transition-colors">
+                <input type="checkbox" name="remember" class="peer sr-only">
+                <div class="absolute inset-0 bg-brand-500 scale-0 peer-checked:scale-100 transition-transform duration-200 rounded-[3px] flex items-center justify-center">
+                  <i class="bi bi-check text-white text-xs"></i>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-slate-500 group-hover:text-slate-300 select-none">Remember Me</span>
+            </label>
+          </div>
+
+          <button 
+            type="submit" 
+            id="submitBtn"
+            class="w-full py-4 rounded-xl bg-slate-900 dark:bg-brand-600 hover:bg-slate-800 dark:hover:bg-brand-500 text-white font-bold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 shadow-xl relative overflow-hidden group outline-none focus:ring-2 focus:ring-brand-500"
+          >
+            <span class="relative z-10 flex items-center gap-2" id="btnText">
+              AUTHENTICATE <i class="bi bi-arrow-right transition-transform group-hover:translate-x-1"></i>
+            </span>
+            <div id="btnLoader" class="absolute inset-0 flex items-center justify-center bg-inherit hidden z-20">
+              <i class="bi bi-arrow-repeat animate-spin text-xl"></i>
+            </div>
+          </button>
+        </form>
+      </div>
+
+      <div class="text-center mt-8 text-slate-500 text-xs font-medium space-y-1">
+        <p><i class="bi bi-shield-lock text-emerald-500 mr-1"></i> End-to-End Encrypted Session</p>
+        <p class="opacity-60">Nexus Tech Systems © {% now "Y" %}</p>
+      </div>
+    </div>
+
+    <script>
+      const html = document.documentElement;
+      const themeToggle = document.getElementById("themeToggle");
+      const icon = themeToggle.querySelector("i");
+
+      function initTheme() {
+        const saved = localStorage.getItem("theme") || "dark";
+        html.setAttribute("data-theme", saved);
+        if (saved === "dark") {
+          html.classList.add("dark");
+          if(icon) icon.classList.replace("bi-moon-stars-fill", "bi-sun-fill");
+        } else {
+          html.classList.remove("dark");
+          if(icon) icon.classList.replace("bi-sun-fill", "bi-moon-stars-fill");
+        }
+      }
+      initTheme();
+
+      themeToggle.addEventListener("click", () => {
+        const isDark = html.getAttribute("data-theme") === "dark";
+        const newTheme = isDark ? "light" : "dark";
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        initTheme();
+      });
+
+      function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('toggleIcon');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+      }
+
+      function showToast(message, type = 'error') {
+        const container = document.getElementById('toast-container');
+        const isError = type === 'error';
+        const borderColor = isError ? 'border-red-500' : 'border-emerald-500';
+        const iconColor = isError ? 'text-red-500 bg-red-500/10' : 'text-emerald-500 bg-emerald-500/10';
+        const iconClass = isError ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill';
+
+        const toast = document.createElement('div');
+        toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-l-4 ${borderColor} border-y border-r border-slate-200 dark:border-white/10 shadow-2xl pointer-events-auto transform -translate-y-full opacity-0 transition-all duration-500`;
+        
+        toast.innerHTML = `
+          <div class="w-8 h-8 rounded-full ${iconColor} flex items-center justify-center shrink-0">
+            <i class="bi ${iconClass}"></i>
+          </div>
+          <p class="text-sm font-bold text-slate-800 dark:text-white pr-4">${message}</p>
+          <button onclick="this.closest('div').remove()" class="ml-auto text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors outline-none">
+            <i class="bi bi-x-lg text-xs"></i>
+          </button>
+        `;
+
+        container.appendChild(toast);
+        requestAnimationFrame(() => {
+          toast.classList.remove('-translate-y-full', 'opacity-0');
+          toast.classList.add('translate-y-0', 'opacity-100');
+        });
+
+        setTimeout(() => {
+          if (toast && toast.parentNode) {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('-translate-y-full', 'opacity-0');
+            setTimeout(() => toast.remove(), 500);
+          }
+        }, 5000);
+      }
+
+      function handleFormSubmit() {
+        document.getElementById('btnText').classList.add('opacity-0');
+        document.getElementById('btnLoader').classList.remove('hidden');
+        document.getElementById('submitBtn').disabled = true;
+        return true;
+      }
+    </script>
+  </body>
+</html>
