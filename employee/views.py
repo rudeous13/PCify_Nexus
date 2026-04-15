@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout 
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -13,9 +14,9 @@ def login_view(request):
             messages.error(request, "Unauthorized. Employee access required.")
 
     if request.method == "POST":
-        # 2. Extract credentials. 
+        # 2. Extract credentials.
         # Note: Your HTML uses name="username", but it expects an email address.
-        email = request.POST.get("username") 
+        email = request.POST.get("username")
         password = request.POST.get("password")
 
         # 3. Authenticate against the custom User model
@@ -25,52 +26,113 @@ def login_view(request):
             # 4. Verify Role - strictly block 'customer' accounts
             if user.role in ['employee', 'admin']:
                 login(request, user)
-                messages.success(request, f"Welcome back, {user.first_name or 'Tech'}!")
+                messages.success(
+                    request, f"Welcome back, {user.first_name or 'Tech'}!")
 
                 next_url = request.GET.get('next', 'employee:tasks')
                 return redirect(next_url)
             else:
-                messages.error(request, "Access restricted to Nexus Tech employees only.")
+                messages.error(
+                    request, "Access restricted to Nexus Tech employees only.")
         else:
             messages.error(request, "Invalid email or password.")
-        
+
     return render(request, 'EmployeePage/login.html')
+
 
 @login_required(login_url='employee:login')
 def dashboard_redirect(request):
     return redirect('employee:tasks')
 
+
 @login_required(login_url='employee:login')
 def tasks_view(request):
-    context = {
-        'stats': {
-            'total_assigned': 12,
-            'in_progress': 3,
-            'pending_queue': 5,
-            'completed_today': 4
-        },
-        'active_task': {
-            'task_id': 'TSK-8921',
-            'title': 'Motherboard Replacement',
-            'description': 'Replace faulty ASUS B550 with new unit.',
-            'customer_name': 'John Doe',
-            'customer_phone': '+1 555-0192',
-            'customer_address': '123 Tech Lane, NY',
-            'delivery_type': 'In-Shop',
-            'task_type': 'Assembly',
-            'parts_html': '<li class="py-2"><i class="bi bi-cpu text-brand-400 mr-2"></i> ASUS B550 Motherboard</li>'
-        },
-        'tasks': [
-            {
-                'task_id': 'TSK-8922',
-                'title': 'Data Recovery',
-                'customer_name': 'Alice Smith',
-                'description': 'Recover files from corrupted HDD.',
-                'task_type': 'Diagnostics',
-            }
-        ]
+    from .models import EmployeeTask
+    from django.utils import timezone
+    from django.db.models import Count, Q
+
+    # Get today's date for filtering
+    today = timezone.now().date()
+
+    # Calculate statistics
+    stats = {
+        'total_assigned': EmployeeTask.objects.filter(assigned_to=request.user).count(),
+        'in_progress': EmployeeTask.objects.filter(assigned_to=request.user, status='in_progress').count(),
+        'pending_queue': EmployeeTask.objects.filter(assigned_to=request.user, status='pending').count(),
+        'completed_today': EmployeeTask.objects.filter(
+            assigned_to=request.user,
+            status='completed',
+            completed_at__date=today
+        ).count()
     }
+
+    # Get active task (in progress)
+    active_task = EmployeeTask.objects.filter(
+        assigned_to=request.user,
+        status='in_progress'
+    ).first()
+
+    # Get pending tasks
+    tasks = EmployeeTask.objects.filter(
+        assigned_to=request.user,
+        status='pending'
+    ).order_by('priority', 'created_at')
+
+    context = {
+        'stats': stats,
+        'active_task': active_task,
+        'tasks': tasks
+    }
+
     return render(request, 'EmployeePage/task.html', context)
+
+
+@login_required(login_url='employee:login')
+def start_task(request, task_id):
+    from .models import EmployeeTask
+
+    try:
+        task = EmployeeTask.objects.get(
+            task_id=task_id, assigned_to=request.user)
+
+        # Check if there's already an active task
+        active_task = EmployeeTask.objects.filter(
+            assigned_to=request.user,
+            status='in_progress'
+        ).first()
+
+        if active_task and active_task != task:
+            messages.warning(
+                request, f"You already have an active task: {active_task.task_id}")
+        else:
+            task.status = 'in_progress'
+            task.save()
+            messages.success(request, f"Started task: {task.task_id}")
+
+    except EmployeeTask.DoesNotExist:
+        messages.error(
+            request, "Task not found or you don't have permission to access it.")
+
+    return redirect('employee:tasks')
+
+
+@login_required(login_url='employee:login')
+def complete_task(request, task_id):
+    from .models import EmployeeTask
+
+    try:
+        task = EmployeeTask.objects.get(
+            task_id=task_id, assigned_to=request.user)
+        task.status = 'completed'
+        task.save()
+        messages.success(request, f"Completed task: {task.task_id}")
+
+    except EmployeeTask.DoesNotExist:
+        messages.error(
+            request, "Task not found or you don't have permission to access it.")
+
+    return redirect('employee:tasks')
+
 
 @login_required(login_url='employee:login')
 def services_view(request):
@@ -91,6 +153,7 @@ def services_view(request):
         ]
     }
     return render(request, 'EmployeePage/service.html', context)
+
 
 @login_required(login_url='employee:login')
 def builds_view(request):
@@ -113,6 +176,7 @@ def builds_view(request):
     }
     # Note: Renaming 'buildes.html' to 'builds.html' on your file system is highly recommended.
     return render(request, 'EmployeePage/buildes.html', context)
+
 
 @login_required(login_url='employee:login')
 def delivery_view(request):
@@ -137,6 +201,7 @@ def delivery_view(request):
         ]
     }
     return render(request, 'EmployeePage/delivery.html', context)
+
 
 @login_required(login_url='employee:login')
 def completed_view(request):
